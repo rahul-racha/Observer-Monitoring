@@ -1,0 +1,6 @@
+framework module Pods_AgressionMonitoring {
+  umbrella header "Pods-AgressionMonitoring-umbrella.h"
+
+  export *
+  module * { export * }
+}
