@@ -17,32 +17,42 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.badge, .alert, .sound]) { (granted, error) in }
-        application.registerForRemoteNotifications()
+        if #available(iOS 10.0, *) {
+            let center = UNUserNotificationCenter.current()
+        } else {
+            // Fallback on earlier versions
+        }
+        //center.requestAuthorization(options: [.badge, .alert, .sound]) { (granted, error) in }
+        //application.registerForRemoteNotifications()
         Manager.patientDetails = nil
-        let splitViewController = self.window!.rootViewController as! UISplitViewController
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        //let _ = self.window?.rootViewController as! LoginViewController
+        UIApplication.shared.keyWindow?.rootViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+        let splitViewController =  storyboard.instantiateViewController(withIdentifier: "splitViewController") as! UISplitViewController//self.window!.rootViewController as! UISplitViewController
         let leftNavController = splitViewController.viewControllers.first as! UINavigationController
         let masterViewController = leftNavController.topViewController as! PatientRootTableViewController
         
         let rightNavController = splitViewController.viewControllers.last as! UINavigationController
-        let detailViewController = rightNavController.topViewController as! PageViewController
+        let detailViewController = rightNavController.topViewController as! DetailViewController
         
 //        if (Manager.patientDetails != nil && Manager.patientDetails!.count > 0) {
 //            detailViewController.patient = Manager.patientDetails![0]//masterViewController.patientDetails[0]
 //        } else {
 //            //firstPatient[""] =
 //        }
-        masterViewController.delegatePatient = UIStoryboard(name: "Main", bundle: nil) .
-            instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+        
+        //masterViewController.delegatePatient = detailViewController//storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+
         
         detailViewController.navigationItem.leftItemsSupplementBackButton = true
         detailViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
+
         return true
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
+        Manager.deviceId = deviceTokenString
         print(deviceTokenString)
     }
     
@@ -54,18 +64,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         print(userInfo)
         let data  = userInfo["aps"] as! [String : Any]
         let patient: [String: Any] = data["data"] as! [String : Any]
-        if (Manager.addControlHold == false) {
-            displayPatient(patient: patient)
+        if (Manager.triggerNotifications == false) {
+            if (Manager.addControlHold == false) {
+                //displayPatient(patient: patient)
+            }
         }
     }
     
     func displayPatient(patient: [String: Any]) {
-        Manager.reloadAllCells = false
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        UIApplication.shared.keyWindow?.rootViewController = storyboard.instantiateViewController(withIdentifier: "ViewController")
+        //Manager.reloadAllCells = false
+        //let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        //UIApplication.shared.keyWindow?.rootViewController = storyboard.instantiateViewController(withIdentifier: "ViewController")
         //let vc = UIApplication.shared.keyWindow?.rootViewController as! ViewController //storyboard.instantiateViewController(withIdentifier: "ViewController") as! ViewController//ViewController()
         //vc.reloadIndexPath(patient:patient)
-        Manager.reloadAllCells = true
+        //Manager.reloadAllCells = true
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

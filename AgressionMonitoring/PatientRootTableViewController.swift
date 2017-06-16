@@ -18,10 +18,10 @@ class PatientRootTableViewController: UITableViewController, NSURLConnectionDele
     //@IBOutlet var tableView: UITableView!
     let cellSpacingHeight: CGFloat = 15
     weak var delegatePatient: PatientRootSelectionDelegate?
+    var selectedPatient: [String:Any]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -98,7 +98,10 @@ class PatientRootTableViewController: UITableViewController, NSURLConnectionDele
         let cell = tableView.dequeueReusableCell(withIdentifier: "PatientRootTableViewCell", for: indexPath) as! PatientRootTableViewCell
   
         if(Manager.patientDetails != nil) {
-            
+            if (indexPath.section == 0) {
+                self.selectedPatient = Manager.patientDetails?[0]
+                performSegue(withIdentifier: "DetailView", sender: self)
+            }
             cell.patientName.text = Manager.patientDetails?[indexPath.section]["name"] as? String
             let status = Manager.patientDetails?[indexPath.section]["status"] as? String
             let voice_status = Manager.patientDetails?[indexPath.section]["voice_status"] as? String
@@ -176,13 +179,27 @@ class PatientRootTableViewController: UITableViewController, NSURLConnectionDele
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // note that indexPath.section is used rather than indexPath.row
         //print("You tapped cell number \(indexPath.section).")
-        let selectedPatient = Manager.patientDetails?[indexPath.section]
-        self.delegatePatient?.patientSelected(patientDetails: selectedPatient!)
-        
-        if let detailViewController = self.delegatePatient as? DetailViewController {
-            splitViewController?.showDetailViewController(detailViewController.navigationController!, sender: nil)
+        self.selectedPatient = Manager.patientDetails?[indexPath.section]
+        //self.delegatePatient?.patientSelected(patientDetails: selectedPatient!)
+        //print("at select cell \(selectedPatient)")
+        //if let detailViewController = self.delegatePatient as? DetailViewController {
+          //  splitViewController?.showDetailViewController(detailViewController.navigationController!, sender: nil)
+        //}
+        performSegue(withIdentifier: "DetailView", sender: self)
+    }
+
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "DetailView") {
+            // initialize new view controller and cast it as your view controller
+            let navViewController = segue.destination as? UINavigationController
+            // your new view controller should have property that will store passed value
+            let dVC = navViewController?.viewControllers.first as! DetailViewController
+            dVC.patient = self.selectedPatient
+            
         }
     }
+
 
     /*
     // Override to support conditional editing of the table view.

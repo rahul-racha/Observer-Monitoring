@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:AgressionMonitoring.xcodeproj">
+      location = "group:/Users/HandsonODU/Desktop/Rahul/AggressionMonitoring-iOS/AggressionMonitoring.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">

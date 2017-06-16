@@ -8,9 +8,15 @@
 
 import UIKit
 
+protocol PageSelectionDelegate: class {
+    func patientSelected(patientDetails: [String:Any])
+}
+
+
 class PageViewController: UIPageViewController, UIPageViewControllerDelegate, UIPageViewControllerDataSource {
     
     var orderedViewControllers: [UIViewController]?
+    weak var delegatePatientDetails: PageSelectionDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +54,7 @@ class PageViewController: UIPageViewController, UIPageViewControllerDelegate, UI
     
     
     
-    private func newViewController(vc: String) -> UIViewController {
+    func newViewController(vc: String) -> UIViewController {
         return UIStoryboard(name: "Main", bundle: nil) .
             instantiateViewController(withIdentifier: "\(vc)ViewController")
     }
@@ -117,5 +123,22 @@ class PageViewController: UIPageViewController, UIPageViewControllerDelegate, UI
     */
 
 }
+
+extension PageViewController: PatientRootSelectionDelegate {
+    func patientSelected(patientDetails: [String : Any]) {
+        //self.patient = patientDetails
+        //print(self.patient)
+        //viewDidLoad()
+        print("HOLA in PAGE \(patientDetails)")
+        self.delegatePatientDetails?.patientSelected(patientDetails: patientDetails)
+        if let pageViewController = self.delegatePatientDetails as? PageViewController {
+            
+        //    splitViewController?.showDetailViewController(pageViewController.navigationController!, sender: nil)
+             //viewDidLoad()
+        }
+
+    }
+}
+
     
 
