@@ -64,7 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         print(userInfo)
         let data  = userInfo["aps"] as! [String : Any]
         let patient: [String: Any] = data["data"] as! [String : Any]
-        if (Manager.triggerNotifications == false) {
+        if (Manager.triggerNotifications == true) {
             if (Manager.addControlHold == false) {
                 //displayPatient(patient: patient)
             }

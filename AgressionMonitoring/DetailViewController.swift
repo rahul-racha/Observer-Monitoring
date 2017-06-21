@@ -49,7 +49,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     
     @IBOutlet weak var pickerTextField: UITextField!
     
-    var pickOption = ["Room-1", "Room-2", "Room-3", "Room-4", "Room-5"]
+    var pickOption = ["Room 1", "Room 2", "Room 3", "Room 4", "Room 5"]
     
     override func viewDidLoad() {
         
@@ -175,14 +175,19 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     func configureView() {
         self.detailsView.layer.cornerRadius = self.detailsView.frame.size.width / 10
         self.detailsView.clipsToBounds = true
-        self.detailsView.layer.borderWidth = 1.0
-        self.detailsView.layer.borderColor = UIColor.white.cgColor
+        self.detailsView.layer.borderWidth = 5.0
+        if (patient != nil) {
+            self.detailsView.layer.borderColor = (patient?["status_color"] as! UIColor).cgColor
+        } else {
+            self.detailsView.layer.borderColor = UIColor.white.cgColor
+        }
     }
     
     func configureDetails() {
         if (patient != nil) {
             self.age.text = patient?["age"] as? String
             self.gender.text = patient?["gender"] as? String
+            self.pickerTextField.text = patient?["location"] as? String
         }
     }
     
@@ -203,7 +208,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     
     func tappedToolBarBtn(_ sender: UIBarButtonItem) {
         
-        pickerTextField.text = "Room-1"
+        pickerTextField.text = "Room 1"
         
         pickerTextField.resignFirstResponder()
     }
@@ -474,22 +479,42 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         print("hands:\(self.limbStatus)")
         print("anger:\(self.angerStatus)")
         
-        let parameters: Parameters = ["patient_id": 1, "observer_id":3, "start_time": timestamp, "status":self.angerStatus ?? "unknown", "cause":cause]
-        Alamofire.request(" http://qav2.cs.odu.edu/Dev_AggressionDetection/storeObserverData.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300)/*.validate(contentType: ["application/json"])*/.responseData { response in
+        let parameters: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "start_time": timestamp, "status":self.angerStatus ?? "unknown", "cause":cause]
+        Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/storeObserverData.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300)/*.validate(contentType: ["application/json"])*/.responseData { response in
             DispatchQueue.main.async(execute: {
-                print(response.result.value)
-                /*
-                if let data = response.result.value, let utf8Text = String(data: data, encoding: .utf8) {
+                if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
                     print("Data: \(utf8Text)")
-                    let obj = Manage()
                     if utf8Text.range(of:"success") != nil{
-                        obj.displayAlertMessage(message: "Submitted :)")
+                        self.displayAlertMessage(message: "Submitted :)")
                     } else {
                         // Perform ACTION
-                        obj.displayAlertMessage(message: "Something went wrong :(")
+                        self.displayAlertMessage(message: "Something went wrong :(")
                     }
-                 
-                }*/
+                    
+                } else {
+                    self.displayAlertMessage(message: "Server response is empty")
+                }
+                
+            })
+        }
+        print("pat: \(patient!["id"] as! String)")
+        print("obs: \(Manager.userData!["id"] as! String)")
+        let parameters2: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "start_time": timestamp, "location": self.pickerTextField.text!]
+        Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/storeObservedLocation.php",method: .post,parameters: parameters2, encoding: URLEncoding.default).validate(statusCode: 200..<300)/*.validate(contentType: ["application/string"])*/.responseData { response in
+            DispatchQueue.main.async(execute: {
+                
+                if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                    print("Data: \(utf8Text)")
+                    if utf8Text.range(of:"success") != nil{
+                        self.displayAlertMessage(message: "Submitted :)")
+                    } else {
+                        // Perform ACTION
+                        self.displayAlertMessage(message: "Something went wrong :(")
+                    }
+                    
+                } else {
+                    self.displayAlertMessage(message: "Server response is empty")
+                }
                 
             })
         }

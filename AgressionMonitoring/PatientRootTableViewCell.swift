@@ -14,6 +14,7 @@ class PatientRootTableViewCell: UITableViewCell {
         case aggressive
         case partiallyaggressive
         case unknown
+        case select
     }
     
     @IBOutlet weak var patientName: UILabel!
@@ -39,8 +40,13 @@ class PatientRootTableViewCell: UITableViewCell {
             self.view.activeStatusColor(viewColor: UIColor.red)
         } else if (status == Status.partiallyaggressive ) {
             self.view.activeStatusColor(viewColor: UIColor.yellow)
+        } else if (status == Status.unknown ) {
+            self.view.activeStatusColor(viewColor: UIColor.clear)
         } else {
-            self.view.activeStatusColor(viewColor: UIColor.gray)
+            self.view.activeStatusColor(viewColor: UIColor.blue)
+            //self.patientName.textColor = UIColor.white
+            //self.location.textColor = UIColor.white
+            //self.status.textColor = UIColor.white
         }
     }
     

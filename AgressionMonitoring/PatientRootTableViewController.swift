@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 
+
 protocol PatientRootSelectionDelegate: class {
     func patientSelected(patientDetails: [String:Any])
 }
@@ -19,6 +20,7 @@ class PatientRootTableViewController: UITableViewController, NSURLConnectionDele
     let cellSpacingHeight: CGFloat = 15
     weak var delegatePatient: PatientRootSelectionDelegate?
     var selectedPatient: [String:Any]?
+    @IBOutlet weak var hamburger: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,11 +29,12 @@ class PatientRootTableViewController: UITableViewController, NSURLConnectionDele
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-
+        let userid = Int(Manager.userData!["id"] as! String)
+        let role = Manager.userData!["role"] as! String
         if (Manager.reloadAllCells == true) {
             // Do any additional setup after loading the view, typically from a nib.
-            let parameters: Parameters = ["userid":1]
-            Alamofire.request("http://qav2.cs.odu.edu/AggressionDetection/getPatientDetails.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300).validate(contentType: ["application/json"]).responseJSON { response in
+            let parameters: Parameters = ["userid": userid as Any, "role": role]
+            Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/getPatientDetails.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300).validate(contentType: ["application/json"]).responseJSON { response in
                 
                 if let data = response.data {
                     do {
@@ -52,6 +55,14 @@ class PatientRootTableViewController: UITableViewController, NSURLConnectionDele
         tableView.backgroundColor = UIColor.gray
         //tableView.rowHeight = UITableViewAutomaticDimension
         //tableView.estimatedRowHeight = 70
+        
+        if (revealViewController() != nil) {
+            hamburger.target = revealViewController()
+            hamburger.action = #selector(SWRevealViewController.revealToggle(_:))
+            //revealViewController().rearViewRevealWidth = 275
+            //revealViewController().rightViewRevealWidth  =
+            view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -98,12 +109,10 @@ class PatientRootTableViewController: UITableViewController, NSURLConnectionDele
         let cell = tableView.dequeueReusableCell(withIdentifier: "PatientRootTableViewCell", for: indexPath) as! PatientRootTableViewCell
   
         if(Manager.patientDetails != nil) {
-            if (indexPath.section == 0) {
-                self.selectedPatient = Manager.patientDetails?[0]
-                performSegue(withIdentifier: "DetailView", sender: self)
-            }
+            
             cell.patientName.text = Manager.patientDetails?[indexPath.section]["name"] as? String
-            let status = Manager.patientDetails?[indexPath.section]["status"] as? String
+            cell.location.text = Manager.patientDetails?[indexPath.section]["location"] as? String
+            let limb_status = Manager.patientDetails?[indexPath.section]["status"] as? String
             let voice_status = Manager.patientDetails?[indexPath.section]["voice_status"] as? String
             //let view = UIView(frame: cell.bounds)
             // Set background color that you want
@@ -111,12 +120,13 @@ class PatientRootTableViewController: UITableViewController, NSURLConnectionDele
             //cell.selectedBackgroundView = view
             //self.collectionView.reloadItems(at: [indexPath])
             //cell.causeTime.isHidden = false
-            if(status == "stable" && voice_status == "stable") {
+            if(limb_status == "stable" && voice_status == "stable") {
                 //cell.status.text = "stable"
                 //cell.causeTime.isHidden = true
                 cell.status.text = "stable"
                 cell.patientStatus(status: PatientRootTableViewCell.Status.stable)
-            } else if (status == "aggressive" && voice_status == "aggression") {
+                Manager.patientDetails?[indexPath.section]["status_color"] = UIColor.green
+            } else if (limb_status == "agitated" && voice_status == "agitated") {
                 //cell.status.text = "aggressive"
                 //let name = Manager.patientDetails?[indexPath.row]["status_timestamp"] as? String
                 //let endIndex = name?.index((name?.endIndex)!, offsetBy: -4)
@@ -124,27 +134,35 @@ class PatientRootTableViewController: UITableViewController, NSURLConnectionDele
                 //cell.causeTime.text = truncated
                 cell.status.text = "hands & voice"
                 cell.patientStatus(status: PatientRootTableViewCell.Status.aggressive)
-            } else if (status == "aggressive" || voice_status == "aggression") {
+                Manager.patientDetails?[indexPath.section]["status_color"] = UIColor.red
+            } else if (limb_status == "agitated" || voice_status == "agitated") {
                 //cell.status.text = "slightly aggressive"
-                if status == "aggressive" {
+                if limb_status == "agitated" {
                     /*let name = Manager.patientDetails?[indexPath.row]["status_timestamp"] as? String
                     let endIndex = name?.index((name?.endIndex)!, offsetBy: -4)
                     let truncated = name?.substring(to: endIndex!)
                     cell.causeTime.text = truncated*/
                     cell.status.text = "hands"
                     
-                } else if voice_status == "aggression" {
+                } else if voice_status == "agitated" {
                     cell.status.text = "voice"
                     /*let name = Manager.patientDetails?[indexPath.row]["voicestatus_timestamp"] as? String
                     let endIndex = name?.index((name?.endIndex)!, offsetBy: -9)
                     let truncated = name?.substring(to: endIndex!)
                     cell.causeTime.text = truncated*/
                     
-                } else {
-                    cell.status.text = "unknown"
-                    cell.patientStatus(status:  PatientRootTableViewCell.Status.unknown)
                 }
                 cell.patientStatus(status:  PatientRootTableViewCell.Status.partiallyaggressive)
+                Manager.patientDetails?[indexPath.section]["status_color"] = UIColor.yellow
+            } else {
+                cell.status.text = "unknown"
+                cell.patientStatus(status:  PatientRootTableViewCell.Status.unknown)
+                Manager.patientDetails?[indexPath.section]["status_color"] = UIColor.gray
+            }
+            
+            if (indexPath.section == 0) {
+                self.selectedPatient = Manager.patientDetails?[0]
+                performSegue(withIdentifier: "DetailView", sender: self)
             }
             
             //cell.age.text = self.patientDetails?[indexPath.row]["age"] as? String
@@ -177,8 +195,13 @@ class PatientRootTableViewController: UITableViewController, NSURLConnectionDele
     
     // method to run when table view cell is tapped
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //let cell = tableView.dequeueReusableCell(withIdentifier: "PatientRootTableViewCell", for: indexPath) as! PatientRootTableViewCell
+        //cell.layer.borderColor = UIColor.blue.cgColor
+        //tableView.cellForRow(at: indexPath)?.textLabel?.textColor = UIColor.white
+        //tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.blue
         // note that indexPath.section is used rather than indexPath.row
         //print("You tapped cell number \(indexPath.section).")
+        
         self.selectedPatient = Manager.patientDetails?[indexPath.section]
         //self.delegatePatient?.patientSelected(patientDetails: selectedPatient!)
         //print("at select cell \(selectedPatient)")

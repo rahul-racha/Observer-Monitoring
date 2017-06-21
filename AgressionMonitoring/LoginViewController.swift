@@ -14,7 +14,7 @@ class LoginViewController: UIViewController, NSURLConnectionDelegate {
 
     
     //@IBOutlet weak var _username: UIView!
-    @IBOutlet weak var _username: UITextField?
+    @IBOutlet weak var _username: UITextField!
     @IBOutlet weak var _password: UITextField?
     @IBOutlet weak var rememberCredentials: UISwitch!
     
@@ -74,10 +74,12 @@ class LoginViewController: UIViewController, NSURLConnectionDelegate {
         keyChainUser = KeychainWrapper.standard.string(forKey: "username")
         if(keyChainUser != nil) {
             _username?.text = keyChainUser!
+            print(keyChainUser)
         }
         keyChainPwd = KeychainWrapper.standard.string(forKey: "password")
         if(keyChainPwd != nil) {
             _password?.text = keyChainPwd!
+            print(keyChainPwd)
         }
         rememberCredentials.addTarget(self, action: #selector(setWhenStateChanged(_:)), for: UIControlEvents.valueChanged)
         //        switchState = UserDefaults.standard.bool(forKey: "switchState")
@@ -126,7 +128,8 @@ class LoginViewController: UIViewController, NSURLConnectionDelegate {
         var user: String?
         
         if (username?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)! || (password?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)! {
-            
+            print(username)
+            print(password)
             displayAlertMessage(message: "All fields are required")
             //self._username?.placeholder = "username"
             //self._password?.placeholder = "password"
@@ -177,18 +180,22 @@ class LoginViewController: UIViewController, NSURLConnectionDelegate {
                                 self.isPwdRemoved = KeychainWrapper.standard.removeObject(forKey: "password")
                             }
                             
-                            
+                            Manager.userData = dict
                             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                            let splitViewController = storyboard.instantiateViewController(withIdentifier: "splitViewController") as! UISplitViewController
+                            /*let splitViewController = storyboard.instantiateViewController(withIdentifier: "splitViewController") as! UISplitViewController
                             UIApplication.shared.keyWindow?.rootViewController = splitViewController
-                            self.present(splitViewController, animated: true, completion: nil)
+                            self.present(splitViewController, animated: true, completion: nil)*/
+                            let swRevViewController = storyboard.instantiateViewController(withIdentifier: "SWRevealViewController") as! SWRevealViewController
+                            UIApplication.shared.keyWindow?.rootViewController = swRevViewController
+                            Manager.triggerNotifications = true
+                            self.present(swRevViewController, animated: true, completion: nil)
+                            
    
                         }
                         else {
                             self.displayAlertMessage(message: "Invalid username or password")
                             self._username?.text = nil
                             self._password?.text = nil
-                            print("invalid username & password")
                         }
                     }
                     else {
