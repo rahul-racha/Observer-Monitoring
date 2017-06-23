@@ -11,10 +11,10 @@ import UIKit
 
 struct Manager {
     static var userData: [String: Any]?
-    static var controlData: Bool?
+    //static var controlData: Bool?
     static var patientDetails: [Dictionary<String,Any>]?
     static var reloadAllCells: Bool = true
-    static var addControlHold: Bool = false
+    //static var addControlHold: Bool = false
     static var deviceId: String?
     static var triggerNotifications: Bool = false
 }

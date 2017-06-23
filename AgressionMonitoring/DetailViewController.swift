@@ -46,11 +46,13 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     @IBOutlet weak var detailsView: UIView!
     @IBOutlet weak var cancel: UIButton!
     @IBOutlet weak var send: UIButton!
+    @IBOutlet weak var stableButton: UIButton!
+    @IBOutlet weak var statisticButton: UIButton!
     
     @IBOutlet weak var pickerTextField: UITextField!
     
-    var pickOption = ["Room 1", "Room 2", "Room 3", "Room 4", "Room 5"]
-    
+    var locationSet: Set<String> = ["Room 1", "Room 2", "Room 3", "Room 4", "Room 5"]
+    var pickOption = [String]()
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -58,8 +60,16 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         //pc.delegatePatient = self
         self.seconds = self.timeConst
         self.timerText.text = " seconds remaing to submit the change."
+        
+        self.statisticButton.layer.cornerRadius = self.statisticButton.frame.size.width/14
+        self.stableButton.layer.cornerRadius = self.stableButton.frame.size.width/14
+        self.stableButton.isHidden = false
+        
         self.timerText.isHidden = true
         self.countdown.isHidden = true
+        
+        self.cancel.layer.cornerRadius = self.cancel.frame.width/14
+        self.send.layer.cornerRadius = self.send.frame.width/14
         self.cancel.isHidden = true
         self.send.isHidden = true
         // Do any additional setup after loading the view, typically from a nib.
@@ -100,19 +110,19 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         self.splitViewController?.preferredDisplayMode = UISplitViewControllerDisplayMode.allVisible
         
         //let minimumWidth =  min((splitViewController?.view.bounds)!.width,(splitViewController?.view.bounds)!.height)
-        if ((splitViewController?.view.bounds)!.width < (splitViewController?.view.bounds)!.height) {
-            splitViewController?.preferredPrimaryColumnWidthFraction = 0.25//*(splitViewController?.view.bounds)!.width
+        //if ((splitViewController?.view.bounds)!.width < (splitViewController?.view.bounds)!.height) {
+        //    splitViewController?.preferredPrimaryColumnWidthFraction = 0.25//*(splitViewController?.view.bounds)!.width
         //    splitViewController?.maximumPrimaryColumnWidth = minimumWidth/2;
-        } else {
-            splitViewController?.preferredPrimaryColumnWidthFraction = 0.33;
+        //} else {
+        //    splitViewController?.preferredPrimaryColumnWidthFraction = 0.33;
         //    splitViewController?.maximumPrimaryColumnWidth = minimumWidth/2;
-        }
+       // }
         
         //splitViewController?.preferredPrimaryColumnWidthFraction = 0.2*minimumWidth
         //splitViewController?.minimumPrimaryColumnWidth = minimumWidth / (3*100);
         //splitViewController?.maximumPrimaryColumnWidth = minimumWidth/3;
+        pickOption.append(contentsOf: self.locationSet.sorted())
         self.initPicker()
-        
         
     }
 
@@ -120,6 +130,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
     
     func imageTapped(_ gestureRecognizer: UIGestureRecognizer) {
         let graphController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "NextDetailViewController") as! NextDetailViewController
@@ -405,12 +416,13 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         self.countdown.text = "\(self.seconds!)"
         if (self.seconds! <= 0) {
             self.timer.invalidate()
+            self.stableButton.isHidden = false
             self.countdown.isHidden = true
             self.timerText.isHidden = true
             self.cancel.isHidden = true
             self.send.isHidden = true
             self.seconds = self.timeConst
-            self.sendObservation(timestamp: self.sliderTimeStamp!)
+            self.sendObservation(timestamp: self.sliderTimeStamp!, isStableClick: "false")
             self.resetFlags()
         }
     }
@@ -418,13 +430,14 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     @IBAction func sendRightAway(_ sender: Any) {
         //self.allowSend = true
         self.timer.invalidate()
+        self.stableButton.isHidden = false
         self.countdown.isHidden = true
         self.timerText.isHidden = true
         self.cancel.isHidden = true
         self.send.isHidden = true
         self.seconds = self.timeConst
         if (self.sliderTimeStamp != nil) {
-            self.sendObservation(timestamp: self.sliderTimeStamp!)
+            self.sendObservation(timestamp: self.sliderTimeStamp!, isStableClick: "false")
         }
         self.resetFlags()
     }
@@ -433,6 +446,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     @IBAction func cancelSubmit(_ sender: Any) {
         //self.allowCancel = true
         self.timer.invalidate()
+        self.stableButton.isHidden = false
         self.countdown.isHidden = true
         self.timerText.isHidden = true
         self.cancel.isHidden = true
@@ -447,6 +461,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             self.sliderTimeStamp = timestamp
             self.controlFlag = true
             self.countdown.text = "\(self.timeConst)"
+            self.stableButton.isHidden = true
             self.countdown.isHidden = false
             self.timerText.isHidden = false
             self.cancel.isHidden = false
@@ -464,8 +479,9 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         }
     }
         
-    func sendObservation(timestamp: String) {
-        print("Checking if run on cancel")
+    func sendObservation(timestamp: String, isStableClick: String) -> Bool {
+        //print("Checking if run on cancel")
+        var result: Bool = true
         var cause: String = "unknown"
         if ((self.voiceStatus != "stable" && self.voiceStatus != "unknown") && (self.limbStatus != "stable" && self.limbStatus != "unknown")) {
             cause = "hands & voice"
@@ -473,13 +489,17 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             cause = "voice"
         } else if (self.limbStatus == "slightly aggressive" || self.limbStatus == "aggressive") {
             cause = "hands"
+        } else if (self.voiceStatus == "stable" && self.limbStatus == "stable") {
+            cause = "stable"
+        } else {
+            //
         }
         
         print("voice:\(self.voiceStatus)")
         print("hands:\(self.limbStatus)")
         print("anger:\(self.angerStatus)")
-        
-        let parameters: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "start_time": timestamp, "status":self.angerStatus ?? "unknown", "cause":cause]
+        print(isStableClick)
+        let parameters: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "start_time": timestamp, "status":self.angerStatus ?? "unknown", "cause":cause, "stable_click": isStableClick]
         Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/storeObserverData.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300)/*.validate(contentType: ["application/json"])*/.responseData { response in
             DispatchQueue.main.async(execute: {
                 if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
@@ -489,17 +509,19 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                     } else {
                         // Perform ACTION
                         self.displayAlertMessage(message: "Something went wrong :(")
+                        result = false
                     }
                     
                 } else {
                     self.displayAlertMessage(message: "Server response is empty")
+                    result = false
                 }
                 
             })
         }
         print("pat: \(patient!["id"] as! String)")
         print("obs: \(Manager.userData!["id"] as! String)")
-        let parameters2: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "start_time": timestamp, "location": self.pickerTextField.text!]
+        let parameters2: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "start_time": timestamp, "location": self.pickerTextField.text!, "stable_click": isStableClick]
         Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/storeObservedLocation.php",method: .post,parameters: parameters2, encoding: URLEncoding.default).validate(statusCode: 200..<300)/*.validate(contentType: ["application/string"])*/.responseData { response in
             DispatchQueue.main.async(execute: {
                 
@@ -509,14 +531,29 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                         self.displayAlertMessage(message: "Submitted :)")
                     } else {
                         // Perform ACTION
-                        self.displayAlertMessage(message: "Something went wrong :(")
+                        self.displayAlertMessage(message: "Location not updated :(")
+                        result = false
                     }
                     
                 } else {
                     self.displayAlertMessage(message: "Server response is empty")
+                    result = false
                 }
                 
             })
+        }
+        return result
+    }
+    
+    
+    @IBAction func sendStableStatus(_ sender: Any) {
+        let angry = self.pulseSlider.value
+        let limbs = self.limbSlider.value
+        let voice = self.voiceSlider.value
+        self.initSliders(p: 0, v: 0, l: 0)
+        let result = self.sendObservation(timestamp: self.getTimestamp(), isStableClick: "true")
+        if result == false {
+            self.initSliders(p: Int(angry), v: Int(voice), l: Int(limbs))
         }
     }
     

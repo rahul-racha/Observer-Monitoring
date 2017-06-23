@@ -124,7 +124,7 @@ class PageViewController: UIPageViewController, UIPageViewControllerDelegate, UI
 
 }
 
-extension PageViewController: PatientRootSelectionDelegate {
+/*extension PageViewController: PatientRootSelectionDelegate {
     func patientSelected(patientDetails: [String : Any]) {
         //self.patient = patientDetails
         //print(self.patient)
@@ -138,7 +138,7 @@ extension PageViewController: PatientRootSelectionDelegate {
         }
 
     }
-}
+}*/
 
     
 

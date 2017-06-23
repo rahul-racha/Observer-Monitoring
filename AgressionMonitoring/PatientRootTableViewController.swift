@@ -8,22 +8,25 @@
 
 import UIKit
 import Alamofire
+//import UserNotifications
 
-
-protocol PatientRootSelectionDelegate: class {
+/*protocol PatientRootSelectionDelegate: class {
     func patientSelected(patientDetails: [String:Any])
-}
+}*/
 
-class PatientRootTableViewController: UITableViewController, NSURLConnectionDelegate {
+class PatientRootTableViewController: UITableViewController/*, UNUserNotificationCenterDelegate*/,NSURLConnectionDelegate {
 
     //@IBOutlet var tableView: UITableView!
     let cellSpacingHeight: CGFloat = 15
-    weak var delegatePatient: PatientRootSelectionDelegate?
+    //weak var delegatePatient: PatientRootSelectionDelegate?
     var selectedPatient: [String:Any]?
+    var locationSet: Set<String> = []
     @IBOutlet weak var hamburger: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -50,7 +53,12 @@ class PatientRootTableViewController: UITableViewController, NSURLConnectionDele
                     }
                 }
             }
-        }
+        } /*else {
+            DispatchQueue.main.async(execute: {
+                self.tableView.reloadData()
+            })
+
+        }*/
         
         tableView.backgroundColor = UIColor.gray
         //tableView.rowHeight = UITableViewAutomaticDimension
@@ -79,6 +87,43 @@ class PatientRootTableViewController: UITableViewController, NSURLConnectionDele
         viewDidLoad()
     }
     
+    
+    func reloadIndexPath(patient: [String: Any]) {
+        //Add location type too
+        print("sections\(self.tableView.numberOfSections)")
+        
+        if (Manager.patientDetails != nil) {
+            for i in 0..<Manager.patientDetails!.count {
+                print("rows:\(self.tableView.numberOfRows(inSection: i))")
+                print("patient id:\(patient["id"])")
+                if Manager.patientDetails?[i]["id"] as? String == patient["id"] as? String {
+                    if (patient["type"] as? String == "voice") {
+                        Manager.patientDetails?[i]["voice_status"] = patient["voice_status"]
+                    } else if (patient["type"] as? String == "hands") {
+                        Manager.patientDetails?[i]["limb_status"] = patient["limb_status"]
+                    } else if (patient["type"] as? String == "location") {
+                        Manager.patientDetails?[i]["location"] = patient["location"]
+                    } else if (patient["type"] as? String == "voice and hands") {
+                        Manager.patientDetails?[i]["voice_status"] = patient["voice_status"]
+                        Manager.patientDetails?[i]["limb_status"] = patient["limb_status"]
+                    }
+                    let indexPath: IndexPath = IndexPath(row: 0, section: i)
+                    var indexPaths = [IndexPath]()
+                    indexPaths.append(indexPath)
+                    //print(indexPaths)
+                    //print(self.tableView)
+                    /*if let visibleIndexPaths = tableView.indexPathsForVisibleRows?.index(of: indexPath as IndexPath) {
+                        if visibleIndexPaths != NSNotFound {
+                            self.tableView.reloadRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
+                        }
+                    }*/
+                    let sectionIndex = IndexSet(integer: i)
+                    self.tableView.reloadSections(sectionIndex, with: .automatic)
+                    break
+                }
+            }
+        }
+    }
 
     // MARK: - Table view data source
 
@@ -107,12 +152,17 @@ class PatientRootTableViewController: UITableViewController, NSURLConnectionDele
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PatientRootTableViewCell", for: indexPath) as! PatientRootTableViewCell
-  
+        //print(Manager.patientDetails)
         if(Manager.patientDetails != nil) {
+            print("index:\(indexPath)")
+            print("section indx:\(indexPath.section)")
             
+            print("id:\(Manager.patientDetails?[indexPath.section]["id"])")
             cell.patientName.text = Manager.patientDetails?[indexPath.section]["name"] as? String
+            print(cell.patientName.text)
             cell.location.text = Manager.patientDetails?[indexPath.section]["location"] as? String
-            let limb_status = Manager.patientDetails?[indexPath.section]["status"] as? String
+            self.locationSet.insert(cell.location.text!)
+            let limb_status = Manager.patientDetails?[indexPath.section]["limb_status"] as? String
             let voice_status = Manager.patientDetails?[indexPath.section]["voice_status"] as? String
             //let view = UIView(frame: cell.bounds)
             // Set background color that you want
@@ -163,7 +213,10 @@ class PatientRootTableViewController: UITableViewController, NSURLConnectionDele
             if (indexPath.section == 0) {
                 self.selectedPatient = Manager.patientDetails?[0]
                 performSegue(withIdentifier: "DetailView", sender: self)
+            } else if (indexPath.section == Manager.patientDetails!.count - 1) {
+                performSegue(withIdentifier: "DetailView", sender: self)
             }
+            
             
             //cell.age.text = self.patientDetails?[indexPath.row]["age"] as? String
             // cell.gender.text = self.patientDetails?[indexPath.row]["gender"] as? String
@@ -219,6 +272,7 @@ class PatientRootTableViewController: UITableViewController, NSURLConnectionDele
             // your new view controller should have property that will store passed value
             let dVC = navViewController?.viewControllers.first as! DetailViewController
             dVC.patient = self.selectedPatient
+            dVC.locationSet = dVC.locationSet.union(self.locationSet)
             
         }
     }

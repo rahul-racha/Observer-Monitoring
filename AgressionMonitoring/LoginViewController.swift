@@ -199,14 +199,14 @@ class LoginViewController: UIViewController, NSURLConnectionDelegate {
                         }
                     }
                     else {
-                        self.displayAlertMessage(message: "invalid account details")
+                        self.displayAlertMessage(message: "Response data is empty. Check your Internet Connection.")
                         self._username?.text = nil
                         self._password?.text = nil
                     }
 
                 }
                 else {
-                    self.displayAlertMessage(message: "response data is empty")
+                    self.displayAlertMessage(message: "response data is empty. Check your Internet Connection.")
                     self._username?.text = nil
                     self._password?.text = nil
                 }

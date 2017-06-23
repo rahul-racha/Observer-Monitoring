@@ -15,6 +15,13 @@
 		3D2633471EF441D700BD3750 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2633461EF441D700BD3750 /* SWRevealViewController.m */; };
 		3D26334D1EF97B5F00BD3750 /* AddPatientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26334C1EF97B5F00BD3750 /* AddPatientViewController.swift */; };
 		3D2633511EF991E200BD3750 /* SlideOutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2633501EF991E200BD3750 /* SlideOutViewController.swift */; };
+		3D5DAEAC1EFAF29600D650EA /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5DAEAB1EFAF29600D650EA /* StatisticsViewController.swift */; };
+		3D5DAEAF1EFAF3FC00D650EA /* SensorChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5DAEAE1EFAF3FC00D650EA /* SensorChartView.swift */; };
+		3D5DAEB11EFAF40B00D650EA /* ObservedChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5DAEB01EFAF40B00D650EA /* ObservedChartView.swift */; };
+		3D5DAEB21EFAF4D500D650EA /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D5DAEA41EFAF27100D650EA /* Charts.framework */; };
+		3D5DAEB31EFAF4D500D650EA /* Charts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3D5DAEA41EFAF27100D650EA /* Charts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3D5DAEB71EFB0D1100D650EA /* XAxisFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5DAEB61EFB0D1100D650EA /* XAxisFormatter.swift */; };
+		3D5DAEB91EFC95F300D650EA /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D5DAEB81EFC95F300D650EA /* UserNotifications.framework */; };
 		41B61AE71EE5A3F9008865FF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B61AE61EE5A3F9008865FF /* AppDelegate.swift */; };
 		41B61AE91EE5A3F9008865FF /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B61AE81EE5A3F9008865FF /* DetailViewController.swift */; };
 		41B61AEC1EE5A3F9008865FF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41B61AEA1EE5A3F9008865FF /* Main.storyboard */; };
@@ -114,6 +121,34 @@
 			remoteGlobalIDString = 47E429C61DCCE2FD002BE498;
 			remoteInfo = TestHostApp;
 		};
+		3D5DAEA31EFAF27100D650EA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D5DAE961EFAF27100D650EA /* Charts.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06165F241D8110E600722320;
+			remoteInfo = Charts;
+		};
+		3D5DAEA51EFAF27100D650EA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D5DAE961EFAF27100D650EA /* Charts.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06B120D51D811E6200D14B02;
+			remoteInfo = ChartsRealm;
+		};
+		3D5DAEA71EFAF27100D650EA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D5DAE961EFAF27100D650EA /* Charts.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06165F2E1D8110E600722320;
+			remoteInfo = ChartsTests;
+		};
+		3D5DAEB41EFAF4D500D650EA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D5DAE961EFAF27100D650EA /* Charts.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 06165F231D8110E600722320;
+			remoteInfo = Charts;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -123,6 +158,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				3D5DAEB31EFAF4D500D650EA /* Charts.framework in Embed Frameworks */,
 				3D0A1EB81EF045ED001F9365 /* SwiftKeychainWrapper.framework in Embed Frameworks */,
 				3D0A1EC41EF045ED001F9365 /* Alamofire.framework in Embed Frameworks */,
 			);
@@ -142,6 +178,12 @@
 		3D2633461EF441D700BD3750 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SWRevealViewController.m; path = "../../packages/SWRevealViewController-master/SWRevealViewController/SWRevealViewController.m"; sourceTree = "<group>"; };
 		3D26334C1EF97B5F00BD3750 /* AddPatientViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPatientViewController.swift; sourceTree = "<group>"; };
 		3D2633501EF991E200BD3750 /* SlideOutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideOutViewController.swift; sourceTree = "<group>"; };
+		3D5DAE961EFAF27100D650EA /* Charts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Charts.xcodeproj; path = "../RLab/LabMonitoring-iOS/Charts-master/Charts.xcodeproj"; sourceTree = "<group>"; };
+		3D5DAEAB1EFAF29600D650EA /* StatisticsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
+		3D5DAEAE1EFAF3FC00D650EA /* SensorChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SensorChartView.swift; sourceTree = "<group>"; };
+		3D5DAEB01EFAF40B00D650EA /* ObservedChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObservedChartView.swift; sourceTree = "<group>"; };
+		3D5DAEB61EFB0D1100D650EA /* XAxisFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XAxisFormatter.swift; sourceTree = "<group>"; };
+		3D5DAEB81EFC95F300D650EA /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		41B61AE31EE5A3F9008865FF /* AggressionMonitoring.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AggressionMonitoring.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41B61AE61EE5A3F9008865FF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		41B61AE81EE5A3F9008865FF /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
@@ -165,6 +207,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D5DAEB91EFC95F300D650EA /* UserNotifications.framework in Frameworks */,
+				3D5DAEB21EFAF4D500D650EA /* Charts.framework in Frameworks */,
 				3D0A1EB71EF045ED001F9365 /* SwiftKeychainWrapper.framework in Frameworks */,
 				3D0A1EC31EF045ED001F9365 /* Alamofire.framework in Frameworks */,
 			);
@@ -215,6 +259,27 @@
 			name = "Slide Out Menu";
 			sourceTree = "<group>";
 		};
+		3D5DAE971EFAF27100D650EA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3D5DAEA41EFAF27100D650EA /* Charts.framework */,
+				3D5DAEA61EFAF27100D650EA /* ChartsRealm.framework */,
+				3D5DAEA81EFAF27100D650EA /* ChartsTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3D5DAEAD1EFAF38200D650EA /* Statistics */ = {
+			isa = PBXGroup;
+			children = (
+				3D5DAEAB1EFAF29600D650EA /* StatisticsViewController.swift */,
+				3D5DAEAE1EFAF3FC00D650EA /* SensorChartView.swift */,
+				3D5DAEB01EFAF40B00D650EA /* ObservedChartView.swift */,
+				3D5DAEB61EFB0D1100D650EA /* XAxisFormatter.swift */,
+			);
+			name = Statistics;
+			sourceTree = "<group>";
+		};
 		41972B641EE860D50072D6F1 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -245,6 +310,7 @@
 		41B61ADA1EE5A3F9008865FF = {
 			isa = PBXGroup;
 			children = (
+				3D5DAE961EFAF27100D650EA /* Charts.xcodeproj */,
 				3D0DC61C1EF045130011CB7D /* SwiftKeychainWrapper.xcodeproj */,
 				3D0DC6031EF045000011CB7D /* Alamofire.xcodeproj */,
 				41B61AE51EE5A3F9008865FF /* AgressionMonitoring */,
@@ -273,6 +339,7 @@
 				41B61AEF1EE5A3FA008865FF /* LaunchScreen.storyboard */,
 				41B61AF21EE5A3FA008865FF /* Info.plist */,
 				3D2633481EF441E500BD3750 /* Supporting files */,
+				3D5DAEAD1EFAF38200D650EA /* Statistics */,
 				3D26334F1EF991B900BD3750 /* Slide Out Menu */,
 				41972B671EE868130072D6F1 /* Detail */,
 				41972B651EE867B90072D6F1 /* Patient */,
@@ -296,6 +363,7 @@
 		EE5C4C966DA1AACD8BB707F5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3D5DAEB81EFC95F300D650EA /* UserNotifications.framework */,
 				2AB310B3DECAF560B2C188C8 /* Pods_AgressionMonitoring.framework */,
 			);
 			name = Frameworks;
@@ -321,6 +389,7 @@
 			dependencies = (
 				3D0A1EBA1EF045ED001F9365 /* PBXTargetDependency */,
 				3D0A1EC61EF045ED001F9365 /* PBXTargetDependency */,
+				3D5DAEB51EFAF4D500D650EA /* PBXTargetDependency */,
 			);
 			name = AggressionMonitoring;
 			productName = AgressionMonitoring;
@@ -368,6 +437,10 @@
 				{
 					ProductGroup = 3D0DC6041EF045000011CB7D /* Products */;
 					ProjectRef = 3D0DC6031EF045000011CB7D /* Alamofire.xcodeproj */;
+				},
+				{
+					ProductGroup = 3D5DAE971EFAF27100D650EA /* Products */;
+					ProjectRef = 3D5DAE961EFAF27100D650EA /* Charts.xcodeproj */;
 				},
 				{
 					ProductGroup = 3D0DC61D1EF045130011CB7D /* Products */;
@@ -452,6 +525,27 @@
 			remoteRef = 3D0DC6261EF045130011CB7D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		3D5DAEA41EFAF27100D650EA /* Charts.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Charts.framework;
+			remoteRef = 3D5DAEA31EFAF27100D650EA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3D5DAEA61EFAF27100D650EA /* ChartsRealm.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ChartsRealm.framework;
+			remoteRef = 3D5DAEA51EFAF27100D650EA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3D5DAEA81EFAF27100D650EA /* ChartsTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ChartsTests.xctest;
+			remoteRef = 3D5DAEA71EFAF27100D650EA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -521,6 +615,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				41B61AE91EE5A3F9008865FF /* DetailViewController.swift in Sources */,
+				3D5DAEB71EFB0D1100D650EA /* XAxisFormatter.swift in Sources */,
 				41B61AE71EE5A3F9008865FF /* AppDelegate.swift in Sources */,
 				41B61AFD1EE71A68008865FF /* PatientRootTableViewCell.swift in Sources */,
 				3D0DC6021EF041DC0011CB7D /* LoginViewController.swift in Sources */,
@@ -529,10 +624,13 @@
 				3D26334D1EF97B5F00BD3750 /* AddPatientViewController.swift in Sources */,
 				41BBAD461EEB37E9005C9E55 /* PageViewController.swift in Sources */,
 				41B61AF91EE5B4B4008865FF /* LimbSliderDesign.swift in Sources */,
+				3D5DAEB11EFAF40B00D650EA /* ObservedChartView.swift in Sources */,
 				3D2633471EF441D700BD3750 /* SWRevealViewController.m in Sources */,
 				3D2633511EF991E200BD3750 /* SlideOutViewController.swift in Sources */,
 				41BBAD541EEB43FE005C9E55 /* NextDetailViewController.swift in Sources */,
+				3D5DAEAF1EFAF3FC00D650EA /* SensorChartView.swift in Sources */,
 				41B61B011EE7212F008865FF /* Global.swift in Sources */,
+				3D5DAEAC1EFAF29600D650EA /* StatisticsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -548,6 +646,11 @@
 			isa = PBXTargetDependency;
 			name = "Alamofire iOS";
 			targetProxy = 3D0A1EC51EF045ED001F9365 /* PBXContainerItemProxy */;
+		};
+		3D5DAEB51EFAF4D500D650EA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Charts;
+			targetProxy = 3D5DAEB41EFAF4D500D650EA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

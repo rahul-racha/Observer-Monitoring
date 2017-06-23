@@ -14,16 +14,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        if #available(iOS 10.0, *) {
-            let center = UNUserNotificationCenter.current()
-        } else {
-            // Fallback on earlier versions
-        }
-        //center.requestAuthorization(options: [.badge, .alert, .sound]) { (granted, error) in }
-        //application.registerForRemoteNotifications()
+        registerForPushNotifications(application: application)
+        
         Manager.patientDetails = nil
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         //let _ = self.window?.rootViewController as! LoginViewController
@@ -50,6 +44,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         return true
     }
     
+    func registerForPushNotifications(application: UIApplication) {
+        if #available(iOS 10.0, *) {
+            let center = UNUserNotificationCenter.current()
+            center.requestAuthorization(options: [.badge, .alert, .sound]) { (granted, error) in }
+            application.registerForRemoteNotifications()
+        } else if #available(iOS 9.0, *) {
+            // Fallback on earlier versions
+            //let notificationSettings = UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil)
+            //application.registerUserNotificationSettings(notificationSettings)
+            //application.registerForRemoteNotifications()
+            
+            UIApplication.shared.registerUserNotificationSettings(UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil))
+            UIApplication.shared.registerForRemoteNotifications()
+        } else if #available(iOS 8.0, *) {
+            UIApplication.shared.registerUserNotificationSettings(UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil))
+            UIApplication.shared.registerForRemoteNotifications()
+        } else {
+            application.registerForRemoteNotifications(matching: [.badge, .sound, .alert])
+        }
+        
+    
+    }
+    
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
         Manager.deviceId = deviceTokenString
@@ -57,27 +74,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        print("Oops! \(error)")
+        //print("Oops! \(error)")
+        //if code == 3010 {
+            print("Push notifications are not supported in the iOS Simulator.")
+        //} else {
+            print("application:didFailToRegisterForRemoteNotificationsWithError: %@", error)
+        //}
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        print(userInfo)
-        let data  = userInfo["aps"] as! [String : Any]
+        //print(userInfo)
+        let data = userInfo["aps"] as! [String : Any]
         let patient: [String: Any] = data["data"] as! [String : Any]
         if (Manager.triggerNotifications == true) {
-            if (Manager.addControlHold == false) {
-                //displayPatient(patient: patient)
-            }
+            displayPatient(patient: patient)
         }
+        completionHandler(UIBackgroundFetchResult.newData);
     }
     
     func displayPatient(patient: [String: Any]) {
-        //Manager.reloadAllCells = false
-        //let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        //UIApplication.shared.keyWindow?.rootViewController = storyboard.instantiateViewController(withIdentifier: "ViewController")
-        //let vc = UIApplication.shared.keyWindow?.rootViewController as! ViewController //storyboard.instantiateViewController(withIdentifier: "ViewController") as! ViewController//ViewController()
+        Manager.reloadAllCells = false
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let splitViewController =  storyboard.instantiateViewController(withIdentifier: "splitViewController") as! UISplitViewController//self.window!.rootViewController as! UISplitViewController
+        let leftNavController = splitViewController.viewControllers.first as! UINavigationController
+        let patientRootVC = leftNavController.topViewController as! PatientRootTableViewController
+        patientRootVC.reloadIndexPath(patient: patient)
+        //let patientRootVC = storyboard.instantiateViewController(withIdentifier: "PatientRootTableViewController") as! PatientRootTableViewController
+        //UIApplication.shared.keyWindow?.rootViewController = patientRootVC
+        //storyboard.instantiateViewController(withIdentifier: "ViewController") as! ViewController//ViewController()
         //vc.reloadIndexPath(patient:patient)
-        //Manager.reloadAllCells = true
+        Manager.reloadAllCells = true
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
