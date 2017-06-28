@@ -291,11 +291,11 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             limbSlider.thumbTintColor = UIColor.green
             limbSlider.minimumTrackTintColor = UIColor.green
             self.limbStatus = "stable"
+//        } else if (limbSlider.value == 1) {
+//            limbSlider.thumbTintColor = UIColor.yellow
+//            limbSlider.minimumTrackTintColor = UIColor.yellow
+//            self.limbStatus = "slightly aggressive"
         } else if (limbSlider.value == 1) {
-            limbSlider.thumbTintColor = UIColor.yellow
-            limbSlider.minimumTrackTintColor = UIColor.yellow
-            self.limbStatus = "slightly aggressive"
-        } else if (limbSlider.value == 2) {
             limbSlider.thumbTintColor = UIColor.red
             limbSlider.minimumTrackTintColor = UIColor.red
             self.limbStatus = "aggressive"
@@ -343,11 +343,11 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             voiceSlider.thumbTintColor = UIColor.green
             voiceSlider.minimumTrackTintColor = UIColor.green
             self.voiceStatus = "stable"
+//        } else if (voiceSlider.value == 1) {
+//            voiceSlider.thumbTintColor = UIColor.yellow
+//            voiceSlider.minimumTrackTintColor = UIColor.yellow
+//            self.voiceStatus = "slightly aggressive"
         } else if (voiceSlider.value == 1) {
-            voiceSlider.thumbTintColor = UIColor.yellow
-            voiceSlider.minimumTrackTintColor = UIColor.yellow
-            self.voiceStatus = "slightly aggressive"
-        } else if (voiceSlider.value == 2) {
             voiceSlider.thumbTintColor = UIColor.red
             voiceSlider.minimumTrackTintColor = UIColor.red
             self.voiceStatus = "aggressive"
@@ -399,11 +399,11 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         } else if (pulseSlider.value == 1) {
             pulseSlider.thumbTintColor = UIColor.yellow
             pulseSlider.minimumTrackTintColor = UIColor.yellow
-            self.angerStatus = "slightly aggressive"
+            self.angerStatus = "slightly agitated"
         } else if (pulseSlider.value == 2) {
             pulseSlider.thumbTintColor = UIColor.red
             pulseSlider.minimumTrackTintColor = UIColor.red
-            self.angerStatus = "aggressive"
+            self.angerStatus = "agitated"
         } else {
             pulseSlider.thumbTintColor = UIColor.gray
             pulseSlider.minimumTrackTintColor = UIColor.lightGray
@@ -500,6 +500,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         print("anger:\(self.angerStatus)")
         print(isStableClick)
         let parameters: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "start_time": timestamp, "status":self.angerStatus ?? "unknown", "cause":cause, "stable_click": isStableClick]
+        print("here para: \(parameters)")
         Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/storeObserverData.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300)/*.validate(contentType: ["application/json"])*/.responseData { response in
             DispatchQueue.main.async(execute: {
                 if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
