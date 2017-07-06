@@ -337,8 +337,8 @@
                                     <action selector="sendRightAway:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cvG-U9-kv2"/>
                                 </connections>
                             </button>
-                            <slider opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="1" continuous="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wYd-48-MRD" customClass="LimbSliderDesign" customModule="AggressionMonitoring" customModuleProvider="target">
-                                <rect key="frame" x="21" y="574" width="190" height="36"/>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="1" continuous="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wYd-48-MRD" customClass="LimbSliderDesign" customModule="AggressionMonitoring" customModuleProvider="target">
+                                <rect key="frame" x="21" y="529" width="190" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="35" id="7si-B9-RDS"/>
                                     <constraint firstAttribute="width" constant="186" id="ydt-5n-jHT"/>
@@ -358,20 +358,20 @@
                                     <action selector="updateLimbAction:" destination="BYZ-38-t0r" eventType="valueChanged" id="LqV-mK-ROh"/>
                                 </connections>
                             </slider>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Limb Movement" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kWn-li-epR">
-                                <rect key="frame" x="44" y="501" width="165" height="27"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Limb Movement" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kWn-li-epR">
+                                <rect key="frame" x="44" y="456" width="165" height="27"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <color key="textColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Voice" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fhs-PH-z6Z">
-                                <rect key="frame" x="324" y="501" width="55" height="27"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Voice" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fhs-PH-z6Z">
+                                <rect key="frame" x="324" y="456" width="55" height="27"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <color key="textColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <slider opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="2" translatesAutoresizingMaskIntoConstraints="NO" id="avD-v4-kyX">
-                                <rect key="frame" x="488" y="575" width="194" height="36"/>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="2" translatesAutoresizingMaskIntoConstraints="NO" id="avD-v4-kyX">
+                                <rect key="frame" x="487.5" y="530" width="194" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="35" id="a6m-U7-vtP"/>
                                     <constraint firstAttribute="width" constant="190" id="sLK-u9-tY2"/>
@@ -393,8 +393,8 @@
                                     <action selector="updatePulseAction:" destination="BYZ-38-t0r" eventType="valueChanged" id="Idg-vr-YTJ"/>
                                 </connections>
                             </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Dl1-zz-pAd">
-                                <rect key="frame" x="253" y="575" width="196" height="36"/>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Dl1-zz-pAd">
+                                <rect key="frame" x="253" y="530" width="196" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="35" id="IxE-VR-c76"/>
                                     <constraint firstAttribute="width" constant="192" id="fsc-14-Osh"/>
@@ -417,8 +417,8 @@
                                     <action selector="updateVoiceAction:" destination="BYZ-38-t0r" eventType="valueChanged" id="9YJ-Zi-uXq"/>
                                 </connections>
                             </slider>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Anger" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fyo-fp-DoZ">
-                                <rect key="frame" x="555" y="501" width="60" height="27"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Anger" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fyo-fp-DoZ">
+                                <rect key="frame" x="554.5" y="456" width="60" height="27"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <color key="textColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <nil key="highlightedColor"/>
