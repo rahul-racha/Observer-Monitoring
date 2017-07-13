@@ -22,6 +22,7 @@
 		3D5DAEB31EFAF4D500D650EA /* Charts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3D5DAEA41EFAF27100D650EA /* Charts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3D5DAEB71EFB0D1100D650EA /* XAxisFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5DAEB61EFB0D1100D650EA /* XAxisFormatter.swift */; };
 		3D5DAEB91EFC95F300D650EA /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D5DAEB81EFC95F300D650EA /* UserNotifications.framework */; };
+		3DA2A2591F158A4900E7B78D /* ModelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA2A2581F158A4900E7B78D /* ModelViewController.swift */; };
 		3DD887161F019F05005A2438 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD887151F019F05005A2438 /* RegisterViewController.swift */; };
 		3DD887901F029304005A2438 /* UIButtonX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD887851F029304005A2438 /* UIButtonX.swift */; };
 		3DD887911F029304005A2438 /* UIImageViewX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD887861F029304005A2438 /* UIImageViewX.swift */; };
@@ -33,6 +34,12 @@
 		3DD887971F029304005A2438 /* UIViewX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD8878C1F029304005A2438 /* UIViewX.swift */; };
 		3DD887981F029304005A2438 /* UIViewXRadialGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD8878D1F029304005A2438 /* UIViewXRadialGradient.swift */; };
 		3DD887991F029304005A2438 /* UIVisualEffectViewX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD8878E1F029304005A2438 /* UIVisualEffectViewX.swift */; };
+		3DD887AB1F0FB399005A2438 /* ActionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD887AA1F0FB399005A2438 /* ActionCollectionViewCell.swift */; };
+		3DD887F61F0FCE68005A2438 /* APLExpandableCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DD887F11F0FCE68005A2438 /* APLExpandableCollectionView.m */; };
+		3DD887F71F0FCE68005A2438 /* APLExpandableSectionFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DD887F31F0FCE68005A2438 /* APLExpandableSectionFlowLayout.m */; };
+		3DD887F81F0FCE68005A2438 /* APLSectionTopToBottomFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DD887F51F0FCE68005A2438 /* APLSectionTopToBottomFlowLayout.m */; };
+		3DD888081F0FD62B005A2438 /* ActionCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD888071F0FD62B005A2438 /* ActionCollectionReusableView.swift */; };
+		3DD8880A1F13CF19005A2438 /* ActionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD888091F13CF19005A2438 /* ActionTableViewCell.swift */; };
 		41B61AE71EE5A3F9008865FF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B61AE61EE5A3F9008865FF /* AppDelegate.swift */; };
 		41B61AE91EE5A3F9008865FF /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B61AE81EE5A3F9008865FF /* DetailViewController.swift */; };
 		41B61AEC1EE5A3F9008865FF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41B61AEA1EE5A3F9008865FF /* Main.storyboard */; };
@@ -195,6 +202,7 @@
 		3D5DAEB01EFAF40B00D650EA /* ObservedChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObservedChartView.swift; sourceTree = "<group>"; };
 		3D5DAEB61EFB0D1100D650EA /* XAxisFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XAxisFormatter.swift; sourceTree = "<group>"; };
 		3D5DAEB81EFC95F300D650EA /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		3DA2A2581F158A4900E7B78D /* ModelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelViewController.swift; sourceTree = "<group>"; };
 		3DD887151F019F05005A2438 /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		3DD887851F029304005A2438 /* UIButtonX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButtonX.swift; sourceTree = "<group>"; };
 		3DD887861F029304005A2438 /* UIImageViewX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageViewX.swift; sourceTree = "<group>"; };
@@ -206,6 +214,15 @@
 		3DD8878C1F029304005A2438 /* UIViewX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewX.swift; sourceTree = "<group>"; };
 		3DD8878D1F029304005A2438 /* UIViewXRadialGradient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewXRadialGradient.swift; sourceTree = "<group>"; };
 		3DD8878E1F029304005A2438 /* UIVisualEffectViewX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIVisualEffectViewX.swift; sourceTree = "<group>"; };
+		3DD887AA1F0FB399005A2438 /* ActionCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionCollectionViewCell.swift; sourceTree = "<group>"; };
+		3DD887F01F0FCE68005A2438 /* APLExpandableCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = APLExpandableCollectionView.h; path = "../../packages/APLExpandableCollectionView-master/Classes/APLExpandableCollectionView.h"; sourceTree = "<group>"; };
+		3DD887F11F0FCE68005A2438 /* APLExpandableCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = APLExpandableCollectionView.m; path = "../../packages/APLExpandableCollectionView-master/Classes/APLExpandableCollectionView.m"; sourceTree = "<group>"; };
+		3DD887F21F0FCE68005A2438 /* APLExpandableSectionFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = APLExpandableSectionFlowLayout.h; path = "../../packages/APLExpandableCollectionView-master/Classes/APLExpandableSectionFlowLayout.h"; sourceTree = "<group>"; };
+		3DD887F31F0FCE68005A2438 /* APLExpandableSectionFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = APLExpandableSectionFlowLayout.m; path = "../../packages/APLExpandableCollectionView-master/Classes/APLExpandableSectionFlowLayout.m"; sourceTree = "<group>"; };
+		3DD887F41F0FCE68005A2438 /* APLSectionTopToBottomFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = APLSectionTopToBottomFlowLayout.h; path = "../../packages/APLExpandableCollectionView-master/Classes/APLSectionTopToBottomFlowLayout.h"; sourceTree = "<group>"; };
+		3DD887F51F0FCE68005A2438 /* APLSectionTopToBottomFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = APLSectionTopToBottomFlowLayout.m; path = "../../packages/APLExpandableCollectionView-master/Classes/APLSectionTopToBottomFlowLayout.m"; sourceTree = "<group>"; };
+		3DD888071F0FD62B005A2438 /* ActionCollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionCollectionReusableView.swift; sourceTree = "<group>"; };
+		3DD888091F13CF19005A2438 /* ActionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionTableViewCell.swift; sourceTree = "<group>"; };
 		41B61AE31EE5A3F9008865FF /* AggressionMonitoring.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AggressionMonitoring.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41B61AE61EE5A3F9008865FF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		41B61AE81EE5A3F9008865FF /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
@@ -266,8 +283,13 @@
 		3D2633481EF441E500BD3750 /* Supporting files */ = {
 			isa = PBXGroup;
 			children = (
-				3D2633451EF441D700BD3750 /* SWRevealViewController.h */,
-				3D2633461EF441D700BD3750 /* SWRevealViewController.m */,
+				3DD887AC1F0FCE0C005A2438 /* SWRevealViewController */,
+				3DD887F01F0FCE68005A2438 /* APLExpandableCollectionView.h */,
+				3DD887F11F0FCE68005A2438 /* APLExpandableCollectionView.m */,
+				3DD887F21F0FCE68005A2438 /* APLExpandableSectionFlowLayout.h */,
+				3DD887F31F0FCE68005A2438 /* APLExpandableSectionFlowLayout.m */,
+				3DD887F41F0FCE68005A2438 /* APLSectionTopToBottomFlowLayout.h */,
+				3DD887F51F0FCE68005A2438 /* APLSectionTopToBottomFlowLayout.m */,
 				3D2633441EF441D600BD3750 /* AggressionMonitoring-Bridging-Header.h */,
 			);
 			name = "Supporting files";
@@ -320,6 +342,15 @@
 			path = "/Users/HandsonODU/Desktop/Rahul/Alamofire-master/../packages/DesignableX-master/DesignableXTesting/DesignableXTesting/DesignableX";
 			sourceTree = "<absolute>";
 		};
+		3DD887AC1F0FCE0C005A2438 /* SWRevealViewController */ = {
+			isa = PBXGroup;
+			children = (
+				3D2633451EF441D700BD3750 /* SWRevealViewController.h */,
+				3D2633461EF441D700BD3750 /* SWRevealViewController.m */,
+			);
+			name = SWRevealViewController;
+			sourceTree = "<group>";
+		};
 		41972B641EE860D50072D6F1 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -343,6 +374,10 @@
 			isa = PBXGroup;
 			children = (
 				41B61AE81EE5A3F9008865FF /* DetailViewController.swift */,
+				3DD888091F13CF19005A2438 /* ActionTableViewCell.swift */,
+				3DD887AA1F0FB399005A2438 /* ActionCollectionViewCell.swift */,
+				3DD888071F0FD62B005A2438 /* ActionCollectionReusableView.swift */,
+				3DA2A2581F158A4900E7B78D /* ModelViewController.swift */,
 			);
 			name = Detail;
 			sourceTree = "<group>";
@@ -660,22 +695,28 @@
 				41B61AE91EE5A3F9008865FF /* DetailViewController.swift in Sources */,
 				3DD887911F029304005A2438 /* UIImageViewX.swift in Sources */,
 				3D5DAEB71EFB0D1100D650EA /* XAxisFormatter.swift in Sources */,
+				3DD887AB1F0FB399005A2438 /* ActionCollectionViewCell.swift in Sources */,
 				3DD887921F029304005A2438 /* UILabelX.swift in Sources */,
 				41B61AE71EE5A3F9008865FF /* AppDelegate.swift in Sources */,
 				41B61AFD1EE71A68008865FF /* PatientRootTableViewCell.swift in Sources */,
+				3DD8880A1F13CF19005A2438 /* ActionTableViewCell.swift in Sources */,
 				3D0DC6021EF041DC0011CB7D /* LoginViewController.swift in Sources */,
 				3DD887931F029304005A2438 /* UISliderX.swift in Sources */,
+				3DD887F81F0FCE68005A2438 /* APLSectionTopToBottomFlowLayout.m in Sources */,
 				41B61AFB1EE71764008865FF /* PatientRootTableViewController.swift in Sources */,
 				3DD887961F029304005A2438 /* UIViewControllerX.swift in Sources */,
 				41B61AFF1EE71D69008865FF /* PatientRootUIView.swift in Sources */,
+				3DD887F71F0FCE68005A2438 /* APLExpandableSectionFlowLayout.m in Sources */,
 				3D26334D1EF97B5F00BD3750 /* AddPatientViewController.swift in Sources */,
 				3DD887901F029304005A2438 /* UIButtonX.swift in Sources */,
 				41BBAD461EEB37E9005C9E55 /* PageViewController.swift in Sources */,
+				3DA2A2591F158A4900E7B78D /* ModelViewController.swift in Sources */,
 				3DD887161F019F05005A2438 /* RegisterViewController.swift in Sources */,
 				41B61AF91EE5B4B4008865FF /* LimbSliderDesign.swift in Sources */,
 				3D5DAEB11EFAF40B00D650EA /* ObservedChartView.swift in Sources */,
 				3D2633471EF441D700BD3750 /* SWRevealViewController.m in Sources */,
 				3DD887941F029304005A2438 /* UITextFieldX.swift in Sources */,
+				3DD887F61F0FCE68005A2438 /* APLExpandableCollectionView.m in Sources */,
 				3D2633511EF991E200BD3750 /* SlideOutViewController.swift in Sources */,
 				41BBAD541EEB43FE005C9E55 /* NextDetailViewController.swift in Sources */,
 				3DD887991F029304005A2438 /* UIVisualEffectViewX.swift in Sources */,
@@ -684,6 +725,7 @@
 				41B61B011EE7212F008865FF /* Global.swift in Sources */,
 				3D5DAEAC1EFAF29600D650EA /* StatisticsViewController.swift in Sources */,
 				3DD887981F029304005A2438 /* UIViewXRadialGradient.swift in Sources */,
+				3DD888081F0FD62B005A2438 /* ActionCollectionReusableView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

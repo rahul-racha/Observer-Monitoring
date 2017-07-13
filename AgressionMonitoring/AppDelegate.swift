@@ -13,7 +13,12 @@ import UserNotifications
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     var window: UIWindow?
-
+    var orientationLock = UIInterfaceOrientationMask.landscape
+    
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        return self.orientationLock
+    }
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         registerForPushNotifications(application: application)
@@ -28,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         let rightNavController = splitViewController.viewControllers.last as! UINavigationController
         let detailViewController = rightNavController.topViewController as! DetailViewController
-        
+
 //        if (Manager.patientDetails != nil && Manager.patientDetails!.count > 0) {
 //            detailViewController.patient = Manager.patientDetails![0]//masterViewController.patientDetails[0]
 //        } else {
@@ -37,6 +42,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         //masterViewController.delegatePatient = detailViewController//storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
 
+        let modelVC = storyboard.instantiateViewController(withIdentifier: "ModelViewController") as! ModelViewController
+        modelVC.delegate = detailViewController
         
         detailViewController.navigationItem.leftItemsSupplementBackButton = true
         detailViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem

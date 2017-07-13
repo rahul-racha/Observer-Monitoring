@@ -27,6 +27,10 @@ class PatientRootTableViewController: UITableViewController/*, UNUserNotificatio
         super.viewDidLoad()
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        
+        self.splitViewController?.preferredDisplayMode = UISplitViewControllerDisplayMode.allVisible
+        splitViewController?.preferredPrimaryColumnWidthFraction = 0.30
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -149,6 +153,10 @@ class PatientRootTableViewController: UITableViewController/*, UNUserNotificatio
         headerView.backgroundColor = UIColor.clear
         return headerView
     }
+    
+    //override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+    //}
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PatientRootTableViewCell", for: indexPath) as! PatientRootTableViewCell

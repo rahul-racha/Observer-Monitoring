@@ -9,28 +9,280 @@
 import UIKit
 import Alamofire
 
-class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate/*,PatientRootSelectionDelegate*/ {
+extension DetailViewController: /*APLExpandableSectionFlowLayout*/UICollectionViewDelegateFlowLayout {
     
-    @IBOutlet weak var limbSlider: UISlider!
-    @IBOutlet weak var voiceSlider: UISlider!
-    @IBOutlet weak var pulseSlider: UISlider!
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let padding = sectionInsets.left * CGFloat(itemsPerRow+1)
+        let availableWidth = view.frame.width - padding
+        let widthPerItem = availableWidth / CGFloat(itemsPerRow)
+        
+        return CGSize(width: widthPerItem, height: widthPerItem)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return sectionInsets
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return sectionInsets.left
+    }
+}
+
+extension DetailViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let indexLoc = collectionView.layer.value(forKey: "indexLoc") as? IndexPath else { return 0}
+        
+        print("no of items indexLoc :\(indexLoc)")
+        let sec = indexLoc.section
+        if (!(self.actionList?[sec].isEmpty)!) {
+            print("####no of cells per row:\(actionList![sec].count)####")
+            return actionList![sec].count
+        }
+        return 0
+        
+    }
+    
+    /*func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+        case UICollectionElementKindSectionHeader:
+            let headerView = actionCollectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "actionHeader", for: indexPath) as! ActionCollectionReusableView
+            headerView.sectionName.text = self.actionHeaders[indexPath.section]
+            headerView.expandSupport.layer.setValue(indexPath.section, forKey: "sectionId")
+            headerView.expandSupport.isHidden = true
+             let headerTap = UITapGestureRecognizer(target: self, action: #selector(DetailViewController.headerTapped(_:)))
+             headerTap.numberOfTapsRequired = 1
+             headerView.addGestureRecognizer(headerTap)
+            
+            return headerView
+        default:
+            assert(false, "Unexpected element kind")
+        }
+    }*/
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        /*guard sharing else {
+            return
+        }*/
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseCIdentifier, for: indexPath) as! ActionCollectionViewCell
+        guard let indexLoc = collectionView.layer.value(forKey: "indexLoc") as? IndexPath else { return }
+        print("indexLoc at removal:\(indexLoc.section),\(indexPath.row)")
+        cell.actionView!.backgroundColor = UIColor.purple
+        //if (!self.selectedIndices.contains(IndexPath(row: indexPath.row, section: indexLoc.section))) {
+        self.selectedIndices.remove(IndexPath(row: indexPath.row, section: indexLoc.section))
+        self.updateSharedIndicesCount()
+        //cell.applyViewStatusColor(status: .DESELECTED)
+        //cell.selectedBackgroundView = UIView(frame: cell.bounds)
+        
+        print("after removed indices:\(self.selectedIndices)")
+        //}
+        if ((self.selectedIndices.count < 1) && self.sharing == true) {
+            self.sharing = false
+        }
+        //collectionView.reloadItems(at: [IndexPath(row: indexPath.row, section: indexLoc.section)])
+        if let count = self.actionHeaders?.count {
+        for i in 0..<count {
+            if let cell = self.actionTableView.cellForRow(at: IndexPath(row: 0, section: i)) as? ActionTableViewCell {
+                cell.actionCollectionView.reloadData()
+            }
+        }
+    }
+
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        if (self.sharing == false) {
+            self.sharing = true
+        }
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseCIdentifier, for: indexPath) as! ActionCollectionViewCell
+        /*guard self.sharing else {
+            return
+        }*/
+        
+        guard let indexLoc = collectionView.layer.value(forKey: "indexLoc") as? IndexPath else { return }
+        print("indexLoc:\(indexLoc)")
+        cell.actionView!.backgroundColor = UIColor.green
+        if (self.selectedIndices.contains(IndexPath(row: indexPath.row, section: indexLoc.section))) {
+            self.collectionView(collectionView, didDeselectItemAt: indexPath)
+            return
+        }
+        
+        self.selectedIndices.insert(IndexPath(row: indexPath.row, section: indexLoc.section))
+        self.updateSharedIndicesCount()
+        //cell.applyViewStatusColor(status: .SELECTED)
+        //cell.selectedBackgroundView = UIView(frame: cell.bounds)
+        //collectionView.reloadItems(at: [IndexPath(row: indexPath.row, section: indexLoc.section)])
+        self.reloadActionCells()
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        shouldSelectItemAt indexPath: IndexPath) -> Bool{
+        /*guard self.sharing else {
+            return true
+        }*/
+        return true
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseCIdentifier, for: indexPath) as! ActionCollectionViewCell
+        guard let indexLoc = collectionView.layer.value(forKey: "indexLoc") as? IndexPath else { return cell }
+        print("indexLoc:\(indexLoc)")
+        let sec = indexLoc.section
+        cell.actionName.text = self.actionList?[sec][indexPath.row]
+        cell.actionName.numberOfLines = 0
+        //print("********label:\(self.actionList?[sec][indexPath.row])********")
+        //cell.applyViewStatusColor(status: .DESELECTED)
+        //cell.selectedBackgroundView = UIView(frame: cell.bounds)
+        if (self.selectedIndices.contains(IndexPath(row: indexPath.row, section: sec))) {
+            cell.actionView.backgroundColor/*selectedBackgroundView!.backgroundColor*/ = UIColor.green
+        } else {
+            cell.actionView!.backgroundColor = UIColor.purple
+        }
+        return cell
+        
+    }
+
+    /*func headerTapped(_ gestureRecognizer: UIGestureRecognizer) {
+        //if (self.actionDictionary["id"])
+        self.itemsPerRow = 0
+        let indexPath = IndexPath(row: 0, section: 0)
+        self.actionCollectionView.reloadItems(at: [indexPath])
+    }*/
+}
+
+extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if (actionHeaders != nil) {
+        if let heading = actionHeaders?[section] {
+        return heading
+        }
+        }
+        return nil
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        if actionHeaders != nil {
+            if let count = actionHeaders?.count {
+                return count
+            }
+        }
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if self.actionList != nil {
+            //if self.actionList![section].count < 5 {
+                return 1
+            //} else {
+            //    return 2
+            //}
+        }
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = actionTableView.dequeueReusableCell(withIdentifier: self.reuseTIdentifier, for: indexPath) as! ActionTableViewCell
+        cell.frame = tableView.bounds
+        cell.layoutIfNeeded()
+        cell.actionCollectionView.reloadData()
+        if let layout = cell.actionCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.scrollDirection = .horizontal
+        }
+        cell.collectionViewHeight.constant = 200//cell.actionCollectionView.collectionViewLayout.collectionViewContentSize.height
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView,
+                   willDisplayCell cell: UITableViewCell,
+                   forRowAtIndexPath indexPath: NSIndexPath) {
+        guard let tableViewCell = cell as? ActionTableViewCell else { return }
+        tableViewCell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, forRow: indexPath.row, forSection: indexPath.section)
+        tableViewCell.collectionViewOffset = storedOffsets[indexPath.section][indexPath.row] ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView,
+                            didEndDisplayingCell cell: UITableViewCell,
+                            forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        guard let tableViewCell = cell as? ActionTableViewCell else { return }
+        
+        storedOffsets[indexPath.section][indexPath.row] = tableViewCell.collectionViewOffset
+    }
+
+    
+}
+
+class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate,  UITextViewDelegate/*,PatientRootSelectionDelegate*/ {
+    
+    @IBOutlet weak var actionTableView: UITableView!
+    fileprivate let reuseTIdentifier = "actionTableCell"
+    fileprivate let reuseCIdentifier = "actionCollectionCell"
+    fileprivate let sectionInsets = UIEdgeInsets(top: 2, left: 10, bottom: 2, right: 10)
+    fileprivate var itemsPerRow = 5
+    @IBOutlet weak var commentTextView: UITextView!
+    var actionTimeStamp: String?
+    var observerParameters: Dictionary<String,Any>?
+    /*
+    var section1: String? // = ["A","B","C","D","E","F","G","H","I","J","K"]
+    var section2: String? // = ["A1","B1","C1","D1","E1"]
+    var section3: String? //= ["A2","B2","C2","D2","E2","F2","G2","H2","I2","J2","K2"]
+    var section4: String? //= ["G3","H3","I3","J3","K3"]
+    */
+    fileprivate var actionList: [[String]]?
+    fileprivate var storedOffsets: [[CGFloat?]] = Array(repeating: Array(repeating:0, count:3), count: 4)
+    
+    //fileprivate var actionDictionary: [Int:String]?
+    
+    
+    fileprivate var actionHeaders: [String]? /*= ["Physical-Aggressive", "Physical-NonAggressive", "Verbal-Aggressive", "Verbal-NonAggressive"]*/
+    
+    fileprivate var selectedIndices = Set<IndexPath>()
+    @IBOutlet weak var seclectedCount: UILabel!
+    @IBOutlet weak var sendActionButton: UIButtonX!
+    
+    @IBOutlet weak var stackHeader: UIView!
+    
+    var sharing: Bool = false {
+        didSet{
+            if let count = self.actionHeaders?.count {
+                for i in 0..<count {
+                    if let cell = self.actionTableView.cellForRow(at: IndexPath(row: 0, section: i)) as? ActionTableViewCell {
+                        cell.actionCollectionView.allowsMultipleSelection = sharing
+                        cell.actionCollectionView.selectItem(at: nil, animated: true, scrollPosition: UICollectionViewScrollPosition())
+                    }
+                }
+            }
+            self.selectedIndices.removeAll(keepingCapacity: false)
+            self.actionTimeStamp = self.getTimestamp()
+            //self.sendActionButton.isHidden = false
+            //self.seclectedCount.isHidden = false
+            //guard let _ = self.sendActionButton else {
+            //    return
+            //}
+            
+            //guard sharing else {
+            //    self.sendActionButton.isHidden = true
+            //    return
+            //}
+            
+            self.updateSharedIndicesCount()
+            
+            
+        }
+    }
+    
+    
     var patient: [String:Any]?
-    var angerStatus:String?
-    var voiceStatus:String?
-    var limbStatus:String?
-    var controlFlag: Bool?
-    var holdAngerChange: Bool?
-    var holdVoiceChange: Bool?
-    var holdLimbChange: Bool?
-    var timeConst: Int = 10
-    var seconds: Int?
-    var timer = Timer()
-    var prevPulseVal: Int?
-    var prevLimbVal: Int?
-    var prevVoiceVal: Int?
-    var stopPrepObs: Bool?
-    var sliderTimeStamp: String?
-    
     var holdLimbTap: Bool?
     var holdVoiceTap: Bool?
     var holdPulseTap: Bool?
@@ -38,14 +290,11 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     //var pc: PatientRootTableViewController!
     //let pc = PatientRootTableViewController()
     
-    @IBOutlet weak var timerText: UILabel!
-    @IBOutlet weak var countdown: UILabel!
+
     @IBOutlet weak var picture: UIImageView!
     @IBOutlet weak var age: UILabel!
     @IBOutlet weak var gender: UILabel!
     @IBOutlet weak var detailsView: UIView!
-    @IBOutlet weak var cancel: UIButton!
-    @IBOutlet weak var send: UIButton!
     @IBOutlet weak var stableButton: UIButton!
     @IBOutlet weak var statisticButton: UIButton!
     
@@ -58,34 +307,30 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         super.viewDidLoad()
         //let pc = PatientRootTableViewController()
         //pc.delegatePatient = self
-        self.seconds = self.timeConst
-        self.timerText.text = " seconds remaing to submit the change."
+        //self.commentTextView.
+        self.commentTextView.delegate = self
+        if !(self.commentTextView?.text.isEmpty)!  {
+            self.commentTextView.textColor = UIColor.black
+        } else {
+            self.commentTextView.text = "write your observations"
+            self.commentTextView.textColor = UIColor.lightGray
+        }
+
+      /*
+        actionDictionary = [
+            ["id":0, "values":section1, "areCellsShown":true ],
+            ["id":1, "values":section2, "areCellsShown":true],
+            ["id":2, "values":section3, "areCellsShown":true],
+            ["id":3, "values":section4, "areCellsShown":true],
+        ]
+*/
+        
+        self.sendActionButton.isHidden = true
+        self.seclectedCount.isHidden = true
         
         self.statisticButton.layer.cornerRadius = self.statisticButton.frame.size.width/14
         self.stableButton.layer.cornerRadius = self.stableButton.frame.size.width/14
         self.stableButton.isHidden = false
-        
-        self.timerText.isHidden = true
-        self.countdown.isHidden = true
-        
-        self.cancel.layer.cornerRadius = self.cancel.frame.width/14
-        self.send.layer.cornerRadius = self.send.frame.width/14
-        self.cancel.isHidden = true
-        self.send.isHidden = true
-        // Do any additional setup after loading the view, typically from a nib.
-        self.controlFlag = false
-        self.holdLimbChange = false
-        self.holdVoiceChange = false
-        self.holdAngerChange = false
-        self.stopPrepObs = false
-        self.initSliders(p:0,v:0,l:0)
-        self.prevLimbVal = Int(roundf(self.limbSlider.value))
-        self.prevPulseVal = Int(roundf(self.pulseSlider.value))
-        self.prevVoiceVal = Int(roundf(self.voiceSlider.value))
-        
-        self.holdVoiceTap = false
-        self.holdLimbTap = false
-        self.holdPulseTap = false
         
         self.configurePic()
         self.configureView()
@@ -94,21 +339,16 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         let imageTap = UITapGestureRecognizer(target: self, action: #selector(DetailViewController.imageTapped(_:)))
         imageTap.numberOfTapsRequired = 1
         self.picture.addGestureRecognizer(imageTap)
-        
-        let doubleTapPulse = UITapGestureRecognizer(target: self, action: #selector(DetailViewController.pulseSliderTapped(_:)))
-        doubleTapPulse.numberOfTapsRequired = 2
-        self.pulseSlider.addGestureRecognizer(doubleTapPulse)
-        
+
+        /*
         let doubleTapVoice = UITapGestureRecognizer(target: self, action: #selector(DetailViewController.voiceSliderTapped(_:)))
         doubleTapVoice.numberOfTapsRequired = 2
         self.voiceSlider.addGestureRecognizer(doubleTapVoice)
+         */
         
-        let doubleTapLimb = UITapGestureRecognizer(target: self, action: #selector(DetailViewController.limbSliderTapped(_:)))
-        doubleTapLimb.numberOfTapsRequired = 2
-        self.limbSlider.addGestureRecognizer(doubleTapLimb)
         
         self.splitViewController?.preferredDisplayMode = UISplitViewControllerDisplayMode.allVisible
-        
+        splitViewController?.preferredPrimaryColumnWidthFraction = 0.31
         //let minimumWidth =  min((splitViewController?.view.bounds)!.width,(splitViewController?.view.bounds)!.height)
         //if ((splitViewController?.view.bounds)!.width < (splitViewController?.view.bounds)!.height) {
         //    splitViewController?.preferredPrimaryColumnWidthFraction = 0.25//*(splitViewController?.view.bounds)!.width
@@ -121,6 +361,38 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         //splitViewController?.preferredPrimaryColumnWidthFraction = 0.2*minimumWidth
         //splitViewController?.minimumPrimaryColumnWidth = minimumWidth / (3*100);
         //splitViewController?.maximumPrimaryColumnWidth = minimumWidth/3;
+        
+        let parameters: Parameters = [:]
+        Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/getActionParameters.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300).validate(contentType: ["application/json"]).responseJSON { response in
+            
+            if let data = response.data {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! Dictionary<String,Any>
+                    self.actionHeaders = json["sections"] as? [String]
+                    if let actionDict = json["actions"]  as? Dictionary<String,Any> {
+                        if 4 == actionDict.count {
+                    let section1 = actionDict[(self.actionHeaders?[0])!] as? [String]
+                    let section2 = actionDict[(self.actionHeaders?[1])!] as? [String]
+                    let section3 = actionDict[(self.actionHeaders?[2])!] as? [String]
+                    let section4 = actionDict[(self.actionHeaders?[3])!] as? [String]
+                    self.actionList = [section1!,section2!,section3!,section4!]
+                    //self.constructActionDict(sectionCount: actionDict.count)
+                    DispatchQueue.main.async(execute: {
+                        self.actionTableView.reloadData()
+                    })
+                    }
+                    }
+                }
+                catch{
+                    print("error serializing JSON: \(error)")
+                }
+            }
+        }
+
+        //self.stackHeader.backgroundColor = UIColor.
+        actionTableView.rowHeight = UITableViewAutomaticDimension
+        actionTableView.estimatedRowHeight = 240
+        
         pickOption.append(contentsOf: self.locationSet.sorted())
         self.initPicker()
         
@@ -131,37 +403,105 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         // Dispose of any resources that can be recreated.
     }
     
+    /*func constructActionDict(sectionCount: Int) {
+        for i in 0..<sectionCount {
+            if let list = self.actionList?[i] {
+            for j in 0..<list.count {
+                //self.actionDictionary?.updateValue(list[j], forKey: IndexPath(row: j, section: i))
+                let key = (i*10)+j
+                self.actionDictionary?[key] = list[j]
+                print("@@@@@@indexPath:\(IndexPath(row: j, section: i)),value: \(list[j])@@@@@@")
+                print(self.actionDictionary?[key])
+            }
+        }
+        }
+        print("final dict:\(self.actionDictionary)")
+    }*/
+    
+    func getTimestamp() -> String {
+        let dateFormatter : DateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let date = Date()
+        let dateString = dateFormatter.string(from: date)
+        let _ = date.timeIntervalSince1970
+        return dateString
+    }
+    
+    func updateSharedIndicesCount() {
+        self.seclectedCount.textColor = UIColor.purple
+        self.seclectedCount.text = "\(self.selectedIndices.count) actions selected"
+        self.seclectedCount.sizeToFit()
+        print("selected indices:\(self.selectedIndices)")
+        if self.selectedIndices.count > 0 {
+            self.seclectedCount.isHidden = false
+            self.sendActionButton.isHidden = false
+        } else {
+            self.seclectedCount.isHidden = true
+            self.sendActionButton.isHidden = true
+        }
+    }
+    
+    func prepareToSendData() {
+        var selectedParameters = [String]()
+        //if let selList = self.selectedIndices? {
+        for idx in self.selectedIndices {
+            //print("action dict:\(self.actionDictionary)")
+            //let key = (idx.section*10)+(idx.row)
+            //if let _ = self.actionDictionary?.index(forKey: key) {
+            //    selectedParameters.append((self.actionDictionary?[key])!)
+            //}
+            selectedParameters.append((self.actionList?[idx.section][idx.row])!)
+        }
+        //}
+        self.sendObservation(selectedParameters: selectedParameters)
+    }
+    
+    @IBAction func share(_ sender: Any) {
+        guard !self.selectedIndices.isEmpty else {
+            self.sharing = !self.sharing
+            return
+        }
+        
+        guard sharing else { return }
+        self.prepareToSendData()
+    }
+    
+    func reloadActionCells() {
+        if let count = self.actionHeaders?.count {
+            for i in 0..<count {
+                if let cell = self.actionTableView.cellForRow(at: IndexPath(row: 0, section: i)) as? ActionTableViewCell {
+                    cell.actionCollectionView.reloadData()
+                }
+            }
+        }
+    }
+    
+    @IBAction func sendStableStatus(_ sender: Any) {
+        self.sharing = false
+        self.reloadActionCells()
+        self.sendObservation(selectedParameters: ["stable"])
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "modelSegue" {
+            if let destinationController = segue.destination as? ModelViewController {
+                destinationController.delegate = self
+                if let data = self.commentTextView?.text {
+                    destinationController.data = data
+                } else {
+                    destinationController.data = nil
+                }
+            }
+        }
+    }
     
     func imageTapped(_ gestureRecognizer: UIGestureRecognizer) {
         let graphController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "NextDetailViewController") as! NextDetailViewController
         self.present(graphController, animated: true, completion: nil)
     }
     
-    func pulseSliderTapped(_ gestureRecognizer: UIGestureRecognizer) {
-        self.holdPulseTap = true
-        self.updatePulse()
-    }
     
-    func voiceSliderTapped(_ gestureRecognizer: UIGestureRecognizer) {
-        self.holdVoiceTap = true
-        self.updateVoice()
-    }
-    
-    func limbSliderTapped(_ gestureRecognizer: UIGestureRecognizer) {
-        self.holdLimbTap = true
-        self.updateLimbs()
-    }
-    
-    
-    func initSliders(p: Int, v: Int, l: Int) {
-        self.pulseSlider.value = Float(p)
-        self.limbSlider.value = Float(l)
-        self.voiceSlider.value = Float(v)
-        self.getAngerStatus()
-        self.getLimbStatus()
-        self.getVoiceStatus()
-    }
-    
+    /*
     func resetFlags() {
         self.controlFlag = false
         self.holdAngerChange = false
@@ -174,19 +514,19 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         self.holdLimbTap = false
         //self.timer = Timer()
     }
-    
+    */
     func configurePic() {
         self.picture.image = #imageLiteral(resourceName: "labimg")
-        self.picture.layer.cornerRadius = self.picture.frame.size.width/2
+        self.picture.layer.cornerRadius = self.detailsView.frame.size.width / 10//self.picture.frame.size.width/10
         self.picture.clipsToBounds = true
         self.picture.layer.borderColor = UIColor.gray.cgColor
-        self.picture.layer.borderWidth = 2
+        self.picture.layer.borderWidth = 1
     }
     
     func configureView() {
         self.detailsView.layer.cornerRadius = self.detailsView.frame.size.width / 10
         self.detailsView.clipsToBounds = true
-        self.detailsView.layer.borderWidth = 5.0
+        self.detailsView.layer.borderWidth = 3.0
         if (patient != nil) {
             self.detailsView.layer.borderColor = (patient?["status_color"] as! UIColor).cgColor
         } else {
@@ -245,19 +585,47 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     }
     
     
-    func getTimestamp() -> String {
-        let dateFormatter : DateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let date = Date()
-        let dateString = dateFormatter.string(from: date)
-        let _ = date.timeIntervalSince1970
-        return dateString
+    
+    func sendObservation(selectedParameters: [String]) {
+        
+        var actionString = "["
+        for param in selectedParameters {
+            actionString = actionString+param+","
+        }
+        actionString = actionString+"]"
+        
+        var cmt: String? = nil
+        if (self.commentTextView.text != "write your observations") {
+            cmt = self.commentTextView.text!
+        }
+        
+        let parameters: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "start_time": self.actionTimeStamp!, "comment": (cmt != nil) ? cmt! : cmt, "parameters": actionString]
+        print("para:\(parameters)")
+        
+        
+        Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/storeObservedParameters.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300)/*.validate(contentType: ["application/json"])*/.responseData { response in
+            DispatchQueue.main.async(execute: {
+                if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                    print("Data: \(utf8Text)")
+                    if utf8Text.range(of:"successs") != nil{
+                        self.displayAlertMessage(message: "Submitted :)")
+                    } else {
+                        // Perform ACTION
+                        self.displayAlertMessage(message: "Something went wrong :(")
+                    }
+                    
+                } else {
+                    self.displayAlertMessage(message: "Server response is empty")
+                }
+                
+            })
+        }
     }
 
-    @IBAction func updateLimbAction(_ sender: Any) {
-        self.updateLimbs()
-    }
     
+    
+    
+   /*
     func updateLimbs() {
         let status = self.limbStatus
         self.getLimbStatus()
@@ -284,111 +652,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             }
         }
     }
-    
-    func getLimbStatus() {
-        limbSlider.value = roundf(limbSlider.value)
-        if (limbSlider.value == 0) {
-            limbSlider.thumbTintColor = UIColor.green
-            limbSlider.minimumTrackTintColor = UIColor.green
-            self.limbStatus = "stable"
-//        } else if (limbSlider.value == 1) {
-//            limbSlider.thumbTintColor = UIColor.yellow
-//            limbSlider.minimumTrackTintColor = UIColor.yellow
-//            self.limbStatus = "slightly aggressive"
-        } else if (limbSlider.value == 1) {
-            limbSlider.thumbTintColor = UIColor.red
-            limbSlider.minimumTrackTintColor = UIColor.red
-            self.limbStatus = "aggressive"
-        } else {
-            limbSlider.thumbTintColor = UIColor.gray
-            limbSlider.minimumTrackTintColor = UIColor.lightGray
-            self.limbStatus = "unknown"
-        }
-    }
-
-    @IBAction func updateVoiceAction(_ sender: Any) {
-        self.updateVoice()
-    }
-    
-    func updateVoice() {
-        let status = self.voiceStatus
-        self.getVoiceStatus()
-        
-        if ((self.pickerTextField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)!) {
-            //let obj = Manage()
-            self.displayAlertMessage(message: "Location cannot be empty")
-            return
-        }
-        
-        if (self.holdVoiceChange == false) {
-            self.holdVoiceChange = true
-            let prevStatus = status
-            self.prevVoiceVal = Int(roundf(self.voiceSlider.value))
-            if (self.stopPrepObs == false) {
-                let wait = DispatchTime.now() + 3
-                DispatchQueue.main.asyncAfter(deadline: wait) {
-                    // Your code with delay
-                    if ((prevStatus != self.voiceStatus) || self.holdVoiceTap == true) {
-                        self.prepareObservation(timestamp: self.getTimestamp())
-                    }
-                    //self.holdVoiceChange = false
-                }
-            }
-        }
-    }
-    
-    func getVoiceStatus() {
-        voiceSlider.value = roundf(voiceSlider.value)
-        if (voiceSlider.value == 0) {
-            voiceSlider.thumbTintColor = UIColor.green
-            voiceSlider.minimumTrackTintColor = UIColor.green
-            self.voiceStatus = "stable"
-//        } else if (voiceSlider.value == 1) {
-//            voiceSlider.thumbTintColor = UIColor.yellow
-//            voiceSlider.minimumTrackTintColor = UIColor.yellow
-//            self.voiceStatus = "slightly aggressive"
-        } else if (voiceSlider.value == 1) {
-            voiceSlider.thumbTintColor = UIColor.red
-            voiceSlider.minimumTrackTintColor = UIColor.red
-            self.voiceStatus = "aggressive"
-        } else {
-            voiceSlider.thumbTintColor = UIColor.gray
-            voiceSlider.minimumTrackTintColor = UIColor.lightGray
-            self.voiceStatus = "unknown"
-        }
-
-    }
-    
-    @IBAction func updatePulseAction(_ sender: Any) {
-        self.updatePulse()
-    }
-    
-    func updatePulse() {
-        let status = self.angerStatus
-        self.getAngerStatus()
-        
-        if ((self.pickerTextField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)!) {
-            //let obj = Manage()
-            self.displayAlertMessage(message: "Location cannot be empty")
-            return
-        }
-        
-        if (self.holdAngerChange == false) {
-            self.holdAngerChange = true
-            let prevStatus = status
-            self.prevPulseVal = Int(roundf(self.pulseSlider.value))
-            if (self.stopPrepObs == false) {
-                let wait = DispatchTime.now() + 3
-                DispatchQueue.main.asyncAfter(deadline: wait) {
-                    // Your code with delay
-                    if ((prevStatus != self.angerStatus) || self.holdPulseTap == true) {
-                        self.prepareObservation(timestamp: self.getTimestamp())
-                    }
-                    //self.holdAngerChange = false
-                }
-            }
-        }
-    }
+ 
     
     func getAngerStatus() {
         pulseSlider.value = roundf(pulseSlider.value)
@@ -478,7 +742,8 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             } */
         }
     }
-        
+    */
+ /*
     func sendObservation(timestamp: String, isStableClick: String) -> Bool {
         //print("Checking if run on cancel")
         var result: Bool = true
@@ -545,8 +810,9 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         }
         return result
     }
+ */
     
-    
+  /*
     @IBAction func sendStableStatus(_ sender: Any) {
         let angry = self.pulseSlider.value
         let limbs = self.limbSlider.value
@@ -557,6 +823,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             self.initSliders(p: Int(angry), v: Int(voice), l: Int(limbs))
         }
     }
+    */
     
     func initPicker() {
         let pickerView = UIPickerView()
@@ -603,6 +870,16 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     
 }
 
+extension DetailViewController: CommentEntryDelegate {
+    func commentTextEntered(comment: String) {
+        self.commentTextView.text = comment
+        if (comment == "write your observations") {
+            self.commentTextView.textColor = UIColor.lightGray
+        } else {
+            self.commentTextView.textColor = UIColor.black
+        }
+    }
+}
 /*extension DetailViewController: PatientRootSelectionDelegate {
     
     func patientSelected(patientDetails: [String : Any]) {
