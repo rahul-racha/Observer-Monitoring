@@ -10,54 +10,61 @@ import UIKit
 import Alamofire
 //import UserNotifications
 
-/*protocol PatientRootSelectionDelegate: class {
-    func patientSelected(patientDetails: [String:Any])
-}*/
+protocol PatientRootSelectionDelegate: class {
+    func patientSelected(patientDetails: [String:Any], locationList: [String])
+}
 
-class PatientRootTableViewController: UITableViewController/*, UNUserNotificationCenterDelegate*/,NSURLConnectionDelegate {
+class PatientRootTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate/*, UNUserNotificationCenterDelegate*/,NSURLConnectionDelegate {
 
-    //@IBOutlet var tableView: UITableView!
+    @IBOutlet var tableView: UITableView!
     let cellSpacingHeight: CGFloat = 15
-    //weak var delegatePatient: PatientRootSelectionDelegate?
+    weak var patientDelegate: PatientRootSelectionDelegate?
     var selectedPatient: [String:Any]?
-    var locationSet: Set<String> = []
-    @IBOutlet weak var hamburger: UIBarButtonItem!
+    var locationList: [String] = []
+    //@IBOutlet weak var hamburger: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
-        self.splitViewController?.preferredDisplayMode = UISplitViewControllerDisplayMode.allVisible
-        splitViewController?.preferredPrimaryColumnWidthFraction = 0.30
+        /*if UIDevice.current.orientation == UIDeviceOrientation.landscapeLeft || UIDevice.current.orientation == UIDeviceOrientation.landscapeRight {
+            self.splitViewController?.preferredDisplayMode = UISplitViewControllerDisplayMode.primaryHidden
+        }*/
+        
+        
+        //splitViewController?.preferredPrimaryColumnWidthFraction = 0.30
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        let userid = Int(Manager.userData!["id"] as! String)
-        let role = Manager.userData!["role"] as! String
-        if (Manager.reloadAllCells == true) {
-            // Do any additional setup after loading the view, typically from a nib.
-            let parameters: Parameters = ["userid": userid as Any, "role": role]
-            Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/getPatientDetails.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300).validate(contentType: ["application/json"]).responseJSON { response in
-                
-                if let data = response.data {
-                    do {
-                        let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! Dictionary<String,Any>
-                        Manager.patientDetails = json["patient_details"] as? [Dictionary<String,Any>]
-                        DispatchQueue.main.async(execute: {
-                            self.tableView.reloadData()
-                        })
-                        
-                    }
-                    catch{
-                        //print("error serializing JSON: \(error)")
-                    }
-                }
-            }
-        } /*else {
+        
+        
+//        let userid = Int(Manager.userData!["id"] as! String)
+//        let role = Manager.userData!["role"] as! String
+//        if (Manager.reloadAllCells == true) {
+//            // Do any additional setup after loading the view, typically from a nib.
+//            let parameters: Parameters = ["userid": userid as Any, "role": role]
+//            Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/getPatientDetails.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300).validate(contentType: ["application/json"]).responseJSON { response in
+//                
+//                if let data = response.data {
+//                    do {
+//                        let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! Dictionary<String,Any>
+//                        Manager.patientDetails = json["patient_details"] as? [Dictionary<String,Any>]
+//                        DispatchQueue.main.async(execute: {
+//                            self.tableView.reloadData()
+//                        })
+//                        
+//                    }
+//                    catch{
+//                        //print("error serializing JSON: \(error)")
+//                    }
+//                }
+//            }
+//        }
+        /*else {
             DispatchQueue.main.async(execute: {
                 self.tableView.reloadData()
             })
@@ -68,13 +75,13 @@ class PatientRootTableViewController: UITableViewController/*, UNUserNotificatio
         //tableView.rowHeight = UITableViewAutomaticDimension
         //tableView.estimatedRowHeight = 70
         
-        if (revealViewController() != nil) {
+        /*if (revealViewController() != nil) {
             hamburger.target = revealViewController()
             hamburger.action = #selector(SWRevealViewController.revealToggle(_:))
             //revealViewController().rearViewRevealWidth = 275
             //revealViewController().rightViewRevealWidth  =
             view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        }
+        }*/
     }
 
     override func didReceiveMemoryWarning() {
@@ -88,7 +95,31 @@ class PatientRootTableViewController: UITableViewController/*, UNUserNotificatio
     }*/
     
     @IBAction func refresh(_ sender: Any) {
-        viewDidLoad()
+        //viewDidLoad()
+        let userid = Int(Manager.userData!["id"] as! String)
+        let role = Manager.userData!["role"] as! String
+        if (Manager.reloadAllCells == true) {
+            // Do any additional setup after loading the view, typically from a nib.
+            let parameters: Parameters = ["userid": userid as Any, "role": role]
+            Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/getPatientDetails.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300).validate(contentType: ["application/json"]).responseJSON { response in
+                
+                if let data = response.data {
+                    do {
+                        let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! Dictionary<String,Any>
+                        Manager.patientDetails = json["patient_details"] as? [Dictionary<String,Any>]
+                        self.locationList = json["locations"] as! [String]
+                        DispatchQueue.main.async(execute: {
+                            self.tableView.reloadData()
+                        })
+                        
+                    }
+                    catch{
+                        //print("error serializing JSON: \(error)")
+                    }
+                }
+            }
+        }
+        
     }
     
     
@@ -131,7 +162,7 @@ class PatientRootTableViewController: UITableViewController/*, UNUserNotificatio
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         if(Manager.patientDetails == nil) {
             return 0
@@ -139,16 +170,16 @@ class PatientRootTableViewController: UITableViewController/*, UNUserNotificatio
         return Manager.patientDetails!.count
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
     
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return cellSpacingHeight
     }
 
     // Make the background color show through
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
         headerView.backgroundColor = UIColor.clear
         return headerView
@@ -158,7 +189,7 @@ class PatientRootTableViewController: UITableViewController/*, UNUserNotificatio
         
     //}
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PatientRootTableViewCell", for: indexPath) as! PatientRootTableViewCell
         //print(Manager.patientDetails)
         if(Manager.patientDetails != nil) {
@@ -169,7 +200,6 @@ class PatientRootTableViewController: UITableViewController/*, UNUserNotificatio
             cell.patientName.text = Manager.patientDetails?[indexPath.section]["name"] as? String
             print(cell.patientName.text)
             cell.location.text = Manager.patientDetails?[indexPath.section]["location"] as? String
-            self.locationSet.insert(cell.location.text!)
             let limb_status = Manager.patientDetails?[indexPath.section]["limb_status"] as? String
             let voice_status = Manager.patientDetails?[indexPath.section]["voice_status"] as? String
             //let view = UIView(frame: cell.bounds)
@@ -181,7 +211,7 @@ class PatientRootTableViewController: UITableViewController/*, UNUserNotificatio
             if(limb_status == "stable" && voice_status == "stable") {
                 //cell.status.text = "stable"
                 //cell.causeTime.isHidden = true
-                cell.status.text = "stable"
+                //cell.status.text = "stable"
                 cell.patientStatus(status: PatientRootTableViewCell.Status.stable)
                 Manager.patientDetails?[indexPath.section]["status_color"] = UIColor.green
             } else if (limb_status == "agitated" && voice_status == "agitated") {
@@ -190,7 +220,7 @@ class PatientRootTableViewController: UITableViewController/*, UNUserNotificatio
                 //let endIndex = name?.index((name?.endIndex)!, offsetBy: -4)
                 //let truncated = name?.substring(to: endIndex!)
                 //cell.causeTime.text = truncated
-                cell.status.text = "hands & voice"
+                //cell.status.text = "hands & voice"
                 cell.patientStatus(status: PatientRootTableViewCell.Status.aggressive)
                 Manager.patientDetails?[indexPath.section]["status_color"] = UIColor.red
             } else if (limb_status == "agitated" || voice_status == "agitated") {
@@ -200,10 +230,10 @@ class PatientRootTableViewController: UITableViewController/*, UNUserNotificatio
                     let endIndex = name?.index((name?.endIndex)!, offsetBy: -4)
                     let truncated = name?.substring(to: endIndex!)
                     cell.causeTime.text = truncated*/
-                    cell.status.text = "hands"
+                    //cell.status.text = "hands"
                     
                 } else if voice_status == "agitated" {
-                    cell.status.text = "voice"
+                    //cell.status.text = "voice"
                     /*let name = Manager.patientDetails?[indexPath.row]["voicestatus_timestamp"] as? String
                     let endIndex = name?.index((name?.endIndex)!, offsetBy: -9)
                     let truncated = name?.substring(to: endIndex!)
@@ -213,16 +243,16 @@ class PatientRootTableViewController: UITableViewController/*, UNUserNotificatio
                 cell.patientStatus(status:  PatientRootTableViewCell.Status.partiallyaggressive)
                 Manager.patientDetails?[indexPath.section]["status_color"] = UIColor.yellow
             } else {
-                cell.status.text = "unknown"
+                //cell.status.text = "unknown"
                 cell.patientStatus(status:  PatientRootTableViewCell.Status.unknown)
                 Manager.patientDetails?[indexPath.section]["status_color"] = UIColor.gray
             }
             
             if (indexPath.section == 0) {
                 self.selectedPatient = Manager.patientDetails?[0]
-                performSegue(withIdentifier: "DetailView", sender: self)
+                //performSegue(withIdentifier: "DetailView", sender: self)
             } else if (indexPath.section == Manager.patientDetails!.count - 1) {
-                performSegue(withIdentifier: "DetailView", sender: self)
+                //performSegue(withIdentifier: "DetailView", sender: self)
             }
             
             
@@ -255,7 +285,7 @@ class PatientRootTableViewController: UITableViewController/*, UNUserNotificatio
     
     
     // method to run when table view cell is tapped
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //let cell = tableView.dequeueReusableCell(withIdentifier: "PatientRootTableViewCell", for: indexPath) as! PatientRootTableViewCell
         //cell.layer.borderColor = UIColor.blue.cgColor
         //tableView.cellForRow(at: indexPath)?.textLabel?.textColor = UIColor.white
@@ -269,11 +299,14 @@ class PatientRootTableViewController: UITableViewController/*, UNUserNotificatio
         //if let detailViewController = self.delegatePatient as? DetailViewController {
           //  splitViewController?.showDetailViewController(detailViewController.navigationController!, sender: nil)
         //}
-        performSegue(withIdentifier: "DetailView", sender: self)
+        
+        //performSegue(withIdentifier: "DetailView", sender: self)
+        self.patientDelegate?.patientSelected(patientDetails: self.selectedPatient!, locationList: self.locationList)
+        self.dismiss(animated: true, completion: nil)
     }
 
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    /*override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "DetailView") {
             // initialize new view controller and cast it as your view controller
             let navViewController = segue.destination as? UINavigationController
@@ -283,9 +316,13 @@ class PatientRootTableViewController: UITableViewController/*, UNUserNotificatio
             dVC.locationSet = dVC.locationSet.union(self.locationSet)
             
         }
+    }*/
+
+    @IBAction func dismissPatientRootView(_ sender: Any) {
+        self.patientDelegate?.patientSelected(patientDetails: [:], locationList: self.locationList)
+        self.dismiss(animated: true, completion: nil)
     }
-
-
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -331,4 +368,14 @@ class PatientRootTableViewController: UITableViewController/*, UNUserNotificatio
     }
     */
 
+}
+
+
+extension PatientRootTableViewController: UISplitViewControllerDelegate {
+    func splitViewController(_ svc: UISplitViewController, shouldHide vc: UIViewController, in orientation: UIInterfaceOrientation) -> Bool {
+        //if orientation.isLandscape {
+            print("IS THIS CALLED?")
+            return true
+        //}
+    }
 }

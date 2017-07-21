@@ -9,248 +9,44 @@
 import UIKit
 import Alamofire
 
-extension DetailViewController: /*APLExpandableSectionFlowLayout*/UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let padding = sectionInsets.left * CGFloat(itemsPerRow+1)
-        let availableWidth = view.frame.width - padding
-        let widthPerItem = availableWidth / CGFloat(itemsPerRow)
-        
-        return CGSize(width: widthPerItem, height: widthPerItem)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return sectionInsets
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return sectionInsets.left
-    }
-}
-
-extension DetailViewController: UICollectionViewDataSource, UICollectionViewDelegate {
-
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let indexLoc = collectionView.layer.value(forKey: "indexLoc") as? IndexPath else { return 0}
-        
-        print("no of items indexLoc :\(indexLoc)")
-        let sec = indexLoc.section
-        if (!(self.actionList?[sec].isEmpty)!) {
-            print("####no of cells per row:\(actionList![sec].count)####")
-            return actionList![sec].count
-        }
-        return 0
-        
-    }
-    
-    /*func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        switch kind {
-        case UICollectionElementKindSectionHeader:
-            let headerView = actionCollectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "actionHeader", for: indexPath) as! ActionCollectionReusableView
-            headerView.sectionName.text = self.actionHeaders[indexPath.section]
-            headerView.expandSupport.layer.setValue(indexPath.section, forKey: "sectionId")
-            headerView.expandSupport.isHidden = true
-             let headerTap = UITapGestureRecognizer(target: self, action: #selector(DetailViewController.headerTapped(_:)))
-             headerTap.numberOfTapsRequired = 1
-             headerView.addGestureRecognizer(headerTap)
-            
-            return headerView
-        default:
-            assert(false, "Unexpected element kind")
-        }
-    }*/
-    
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        /*guard sharing else {
-            return
-        }*/
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseCIdentifier, for: indexPath) as! ActionCollectionViewCell
-        guard let indexLoc = collectionView.layer.value(forKey: "indexLoc") as? IndexPath else { return }
-        print("indexLoc at removal:\(indexLoc.section),\(indexPath.row)")
-        cell.actionView!.backgroundColor = UIColor.purple
-        //if (!self.selectedIndices.contains(IndexPath(row: indexPath.row, section: indexLoc.section))) {
-        self.selectedIndices.remove(IndexPath(row: indexPath.row, section: indexLoc.section))
-        self.updateSharedIndicesCount()
-        //cell.applyViewStatusColor(status: .DESELECTED)
-        //cell.selectedBackgroundView = UIView(frame: cell.bounds)
-        
-        print("after removed indices:\(self.selectedIndices)")
-        //}
-        if ((self.selectedIndices.count < 1) && self.sharing == true) {
-            self.sharing = false
-        }
-        //collectionView.reloadItems(at: [IndexPath(row: indexPath.row, section: indexLoc.section)])
-        if let count = self.actionHeaders?.count {
-        for i in 0..<count {
-            if let cell = self.actionTableView.cellForRow(at: IndexPath(row: 0, section: i)) as? ActionTableViewCell {
-                cell.actionCollectionView.reloadData()
-            }
-        }
-    }
-
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        if (self.sharing == false) {
-            self.sharing = true
-        }
-        
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseCIdentifier, for: indexPath) as! ActionCollectionViewCell
-        /*guard self.sharing else {
-            return
-        }*/
-        
-        guard let indexLoc = collectionView.layer.value(forKey: "indexLoc") as? IndexPath else { return }
-        print("indexLoc:\(indexLoc)")
-        cell.actionView!.backgroundColor = UIColor.green
-        if (self.selectedIndices.contains(IndexPath(row: indexPath.row, section: indexLoc.section))) {
-            self.collectionView(collectionView, didDeselectItemAt: indexPath)
-            return
-        }
-        
-        self.selectedIndices.insert(IndexPath(row: indexPath.row, section: indexLoc.section))
-        self.updateSharedIndicesCount()
-        //cell.applyViewStatusColor(status: .SELECTED)
-        //cell.selectedBackgroundView = UIView(frame: cell.bounds)
-        //collectionView.reloadItems(at: [IndexPath(row: indexPath.row, section: indexLoc.section)])
-        self.reloadActionCells()
-        
-    }
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        shouldSelectItemAt indexPath: IndexPath) -> Bool{
-        /*guard self.sharing else {
-            return true
-        }*/
-        return true
-    }
-    
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseCIdentifier, for: indexPath) as! ActionCollectionViewCell
-        guard let indexLoc = collectionView.layer.value(forKey: "indexLoc") as? IndexPath else { return cell }
-        print("indexLoc:\(indexLoc)")
-        let sec = indexLoc.section
-        cell.actionName.text = self.actionList?[sec][indexPath.row]
-        cell.actionName.numberOfLines = 0
-        //print("********label:\(self.actionList?[sec][indexPath.row])********")
-        //cell.applyViewStatusColor(status: .DESELECTED)
-        //cell.selectedBackgroundView = UIView(frame: cell.bounds)
-        if (self.selectedIndices.contains(IndexPath(row: indexPath.row, section: sec))) {
-            cell.actionView.backgroundColor/*selectedBackgroundView!.backgroundColor*/ = UIColor.green
-        } else {
-            cell.actionView!.backgroundColor = UIColor.purple
-        }
-        return cell
-        
-    }
-
-    /*func headerTapped(_ gestureRecognizer: UIGestureRecognizer) {
-        //if (self.actionDictionary["id"])
-        self.itemsPerRow = 0
-        let indexPath = IndexPath(row: 0, section: 0)
-        self.actionCollectionView.reloadItems(at: [indexPath])
-    }*/
-}
-
-extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if (actionHeaders != nil) {
-        if let heading = actionHeaders?[section] {
-        return heading
-        }
-        }
-        return nil
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        if actionHeaders != nil {
-            if let count = actionHeaders?.count {
-                return count
-            }
-        }
-        return 0
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.actionList != nil {
-            //if self.actionList![section].count < 5 {
-                return 1
-            //} else {
-            //    return 2
-            //}
-        }
-        return 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = actionTableView.dequeueReusableCell(withIdentifier: self.reuseTIdentifier, for: indexPath) as! ActionTableViewCell
-        cell.frame = tableView.bounds
-        cell.layoutIfNeeded()
-        cell.actionCollectionView.reloadData()
-        if let layout = cell.actionCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.scrollDirection = .horizontal
-        }
-        cell.collectionViewHeight.constant = 200//cell.actionCollectionView.collectionViewLayout.collectionViewContentSize.height
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView,
-                   willDisplayCell cell: UITableViewCell,
-                   forRowAtIndexPath indexPath: NSIndexPath) {
-        guard let tableViewCell = cell as? ActionTableViewCell else { return }
-        tableViewCell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, forRow: indexPath.row, forSection: indexPath.section)
-        tableViewCell.collectionViewOffset = storedOffsets[indexPath.section][indexPath.row] ?? 0
-    }
-    
-    func tableView(_ tableView: UITableView,
-                            didEndDisplayingCell cell: UITableViewCell,
-                            forRowAtIndexPath indexPath: NSIndexPath) {
-        
-        guard let tableViewCell = cell as? ActionTableViewCell else { return }
-        
-        storedOffsets[indexPath.section][indexPath.row] = tableViewCell.collectionViewOffset
-    }
-
-    
-}
-
-class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate,  UITextViewDelegate/*,PatientRootSelectionDelegate*/ {
+class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate,  UITextViewDelegate {
     
     @IBOutlet weak var actionTableView: UITableView!
+    @IBOutlet weak var commentTextView: UITextView!
+    @IBOutlet weak var hamburger: UIBarButtonItem!
+    @IBOutlet weak var seclectedCount: UILabel!
+    @IBOutlet weak var sendActionButton: UIButtonX!
+    @IBOutlet weak var eventButton: UIButtonX!
+    @IBOutlet weak var clearActionsButton: UIButtonX!
+    @IBOutlet weak var picture: UIImageViewX!
+    //@IBOutlet weak var age: UILabel!
+    //@IBOutlet weak var gender: UILabel!
+    @IBOutlet weak var detailsView: UIViewX!
+    @IBOutlet weak var runningTime: UILabelX!
+    @IBOutlet weak var pickerTextField: UITextFieldX!
+    @IBOutlet weak var commentButton: UIButtonX!
+    
     fileprivate let reuseTIdentifier = "actionTableCell"
     fileprivate let reuseCIdentifier = "actionCollectionCell"
     fileprivate let sectionInsets = UIEdgeInsets(top: 2, left: 10, bottom: 2, right: 10)
-    fileprivate var itemsPerRow = 5
-    @IBOutlet weak var commentTextView: UITextView!
+    fileprivate var itemsPerRow = 10
+    fileprivate var actionList = [[String?]](repeating: [String?](repeating:nil, count:12), count: 4)
+    fileprivate var actionParameterList = [[String?]](repeating: [String?](repeating:nil, count:12), count: 4)
+    fileprivate var actionParameterIds = [[Int?]](repeating: [Int?](repeating:nil, count:12), count: 4)
+    fileprivate var storedOffsets: [[CGFloat?]] = Array(repeating: Array(repeating:0, count:3), count: 4)
+    fileprivate var actionHeaders: [String]?
+    fileprivate var selectedIndices = Set<IndexPath>()
+    
     var actionTimeStamp: String?
     var observerParameters: Dictionary<String,Any>?
-    /*
-    var section1: String? // = ["A","B","C","D","E","F","G","H","I","J","K"]
-    var section2: String? // = ["A1","B1","C1","D1","E1"]
-    var section3: String? //= ["A2","B2","C2","D2","E2","F2","G2","H2","I2","J2","K2"]
-    var section4: String? //= ["G3","H3","I3","J3","K3"]
-    */
-    fileprivate var actionList: [[String]]?
-    fileprivate var storedOffsets: [[CGFloat?]] = Array(repeating: Array(repeating:0, count:3), count: 4)
-    
-    //fileprivate var actionDictionary: [Int:String]?
-    
-    
-    fileprivate var actionHeaders: [String]? /*= ["Physical-Aggressive", "Physical-NonAggressive", "Verbal-Aggressive", "Verbal-NonAggressive"]*/
-    
-    fileprivate var selectedIndices = Set<IndexPath>()
-    @IBOutlet weak var seclectedCount: UILabel!
-    @IBOutlet weak var sendActionButton: UIButtonX!
-    
-    @IBOutlet weak var stackHeader: UIView!
+    var patient: [String:Any]?
+    //var locationSet: Set<String> = [] //["Room 1", "Room 2", "Room 3", "Room 4", "Room 5"]
+    var pickOption = [String]()
+    var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
+    var cellHeightBooster: CGFloat = 1.5
+    var cellWidthBooster: CGFloat = 1
+    let commentPlaceholder: String = "write your observations"
+    var isStop: Bool = false
     
     var sharing: Bool = false {
         didSet{
@@ -264,6 +60,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             }
             self.selectedIndices.removeAll(keepingCapacity: false)
             self.actionTimeStamp = self.getTimestamp()
+            print("time noted:\(self.actionTimeStamp)")
             //self.sendActionButton.isHidden = false
             //self.seclectedCount.isHidden = false
             //guard let _ = self.sendActionButton else {
@@ -281,74 +78,35 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         }
     }
     
-    
-    var patient: [String:Any]?
-    var holdLimbTap: Bool?
-    var holdVoiceTap: Bool?
-    var holdPulseTap: Bool?
-    
-    //var pc: PatientRootTableViewController!
-    //let pc = PatientRootTableViewController()
-    
-
-    @IBOutlet weak var picture: UIImageView!
-    @IBOutlet weak var age: UILabel!
-    @IBOutlet weak var gender: UILabel!
-    @IBOutlet weak var detailsView: UIView!
-    @IBOutlet weak var stableButton: UIButton!
-    @IBOutlet weak var statisticButton: UIButton!
-    
-    @IBOutlet weak var pickerTextField: UITextField!
-    
-    var locationSet: Set<String> = ["Room 1", "Room 2", "Room 3", "Room 4", "Room 5"]
-    var pickOption = [String]()
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        //let pc = PatientRootTableViewController()
-        //pc.delegatePatient = self
-        //self.commentTextView.
+        self.updateTime()
+        Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true)
         self.commentTextView.delegate = self
         if !(self.commentTextView?.text.isEmpty)!  {
             self.commentTextView.textColor = UIColor.black
         } else {
-            self.commentTextView.text = "write your observations"
+            self.commentTextView.text = self.commentPlaceholder
             self.commentTextView.textColor = UIColor.lightGray
         }
-
-      /*
-        actionDictionary = [
-            ["id":0, "values":section1, "areCellsShown":true ],
-            ["id":1, "values":section2, "areCellsShown":true],
-            ["id":2, "values":section3, "areCellsShown":true],
-            ["id":3, "values":section4, "areCellsShown":true],
-        ]
-*/
         
-        self.sendActionButton.isHidden = true
+        self.enableInterfaceOutlets(flag: true)
+        self.clearActionsButton.isHidden = true
         self.seclectedCount.isHidden = true
         
-        self.statisticButton.layer.cornerRadius = self.statisticButton.frame.size.width/14
-        self.stableButton.layer.cornerRadius = self.stableButton.frame.size.width/14
-        self.stableButton.isHidden = false
-        
-        self.configurePic()
-        self.configureView()
-        self.configureDetails()
+        //self.configurePic()
+        //self.configureView()
+        //self.configureDetails()
 
         let imageTap = UITapGestureRecognizer(target: self, action: #selector(DetailViewController.imageTapped(_:)))
         imageTap.numberOfTapsRequired = 1
         self.picture.addGestureRecognizer(imageTap)
-
+        
+        
         /*
-        let doubleTapVoice = UITapGestureRecognizer(target: self, action: #selector(DetailViewController.voiceSliderTapped(_:)))
-        doubleTapVoice.numberOfTapsRequired = 2
-        self.voiceSlider.addGestureRecognizer(doubleTapVoice)
-         */
-        
-        
         self.splitViewController?.preferredDisplayMode = UISplitViewControllerDisplayMode.allVisible
-        splitViewController?.preferredPrimaryColumnWidthFraction = 0.31
+        splitViewController?.preferredPrimaryColumnWidthFraction = 0.31*/
         //let minimumWidth =  min((splitViewController?.view.bounds)!.width,(splitViewController?.view.bounds)!.height)
         //if ((splitViewController?.view.bounds)!.width < (splitViewController?.view.bounds)!.height) {
         //    splitViewController?.preferredPrimaryColumnWidthFraction = 0.25//*(splitViewController?.view.bounds)!.width
@@ -361,26 +119,52 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         //splitViewController?.preferredPrimaryColumnWidthFraction = 0.2*minimumWidth
         //splitViewController?.minimumPrimaryColumnWidth = minimumWidth / (3*100);
         //splitViewController?.maximumPrimaryColumnWidth = minimumWidth/3;
+        self.startActivityIndicator()
         
-        let parameters: Parameters = [:]
+        var parameters: Parameters = [:]
         Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/getActionParameters.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300).validate(contentType: ["application/json"]).responseJSON { response in
             
             if let data = response.data {
                 do {
                     let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! Dictionary<String,Any>
-                    self.actionHeaders = json["sections"] as? [String]
-                    if let actionDict = json["actions"]  as? Dictionary<String,Any> {
-                        if 4 == actionDict.count {
-                    let section1 = actionDict[(self.actionHeaders?[0])!] as? [String]
-                    let section2 = actionDict[(self.actionHeaders?[1])!] as? [String]
-                    let section3 = actionDict[(self.actionHeaders?[2])!] as? [String]
-                    let section4 = actionDict[(self.actionHeaders?[3])!] as? [String]
-                    self.actionList = [section1!,section2!,section3!,section4!]
-                    //self.constructActionDict(sectionCount: actionDict.count)
-                    DispatchQueue.main.async(execute: {
-                        self.actionTableView.reloadData()
-                    })
-                    }
+                    self.actionHeaders = /*["Physical / Aggressive", "Physical / Non-Aggressive", "Verbal / Aggressive", "Verbal / Non-aggressive"]*/json["sections"] as? [String]
+                    if let actionDict = json["categories"]  as? [Dictionary<String,Any>] {
+                        //print("actioDict:\(actionDict)")
+                        if 0 < actionDict.count && self.actionHeaders?.count == actionDict.count {
+                            for section in 0..<(self.actionHeaders?.count)! {
+                                
+                                let sectionDict = actionDict[section][(self.actionHeaders?[section])!] as! [Dictionary<String,String>]
+                                //let sectionDict = actionDict[(self.actionHeaders?[section])!] as! [Dictionary<String,String>]
+                                for param in 0..<sectionDict.count {
+                                    print("section,row: \(section),\(param)")
+                                    print("**********")
+                                    print(sectionDict[param]["short_name"]!)
+                                    self.actionList[section].insert(sectionDict[param]["short_name"]!, at: param)
+                                    self.actionParameterList[section].insert(sectionDict[param]["parameter_name"]!, at: param)
+                                    //self.actionParameterIds[section].insert(Int(sectionDict[param]["id"]!), at: param)
+                                    // #get the id's as well in a separate list
+                                    //self.actionParameterList?[section][param] = sectionDict[param]["parameter_name"]!
+                                    print("result:\(self.actionList[section][param])")
+                                    /*
+                                     let section1 = actionDict["Physical / Aggressive"/*(self.actionHeaders?[0])!*/] as? [String]
+                                     let section2 = actionDict[(self.actionHeaders?[1])!] as? [String]
+                                     let section3 = actionDict[(self.actionHeaders?[2])!] as? [String]
+                                     let section4 = actionDict[(self.actionHeaders?[3])!] as? [String]
+                                     
+                                     
+                                     self.actionList = [section1!,section2!,section3!,section4!]*/
+                                    //self.constructActionDict(sectionCount: actionDict.count)
+                                    DispatchQueue.main.async(execute: {
+                                        self.actionTableView.reloadData()
+                                        self.getAllPatients()
+                                        self.stopActivityIndicator()
+                                    })
+                                }
+                                print("************size if actionList:\(self.actionList[0].count)")
+                            }
+                            print("final list: \(self.actionList)::::)")
+                            
+                        }
                     }
                 }
                 catch{
@@ -388,12 +172,25 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                 }
             }
         }
+        
+        
+        
 
+        if (revealViewController() != nil) {
+            hamburger.target = revealViewController()
+            hamburger.action = #selector(SWRevealViewController.revealToggle(_:))
+            //revealViewController().rearViewRevealWidth = 275
+            //revealViewController().rightViewRevealWidth  =
+            //view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+        }
+        
         //self.stackHeader.backgroundColor = UIColor.
+        
+        
         actionTableView.rowHeight = UITableViewAutomaticDimension
         actionTableView.estimatedRowHeight = 240
         
-        pickOption.append(contentsOf: self.locationSet.sorted())
+        //pickOption.append(contentsOf: self.locationSet.sorted())
         self.initPicker()
         
     }
@@ -418,14 +215,87 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         print("final dict:\(self.actionDictionary)")
     }*/
     
-    func getTimestamp() -> String {
+    func getAllPatients() {
+        let userid = Int(Manager.userData!["id"] as! String)
+        let role = Manager.userData!["role"] as! String
+        // Do any additional setup after loading the view, typically from a nib.
+        let parameters: Parameters = ["userid": userid as Any, "role": role]
+        Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/getPatientDetails.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300).validate(contentType: ["application/json"]).responseJSON { response in
+            
+            if let data = response.data {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! Dictionary<String,Any>
+                    Manager.patientDetails = json["patient_details"] as? [Dictionary<String,Any>]
+                    self.patient = Manager.patientDetails?[0]
+                    self.pickOption = json["locations"] as! [String]
+                    self.pickOption.sort()
+                    //let paramIds = Manager.patientDetails?[indexPath.section]["stored_param"] as? [String]
+                    DispatchQueue.main.async(execute: {
+                        /*self.configurePic()
+                         self.configureView()
+                         */self.configureDetails()
+                    })
+                    
+                }
+                catch{
+                    //print("error serializing JSON: \(error)")
+                }
+            }
+        }
+    }
+    
+    func startActivityIndicator() {
+        //self.sendActionButton.isEnabled = false
+        //self.eventButton.isEnabled = false
+        self.activityIndicator.center = self.view.center
+        self.activityIndicator.hidesWhenStopped = true
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.whiteLarge
+        self.view.addSubview(self.activityIndicator)
+        UIApplication.shared.beginIgnoringInteractionEvents()
+        self.activityIndicator.startAnimating()
+    }
+    
+    func stopActivityIndicator() {
+        //self.sendActionButton.isEnabled = true
+        //self.eventButton.isEnabled = true
+        UIApplication.shared.endIgnoringInteractionEvents()
+        self.activityIndicator.stopAnimating()
+    }
+    
+    func getTimestamp(forDisplay: Bool = false) -> String {
         let dateFormatter : DateFormatter = DateFormatter()
+        if (forDisplay) {
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        } else {
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSS"
+        }
         let date = Date()
         let dateString = dateFormatter.string(from: date)
         let _ = date.timeIntervalSince1970
         return dateString
     }
+    
+    func updateTime() {
+        self.runningTime.text = self.getTimestamp(forDisplay: true)
+    }
+    
+//    func switchValueDidChange(_ sender: UISwitch!) {
+//        let window = UIApplication.shared.keyWindow!
+//        if (splitViewController?.isViewLoaded)! && splitViewController?.view.window != nil {
+//        //if sender.isOn {
+//            splitViewController?.view.removeFromSuperview()
+//            splitViewController?.viewControllers = NSArray(objects: self.leftNav!, self.leftNav!) as! [UINavigationController]
+//            window.addSubview(self.view)
+//            
+//        } else {
+//            self.view.removeFromSuperview()
+//            self.view.transform = CGAffineTransform.identity
+//            splitViewController?.viewControllers = NSArray(objects: self.leftNav!, self.rightNav!) as! [UIViewController]
+//            window.addSubview((splitViewController?.view)!)
+//            self.view.sizeToFit()
+//            
+//    }
+//    }
     
     func updateSharedIndicesCount() {
         self.seclectedCount.textColor = UIColor.purple
@@ -434,37 +304,13 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         print("selected indices:\(self.selectedIndices)")
         if self.selectedIndices.count > 0 {
             self.seclectedCount.isHidden = false
-            self.sendActionButton.isHidden = false
+            self.clearActionsButton.isHidden = false
         } else {
             self.seclectedCount.isHidden = true
-            self.sendActionButton.isHidden = true
+            self.clearActionsButton.isHidden = true
         }
     }
     
-    func prepareToSendData() {
-        var selectedParameters = [String]()
-        //if let selList = self.selectedIndices? {
-        for idx in self.selectedIndices {
-            //print("action dict:\(self.actionDictionary)")
-            //let key = (idx.section*10)+(idx.row)
-            //if let _ = self.actionDictionary?.index(forKey: key) {
-            //    selectedParameters.append((self.actionDictionary?[key])!)
-            //}
-            selectedParameters.append((self.actionList?[idx.section][idx.row])!)
-        }
-        //}
-        self.sendObservation(selectedParameters: selectedParameters)
-    }
-    
-    @IBAction func share(_ sender: Any) {
-        guard !self.selectedIndices.isEmpty else {
-            self.sharing = !self.sharing
-            return
-        }
-        
-        guard sharing else { return }
-        self.prepareToSendData()
-    }
     
     func reloadActionCells() {
         if let count = self.actionHeaders?.count {
@@ -476,10 +322,127 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         }
     }
     
-    @IBAction func sendStableStatus(_ sender: Any) {
+    func prepareToSendData(actionType: String, isEvent: Bool) -> Bool?{
+        var selectedParameters = [String]()
+        //if let selList = self.selectedIndices? {
+        for idx in self.selectedIndices {
+            //print("action dict:\(self.actionDictionary)")
+            //let key = (idx.section*10)+(idx.row)
+            //if let _ = self.actionDictionary?.index(forKey: key) {
+            //    selectedParameters.append((self.actionDictionary?[key])!)
+            //}
+            selectedParameters.append((self.actionParameterList[idx.section][idx.row])!)
+        }
+        //}
+        return self.sendObservation(selectedParameters: selectedParameters, type: actionType, isEvent: isEvent)
+    }
+
+    func processActions(isSendAction: Bool, response: Bool?) {
+        var resp: Bool? = response
+        if (self.sendActionButton.title(for: .normal) == "Start Action") {
+            if (isSendAction == true) {
+                resp = self.prepareToSendData(actionType: "start event", isEvent: false)
+            }
+                if (resp != nil && resp! == true) {
+                    self.sendActionButton.setTitle("Stop Action", for: .normal)
+                    self.sendActionButton.backgroundColor = UIColor.red
+                    self.eventButton.isEnabled = false
+                    self.isStop = true
+                }
+            
+        } else {
+            self.actionTimeStamp = self.getTimestamp()
+            if (isSendAction == true) {
+            resp = self.prepareToSendData(actionType: "stop event", isEvent: false)
+            }
+                if (resp != nil && resp! == true) {
+                    self.sharing = false
+                    self.reloadActionCells()
+                    self.sendActionButton.setTitle("Start Action", for: .normal)
+                    self.sendActionButton.backgroundColor = UIColor.blue
+                    self.eventButton.isEnabled = true
+                    self.isStop = false
+                }
+            
+        }
+    }
+    
+    @IBAction func share(_ sender: Any) {
+        guard !self.selectedIndices.isEmpty else {
+            self.displayAlertMessage(message: "No actions selected")
+            //self.sharing = !self.sharing
+            return
+        }
+        
+        guard sharing else { return }
+        self.processActions(isSendAction: true, response: nil)
+    }
+    
+    func processEvent(isSendEvent: Bool, response: Bool?) {
+        var resp: Bool? = response
+        if (isSendEvent == true) {
+            resp = self.prepareToSendData(actionType: "single event", isEvent: true)
+        }
+        if (resp != nil && resp! == true) {
+            self.sharing = false
+            self.reloadActionCells()
+        }
+    }
+    
+    @IBAction func shareEvent(_ sender: Any) {
+        guard !self.selectedIndices.isEmpty else {
+            self.displayAlertMessage(message: "No actions selected")
+            //self.sharing = !self.sharing
+            return
+        }
+        
+        guard sharing else { return }
+        self.processEvent(isSendEvent: true, response: nil)
+        
+    }
+    
+    
+    @IBAction func clearActions(_ sender: Any) {
         self.sharing = false
         self.reloadActionCells()
-        self.sendObservation(selectedParameters: ["stable"])
+    }
+
+    
+    func sendPatientState() {
+        var isResponseSuccess: Bool? = nil
+        var cmt: String? = nil
+        if (self.commentTextView.text != self.commentPlaceholder) {
+            cmt = self.commentTextView.text!
+        }
+        
+        var selectedIds = [Int]()
+        for idx in self.selectedIndices {
+            selectedIds.append((self.actionParameterIds[idx.section][idx.row])!)
+        }
+        
+        let parameters: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "comment": (cmt != nil) ? cmt! : cmt as Any, "parameters": selectedIds, "action": "stop"]
+        print("para:\(parameters)")
+        
+        Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/storeObservationState.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300)/*.validate(contentType: ["application/json"])*/.responseData { response in
+            DispatchQueue.main.async(execute: {
+                if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                    print("Data: \(utf8Text)")
+                    if utf8Text.range(of:"successs") != nil{
+                        //self.displayAlertMessage(message: "Submitted :)")
+                        isResponseSuccess = true
+                    } else {
+                        // Perform ACTION
+                        //self.displayAlertMessage(message: "Something went wrong :(")
+                        isResponseSuccess = false
+                    }
+                    
+                } else {
+                    //self.displayAlertMessage(message: "Server response is empty")
+                    isResponseSuccess = false
+                }
+
+            })
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -492,6 +455,13 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                     destinationController.data = nil
                 }
             }
+        } else if (segue.identifier == "patientSegue") {
+            if (self.isStop == true || self.commentTextView.text != self.commentPlaceholder) {
+                //self.sendPatientState()
+            }
+            if let destinationVC = segue.destination as? PatientRootTableViewController {
+                destinationVC.patientDelegate = self
+            }
         }
     }
     
@@ -499,7 +469,6 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         let graphController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "NextDetailViewController") as! NextDetailViewController
         self.present(graphController, animated: true, completion: nil)
     }
-    
     
     /*
     func resetFlags() {
@@ -515,9 +484,18 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         //self.timer = Timer()
     }
     */
+    
+    func enableInterfaceOutlets(flag: Bool) {
+        self.sendActionButton.isEnabled = flag
+        self.eventButton.isEnabled = flag
+        self.clearActionsButton.isEnabled = flag
+        self.commentButton.isEnabled = flag
+        self.pickerTextField.isEnabled = flag
+    }
+    
     func configurePic() {
         self.picture.image = #imageLiteral(resourceName: "labimg")
-        self.picture.layer.cornerRadius = self.detailsView.frame.size.width / 10//self.picture.frame.size.width/10
+        self.picture.layer.cornerRadius = self.picture.frame.size.width/10
         self.picture.clipsToBounds = true
         self.picture.layer.borderColor = UIColor.gray.cgColor
         self.picture.layer.borderWidth = 1
@@ -528,18 +506,49 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         self.detailsView.clipsToBounds = true
         self.detailsView.layer.borderWidth = 3.0
         if (patient != nil) {
-            self.detailsView.layer.borderColor = (patient?["status_color"] as! UIColor).cgColor
+           // self.detailsView.layer.borderColor = (patient?["status_color"] as! UIColor).cgColor
         } else {
             self.detailsView.layer.borderColor = UIColor.white.cgColor
         }
     }
     
-    func configureDetails() {
+    func configureDetails() -> Bool {
+        var isReloadCells: Bool = true
         if (patient != nil) {
-            self.age.text = patient?["age"] as? String
-            self.gender.text = patient?["gender"] as? String
+          /*  if let cmt = self.patient["comment"] as? String {
+                self.commentTextView.text = cmt
+            }
+            if ("stop" == self.patient["action"] as? String && self.patient["action"] as? String != nil) {
+            self.sharing = true
+                if (self.patient["observer_id"] as? String != Int(Manager.userData!["id"] as! String)) {
+                    self.enableInterfaceOutlets(flag: false)
+                    
+                }
+            if let paramIds = self.patient["stored_param"] as? [String] {
+            //if paramIds.count != 0 {
+                for i in 0..<paramIds.count {
+                    for j in 0..<self.actionHeaders?.count {
+                        if let index = self.actionParameterIds[j].indexOf(paramIds[i]) {
+                            self.selectedIndices.insert(IndexPath(row: index, section: j))
+                        }
+                    }
+                }
+
+            //}
+            }
+               self.reloadActionCells()
+               self.sendActionButton.title(for: .normal) == "Stop Action"
+               self.sendActionButton.backgroundColor = UIColor.red
+               self.eventButton.isEnabled = false
+               self.isStop = true
+               isReloadCells = false
+        }
+        */
+            //self.age.text = patient?["age"] as? String
+            //self.gender.text = patient?["gender"] as? String
             self.pickerTextField.text = patient?["location"] as? String
         }
+        return isReloadCells
     }
     
     func displayAlertMessage(message: String) {
@@ -584,22 +593,21 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         pickerTextField.text = pickOption[row]
     }
     
-    
-    
-    func sendObservation(selectedParameters: [String]) {
-        
-        var actionString = "["
+   
+    func sendObservation(selectedParameters: [String], type: String, isEvent: Bool) -> Bool? {
+        var isResponseSuccess: Bool? = nil
+        /*var actionString = "["
         for param in selectedParameters {
             actionString = actionString+param+","
         }
-        actionString = actionString+"]"
+        actionString = actionString+"]"*/
         
         var cmt: String? = nil
-        if (self.commentTextView.text != "write your observations") {
+        if (self.commentTextView.text != self.commentPlaceholder) {
             cmt = self.commentTextView.text!
         }
         
-        let parameters: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "start_time": self.actionTimeStamp!, "comment": (cmt != nil) ? cmt! : cmt, "parameters": actionString]
+        let parameters: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "start_time": self.actionTimeStamp!, "comment": (cmt != nil) ? cmt! : cmt, "parameters": selectedParameters, "action": type]
         print("para:\(parameters)")
         
         
@@ -609,222 +617,28 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                     print("Data: \(utf8Text)")
                     if utf8Text.range(of:"successs") != nil{
                         self.displayAlertMessage(message: "Submitted :)")
+                        isResponseSuccess = true
                     } else {
                         // Perform ACTION
                         self.displayAlertMessage(message: "Something went wrong :(")
+                        isResponseSuccess = false
                     }
                     
                 } else {
                     self.displayAlertMessage(message: "Server response is empty")
+                    isResponseSuccess = false
                 }
                 
+                if (isEvent == true) {
+                    self.processEvent(isSendEvent: false, response: isResponseSuccess)
+                } else {
+                    self.processActions(isSendAction: false, response: isResponseSuccess)
+                }
             })
         }
+        return isResponseSuccess
     }
 
-    
-    
-    
-   /*
-    func updateLimbs() {
-        let status = self.limbStatus
-        self.getLimbStatus()
-        
-        if ((self.pickerTextField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)!) {
-            //let obj = Manage()
-            self.displayAlertMessage(message: "Location cannot be empty")
-            return
-        }
-        
-        if (self.holdLimbChange == false) {
-            self.holdLimbChange = true
-            let prevStatus = status
-            self.prevLimbVal = Int(roundf(self.limbSlider.value))
-            if (self.stopPrepObs == false) {
-                let wait = DispatchTime.now() + 3
-                DispatchQueue.main.asyncAfter(deadline: wait) {
-                    // Your code with delay
-                    if ((prevStatus != self.limbStatus) || self.holdLimbTap == true) {
-                        self.prepareObservation(timestamp: self.getTimestamp())
-                    }
-                    //self.holdLimbChange = false
-                }
-            }
-        }
-    }
- 
-    
-    func getAngerStatus() {
-        pulseSlider.value = roundf(pulseSlider.value)
-        if (pulseSlider.value == 0) {
-            pulseSlider.thumbTintColor = UIColor.green
-            pulseSlider.minimumTrackTintColor = UIColor.green
-            self.angerStatus = "stable"
-        } else if (pulseSlider.value == 1) {
-            pulseSlider.thumbTintColor = UIColor.yellow
-            pulseSlider.minimumTrackTintColor = UIColor.yellow
-            self.angerStatus = "slightly agitated"
-        } else if (pulseSlider.value == 2) {
-            pulseSlider.thumbTintColor = UIColor.red
-            pulseSlider.minimumTrackTintColor = UIColor.red
-            self.angerStatus = "agitated"
-        } else {
-            pulseSlider.thumbTintColor = UIColor.gray
-            pulseSlider.minimumTrackTintColor = UIColor.lightGray
-            self.angerStatus = "unknown"
-        }
-    }
-    
-    func updateTimer() {
-        self.seconds! -= 1
-        self.countdown.text = "\(self.seconds!)"
-        if (self.seconds! <= 0) {
-            self.timer.invalidate()
-            self.stableButton.isHidden = false
-            self.countdown.isHidden = true
-            self.timerText.isHidden = true
-            self.cancel.isHidden = true
-            self.send.isHidden = true
-            self.seconds = self.timeConst
-            self.sendObservation(timestamp: self.sliderTimeStamp!, isStableClick: "false")
-            self.resetFlags()
-        }
-    }
-
-    @IBAction func sendRightAway(_ sender: Any) {
-        //self.allowSend = true
-        self.timer.invalidate()
-        self.stableButton.isHidden = false
-        self.countdown.isHidden = true
-        self.timerText.isHidden = true
-        self.cancel.isHidden = true
-        self.send.isHidden = true
-        self.seconds = self.timeConst
-        if (self.sliderTimeStamp != nil) {
-            self.sendObservation(timestamp: self.sliderTimeStamp!, isStableClick: "false")
-        }
-        self.resetFlags()
-    }
-    
-    
-    @IBAction func cancelSubmit(_ sender: Any) {
-        //self.allowCancel = true
-        self.timer.invalidate()
-        self.stableButton.isHidden = false
-        self.countdown.isHidden = true
-        self.timerText.isHidden = true
-        self.cancel.isHidden = true
-        self.send.isHidden = true
-        self.seconds = self.timeConst
-        self.initSliders(p: self.prevPulseVal!, v: self.prevVoiceVal!, l: self.prevLimbVal!)
-        self.resetFlags()
-    }
-    
-    func prepareObservation(timestamp: String)  {
-        if (self.controlFlag == false) {
-            self.sliderTimeStamp = timestamp
-            self.controlFlag = true
-            self.countdown.text = "\(self.timeConst)"
-            self.stableButton.isHidden = true
-            self.countdown.isHidden = false
-            self.timerText.isHidden = false
-            self.cancel.isHidden = false
-            self.send.isHidden = false
-            self.stopPrepObs = true
-            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(DetailViewController.updateTimer)), userInfo: nil, repeats: true)
-            /*let wait = DispatchTime.now() + 10
-            if (self.allowCancel == false && self.allowSend == false) {
-                DispatchQueue.main.asyncAfter(deadline: wait) {
-                    self.sendObservation(timestamp: timestamp)
-                    //self.initSliders()
-                    self.resetFlags()
-                }
-            } */
-        }
-    }
-    */
- /*
-    func sendObservation(timestamp: String, isStableClick: String) -> Bool {
-        //print("Checking if run on cancel")
-        var result: Bool = true
-        var cause: String = "unknown"
-        if ((self.voiceStatus != "stable" && self.voiceStatus != "unknown") && (self.limbStatus != "stable" && self.limbStatus != "unknown")) {
-            cause = "hands & voice"
-        } else if (self.voiceStatus == "slightly aggressive" || self.voiceStatus == "aggressive") {
-            cause = "voice"
-        } else if (self.limbStatus == "slightly aggressive" || self.limbStatus == "aggressive") {
-            cause = "hands"
-        } else if (self.voiceStatus == "stable" && self.limbStatus == "stable") {
-            cause = "stable"
-        } else {
-            //
-        }
-        
-        print("voice:\(self.voiceStatus)")
-        print("hands:\(self.limbStatus)")
-        print("anger:\(self.angerStatus)")
-        print(isStableClick)
-        let parameters: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "start_time": timestamp, "status":self.angerStatus ?? "unknown", "cause":cause, "stable_click": isStableClick]
-        print("here para: \(parameters)")
-        Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/storeObserverData.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300)/*.validate(contentType: ["application/json"])*/.responseData { response in
-            DispatchQueue.main.async(execute: {
-                if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-                    print("Data: \(utf8Text)")
-                    if utf8Text.range(of:"success") != nil{
-                        self.displayAlertMessage(message: "Submitted :)")
-                    } else {
-                        // Perform ACTION
-                        self.displayAlertMessage(message: "Something went wrong :(")
-                        result = false
-                    }
-                    
-                } else {
-                    self.displayAlertMessage(message: "Server response is empty")
-                    result = false
-                }
-                
-            })
-        }
-        print("pat: \(patient!["id"] as! String)")
-        print("obs: \(Manager.userData!["id"] as! String)")
-        let parameters2: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "start_time": timestamp, "location": self.pickerTextField.text!, "stable_click": isStableClick]
-        Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/storeObservedLocation.php",method: .post,parameters: parameters2, encoding: URLEncoding.default).validate(statusCode: 200..<300)/*.validate(contentType: ["application/string"])*/.responseData { response in
-            DispatchQueue.main.async(execute: {
-                
-                if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-                    print("Data: \(utf8Text)")
-                    if utf8Text.range(of:"success") != nil{
-                        self.displayAlertMessage(message: "Submitted :)")
-                    } else {
-                        // Perform ACTION
-                        self.displayAlertMessage(message: "Location not updated :(")
-                        result = false
-                    }
-                    
-                } else {
-                    self.displayAlertMessage(message: "Server response is empty")
-                    result = false
-                }
-                
-            })
-        }
-        return result
-    }
- */
-    
-  /*
-    @IBAction func sendStableStatus(_ sender: Any) {
-        let angry = self.pulseSlider.value
-        let limbs = self.limbSlider.value
-        let voice = self.voiceSlider.value
-        self.initSliders(p: 0, v: 0, l: 0)
-        let result = self.sendObservation(timestamp: self.getTimestamp(), isStableClick: "true")
-        if result == false {
-            self.initSliders(p: Int(angry), v: Int(voice), l: Int(limbs))
-        }
-    }
-    */
-    
     func initPicker() {
         let pickerView = UIPickerView()
         
@@ -873,19 +687,211 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
 extension DetailViewController: CommentEntryDelegate {
     func commentTextEntered(comment: String) {
         self.commentTextView.text = comment
-        if (comment == "write your observations") {
+        if (comment == self.commentPlaceholder) {
             self.commentTextView.textColor = UIColor.lightGray
         } else {
             self.commentTextView.textColor = UIColor.black
         }
     }
 }
-/*extension DetailViewController: PatientRootSelectionDelegate {
+
+extension DetailViewController: PatientRootSelectionDelegate {
     
-    func patientSelected(patientDetails: [String : Any]) {
-        self.patient = patientDetails
+    func patientSelected(patientDetails: [String : Any], locationList: [String]) {
         print("inside detail's delegate")
+        if (patientDetails.count > 0) {
+        self.patient = patientDetails
         print(self.patient)
-        viewDidLoad()
+        //viewDidLoad()
+            let doReload = self.configureDetails()
+        self.configurePic()
+            if (doReload == true) {
+        self.sharing = false
+        self.reloadActionCells()
+            }
+        }
+        if (locationList.count > 0) {
+            self.pickOption = locationList
+            self.pickOption.sort()
+        }
+        
     }
-}*/
+}
+
+extension DetailViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let padding = sectionInsets.left * CGFloat(itemsPerRow+1)
+        let availableWidth = view.frame.width - padding
+        let widthPerItem = availableWidth / CGFloat(itemsPerRow)
+        
+        return CGSize(width: widthPerItem*self.cellWidthBooster, height: widthPerItem)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return sectionInsets
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return sectionInsets.left
+    }
+}
+
+extension DetailViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let indexLoc = collectionView.layer.value(forKey: "indexLoc") as? IndexPath else { return 0}
+        var itemCount = 0
+        let sec = indexLoc.section
+        if (!(self.actionList[sec].isEmpty)) {
+            for i in 0..<actionList[sec].count {
+                if (self.actionList[sec][i] == nil) {
+                    break
+                }
+                itemCount += 1
+            }
+            return itemCount
+        }
+        return 0
+        
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        //if (Int(Manager.userData!["id"] as! String) == self.patient["observer_id"] as? String || self.patient["observer_id"] as? String == nil) {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseCIdentifier, for: indexPath) as! ActionCollectionViewCell
+        guard let indexLoc = collectionView.layer.value(forKey: "indexLoc") as? IndexPath else { return }
+        cell.actionView!.backgroundColor = UIColor.purple
+        self.selectedIndices.remove(IndexPath(row: indexPath.row, section: indexLoc.section))
+        self.updateSharedIndicesCount()
+        
+        if ((self.selectedIndices.count < 1) && self.sharing == true) {
+            self.sharing = false
+        }
+        
+        if let count = self.actionHeaders?.count {
+            for i in 0..<count {
+                if let cell = self.actionTableView.cellForRow(at: IndexPath(row: 0, section: i)) as? ActionTableViewCell {
+                    cell.actionCollectionView.reloadData()
+                }
+            }
+        }
+    //}
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        //if (Int(Manager.userData!["id"] as! String) == self.patient["observer_id"] as? String || self.patient["observer_id"] as? String == nil)) {
+        if (self.sharing == false) {
+            self.sharing = true
+        }
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseCIdentifier, for: indexPath) as! ActionCollectionViewCell
+        
+        guard let indexLoc = collectionView.layer.value(forKey: "indexLoc") as? IndexPath else { return }
+        print("indexLoc:\(indexLoc)")
+        cell.actionView!.backgroundColor = UIColor.green
+        if (self.selectedIndices.contains(IndexPath(row: indexPath.row, section: indexLoc.section))) {
+            self.collectionView(collectionView, didDeselectItemAt: indexPath)
+            return
+        }
+        
+        self.selectedIndices.insert(IndexPath(row: indexPath.row, section: indexLoc.section))
+        self.updateSharedIndicesCount()
+        self.reloadActionCells()
+        //}
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        shouldSelectItemAt indexPath: IndexPath) -> Bool{
+        return true
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseCIdentifier, for: indexPath) as! ActionCollectionViewCell
+        guard let indexLoc = collectionView.layer.value(forKey: "indexLoc") as? IndexPath else { return cell }
+        let sec = indexLoc.section
+        cell.actionName.text = self.actionList[sec][indexPath.row]
+        cell.actionName.numberOfLines = 0
+        if (self.selectedIndices.contains(IndexPath(row: indexPath.row, section: sec))) {
+            cell.actionView.backgroundColor = UIColor.green
+        } else {
+            cell.actionView!.backgroundColor = UIColor.purple
+        }
+        return cell
+        
+    }
+    
+}
+
+extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if (actionHeaders != nil) {
+            if let heading = actionHeaders?[section] {
+                return heading
+            }
+        }
+        return nil
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        if actionHeaders != nil {
+            if let count = actionHeaders?.count {
+                return count
+            }
+        }
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if self.actionList.count != 0 {
+            return 1
+            
+        }
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let padding = sectionInsets.left * CGFloat(itemsPerRow+1)
+        let availableWidth = view.frame.width - padding
+        let widthPerItem = availableWidth / CGFloat(itemsPerRow)
+        //cell.collectionViewHeight.constant = 200//widthPerItem+40//
+        return widthPerItem*self.cellHeightBooster
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = actionTableView.dequeueReusableCell(withIdentifier: self.reuseTIdentifier, for: indexPath) as! ActionTableViewCell
+        //cell.frame = tableView.bounds
+        //cell.layoutIfNeeded()
+        //cell.actionCollectionView.reloadData()
+        //if let layout = cell.actionCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+        //    layout.scrollDirection = .horizontal
+        //}
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView,
+                   willDisplayCell cell: UITableViewCell,
+                   forRowAtIndexPath indexPath: NSIndexPath) {
+        guard let tableViewCell = cell as? ActionTableViewCell else { return }
+        tableViewCell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, forRow: indexPath.row, forSection: indexPath.section)
+        tableViewCell.collectionViewOffset = storedOffsets[indexPath.section][indexPath.row] ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView,
+                   didEndDisplayingCell cell: UITableViewCell,
+                   forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        guard let tableViewCell = cell as? ActionTableViewCell else { return }
+        
+        storedOffsets[indexPath.section][indexPath.row] = tableViewCell.collectionViewOffset
+    }
+    
+    
+}
+

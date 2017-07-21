@@ -12,7 +12,7 @@ class ActionTableViewCell: UITableViewCell {
 
     @IBOutlet weak var actionCollectionView: UICollectionView!
     
-    @IBOutlet weak var collectionViewHeight: NSLayoutConstraint!
+    //@IBOutlet weak var collectionViewHeight: NSLayoutConstraint!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

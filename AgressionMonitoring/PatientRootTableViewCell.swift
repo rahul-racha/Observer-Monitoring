@@ -19,7 +19,7 @@ class PatientRootTableViewCell: UITableViewCell {
     
     @IBOutlet weak var patientName: UILabel!
     @IBOutlet weak var location: UILabel!
-    @IBOutlet weak var status: UILabel!
+    //@IBOutlet weak var status: UILabel!
     @IBOutlet weak var view: PatientRootUIView!
     
     override func awakeFromNib() {

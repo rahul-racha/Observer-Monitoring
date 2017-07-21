@@ -11,7 +11,7 @@ import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
-
+    
     var window: UIWindow?
     var orientationLock = UIInterfaceOrientationMask.landscape
     
@@ -27,13 +27,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         //let _ = self.window?.rootViewController as! LoginViewController
         UIApplication.shared.keyWindow?.rootViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
-        let splitViewController =  storyboard.instantiateViewController(withIdentifier: "splitViewController") as! UISplitViewController//self.window!.rootViewController as! UISplitViewController
+        /*let splitViewController =  storyboard.instantiateViewController(withIdentifier: "splitViewController") as! UISplitViewController//self.window!.rootViewController as! UISplitViewController
         let leftNavController = splitViewController.viewControllers.first as! UINavigationController
         let masterViewController = leftNavController.topViewController as! PatientRootTableViewController
         
         let rightNavController = splitViewController.viewControllers.last as! UINavigationController
         let detailViewController = rightNavController.topViewController as! DetailViewController
-
+        */
 //        if (Manager.patientDetails != nil && Manager.patientDetails!.count > 0) {
 //            detailViewController.patient = Manager.patientDetails![0]//masterViewController.patientDetails[0]
 //        } else {
@@ -41,13 +41,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 //        }
         
         //masterViewController.delegatePatient = detailViewController//storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
-
+/*
         let modelVC = storyboard.instantiateViewController(withIdentifier: "ModelViewController") as! ModelViewController
         modelVC.delegate = detailViewController
         
         detailViewController.navigationItem.leftItemsSupplementBackButton = true
         detailViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
-
+*/
         return true
     }
     
