@@ -299,32 +299,42 @@ class PatientRootTableViewController: UIViewController, UITableViewDataSource, U
         //if let detailViewController = self.delegatePatient as? DetailViewController {
           //  splitViewController?.showDetailViewController(detailViewController.navigationController!, sender: nil)
         //}
-        
+        if (selectedPatient != nil && userid != nil) {
         //performSegue(withIdentifier: "DetailView", sender: self)
-        let parameters: Parameters = ["patient_id": self.selectedPatient!["id"] as Any, "observer_id": userid as Any]
+        let parameters: Parameters = ["patient_id": self.selectedPatient!["id"]!, "observer_id": userid!]
+        print("PARA on click:\(parameters)")
         Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/getObservationstate.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300).validate(contentType: ["application/json"]).responseJSON { response in
-            
+            DispatchQueue.main.async(execute: {
             if let data = response.data {
                 do {
                     let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! Dictionary<String,Any>
                     let prevState = json["pastdetails"] as? [Dictionary<String,Any>]
-                    
-                    self.selectedPatient?["action"] = prevState?[0]["ation"] as? String
+                    print("prev State: \(prevState)")
+                    self.selectedPatient?["action"] = prevState?[0]["action"] as? String
                     self.selectedPatient?["comments"] = prevState?[0]["comments"] as? String
-                    //self.patient?["parameters"] = prevState[0]["parameters"] as? [String]
-                    self.selectedPatient?["parameters"] = [5,10,14]
-                    
-                    DispatchQueue.main.async(execute: {
+                    self.selectedPatient?["observer_id"] = prevState?[0]["observer_id"] as? String
+                    var temp = prevState?[0]["parameters"] as? String
+                    print("id without manipulation :\(temp)")
+                    //var charRemSet = NSCharacterSet(charactersIn: "[")
+                    temp = temp?.trimmingCharacters(in: ["[","]"])
+                    let strToArray: [String] = (temp?.components(separatedBy: ","))!
+                    self.selectedPatient?["parameters"] = strToArray
+                    print("ID we got back :\(self.selectedPatient?["parameters"])")
+                    //self.selectedPatient?["parameters"] = [5,10,14]
+                    print("selected patient:\(self.selectedPatient)")
+                    //DispatchQueue.main.async(execute: {
                         self.patientDelegate?.patientSelected(patientDetails: self.selectedPatient!, locationList: self.locationList)
                         self.dismiss(animated: true, completion: nil)
-                    })
+                    //})
                     
                 }
                 catch{
                     //print("error serializing JSON: \(error)")
                 }
             }
+            })
         }
+    }
     }
 
     

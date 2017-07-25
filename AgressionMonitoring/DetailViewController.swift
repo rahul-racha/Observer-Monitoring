@@ -14,9 +14,9 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     @IBOutlet weak var actionTableView: UITableView!
     @IBOutlet weak var commentTextView: UITextView!
     @IBOutlet weak var hamburger: UIBarButtonItem!
-    @IBOutlet weak var seclectedCount: UILabel!
     @IBOutlet weak var sendActionButton: UIButtonX!
     @IBOutlet weak var eventButton: UIButtonX!
+    @IBOutlet weak var selectedCount: UILabelX!
     @IBOutlet weak var clearActionsButton: UIButtonX!
     @IBOutlet weak var picture: UIImageViewX!
     //@IBOutlet weak var age: UILabel!
@@ -32,7 +32,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     fileprivate var itemsPerRow = 10
     fileprivate var actionList = [[String?]](repeating: [String?](repeating:nil, count:12), count: 4)
     fileprivate var actionParameterList = [[String?]](repeating: [String?](repeating:nil, count:12), count: 4)
-    fileprivate var actionParameterIds = [[Int?]](repeating: [Int?](repeating:nil, count:12), count: 4)
+    fileprivate var actionParameterIds = [[String?]](repeating: [String?](repeating:nil, count:12), count: 4)
     fileprivate var storedOffsets: [[CGFloat?]] = Array(repeating: Array(repeating:0, count:3), count: 4)
     fileprivate var actionHeaders: [String]?
     fileprivate var selectedIndices = Set<IndexPath>()
@@ -62,7 +62,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             self.actionTimeStamp = self.getTimestamp()
             print("time noted:\(self.actionTimeStamp)")
             //self.sendActionButton.isHidden = false
-            //self.seclectedCount.isHidden = false
+            //self.selectedCount.isHidden = false
             //guard let _ = self.sendActionButton else {
             //    return
             //}
@@ -90,10 +90,14 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             self.commentTextView.text = self.commentPlaceholder
             self.commentTextView.textColor = UIColor.lightGray
         }
+        self.title = "Aggression Monitor"
+        self.eventButton.backgroundColor = UIColor.blue
+        self.sendActionButton.backgroundColor = UIColor.blue
+        self.commentButton.backgroundColor = UIColor.blue
         
         self.enableInterfaceOutlets(flag: true)
         self.clearActionsButton.isHidden = true
-        self.seclectedCount.isHidden = true
+        self.selectedCount.isHidden = true
         
         //self.configurePic()
         //self.configureView()
@@ -141,7 +145,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                                     print(sectionDict[param]["short_name"]!)
                                     self.actionList[section].insert(sectionDict[param]["short_name"]!, at: param)
                                     self.actionParameterList[section].insert(sectionDict[param]["parameter_name"]!, at: param)
-                                    self.actionParameterIds[section].insert(Int(sectionDict[param]["parameter_id"]!), at: param)
+                                    self.actionParameterIds[section].insert(sectionDict[param]["parameter_id"]!, at: param)
                                     
                                     // #get the id's as well in a separate list
                                     //self.actionParameterList?[section][param] = sectionDict[param]["parameter_name"]!
@@ -229,27 +233,36 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                     Manager.patientDetails = json["patient_details"] as? [Dictionary<String,Any>]
                     self.patient = Manager.patientDetails?[0]
                     //8888888888888
-                    
+                    if self.patient != nil {
+                    print("PATIENT, obser: \(self.patient), \(userid)")
                     let params: Parameters = ["patient_id": self.patient!["id"], "observer_id": userid as Any]
                     Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/getObservationstate.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300).validate(contentType: ["application/json"]).responseJSON { response in
                         DispatchQueue.main.async(execute: {
                         if let data = response.data {
                             do {
+                                
                                 let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! Dictionary<String,Any>
                                 let prevState = json["pastdetails"] as? [Dictionary<String,Any>]
-                                
+                                if (prevState != nil) {
                                 self.patient?["action"] = prevState?[0]["ation"] as? String
                                 self.patient?["comments"] = prevState?[0]["comments"] as? String
-                                //self.patient?["parameters"] = prevState[0]["parameters"] as? [String]
-                                self.patient?["parameters"] = [5,10,14]
-
+                                self.patient?["observer_id"] = prevState?[0]["observer_id"] as? String
+                                var temp = prevState?[0]["parameters"] as? String
+                                print("TEMP:\(temp)")
+                                //var charRemSet = NSCharacterSet(charactersIn: "[")
+                                temp = temp?.trimmingCharacters(in: ["[","]"])
+                                print("TEMP:\(temp)")
+                                let strToArray: [String] = (temp?.components(separatedBy: ","))!
+                                self.patient?["parameters"] = strToArray
+                                //self.patient?["parameters"] = [5,10,14]
+                                }
                                 //DispatchQueue.main.async(execute: {
                                       self.configurePic()
                                      /*self.configureView()
                                      */
                                     self.configureDetails()
                                 //})
-                                
+                            
                             }
                             catch{
                                 //print("error serializing JSON: \(error)")
@@ -257,7 +270,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                         }
                         })
                     }
-                    
+                }
                     //8888888888888
                     self.pickOption = json["locations"] as! [String]
                     self.pickOption.sort()
@@ -332,15 +345,15 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
 //    }
     
     func updateSharedIndicesCount() {
-        self.seclectedCount.textColor = UIColor.purple
-        self.seclectedCount.text = "\(self.selectedIndices.count) actions selected"
-        self.seclectedCount.sizeToFit()
+        self.selectedCount.textColor = UIColor.blue
+        self.selectedCount.text = "\(self.selectedIndices.count) actions selected"
+        self.selectedCount.sizeToFit()
         print("selected indices:\(self.selectedIndices)")
         if self.selectedIndices.count > 0 {
-            self.seclectedCount.isHidden = false
+            self.selectedCount.isHidden = false
             self.clearActionsButton.isHidden = false
         } else {
-            self.seclectedCount.isHidden = true
+            self.selectedCount.isHidden = true
             self.clearActionsButton.isHidden = true
         }
     }
@@ -451,7 +464,8 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         
         var selectedIds = [Int]()
         for idx in self.selectedIndices {
-            selectedIds.append((self.actionParameterIds[idx.section][idx.row])!)
+            print("track ids selected: \(self.actionParameterIds[idx.section][idx.row]!)")
+            selectedIds.append(Int(self.actionParameterIds[idx.section][idx.row]!)!)
         }
         
         let parameters: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "comment": (cmt != nil) ? cmt! : cmt as Any, "parameters": selectedIds, "action": "stop"]
@@ -554,21 +568,29 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             }
             if (self.patient?["action"] as? String != nil && "stop" == self.patient?["action"] as? String) {
             self.sharing = true
+                print("observer in selected patient:\(self.patient?["observer_id"] as? String), \(Manager.userData!["id"] as? String)")
                 if (self.patient?["observer_id"] as? String != Manager.userData!["id"] as? String) {
                     self.enableInterfaceOutlets(flag: false)
                     
+                } else {
+                    self.enableInterfaceOutlets(flag: true)
+                    self.eventButton.isEnabled = false
                 }
-            let paramIds = self.patient?["parameters"] as? [Int]
+            let paramIds = self.patient?["parameters"] as? [String]
             if (paramIds?.count)! > 0 {
             //if paramIds.count != 0 {
                 for i in 0..<(paramIds?.count)! {
                     for j in 0..<(self.actionHeaders?.count)! {
-                        let id = paramIds?[i]
+                        let id = Int((paramIds?[i])!)
 //                        if let index = self.actionParameterIds[j].index(where: ()) {
 //                            self.selectedIndices.insert(IndexPath(row: index, section: j))
 //                        }
                         for k in 0..<(self.actionParameterIds[j].count) {
-                            if id == self.actionParameterIds[j][k] {
+                            print("is null id: \(actionParameterIds[j][k])")
+                            if self.actionParameterIds[j][k] == nil {
+                                break
+                            }
+                            if id == Int(self.actionParameterIds[j][k]!) {
                                self.selectedIndices.insert(IndexPath(row: k, section: j))
                                 break
                             }
@@ -582,11 +604,18 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                self.updateSharedIndicesCount()
                self.sendActionButton.setTitle("Stop Action", for: .normal)
                self.sendActionButton.backgroundColor = UIColor.red
-               self.eventButton.isEnabled = false
                self.isStop = true
                isReloadCells = false
-        }
+            } else {
+                self.sendActionButton.setTitle("Start Action", for: .normal)
+                self.sendActionButton.backgroundColor = UIColor.blue
+                self.sendActionButton.isEnabled = true
+                self.eventButton.isEnabled = true
+                self.isStop = false
+                isReloadCells = true
  
+            }
+            self.title = patient?["name"] as? String
             //self.age.text = patient?["age"] as? String
             //self.gender.text = patient?["gender"] as? String
             self.pickerTextField.text = patient?["location"] as? String
@@ -649,7 +678,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         if (self.commentTextView.text != self.commentPlaceholder) {
             cmt = self.commentTextView.text!
         }
-        
+        if (self.patient != nil && Manager.userData != nil) {
         let parameters: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "start_time": self.actionTimeStamp!, "comment": (cmt != nil) ? cmt! : cmt, "parameters": selectedParameters, "action": type]
         print("para:\(parameters)")
         
@@ -658,7 +687,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             DispatchQueue.main.async(execute: {
                 if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
                     print("Data: \(utf8Text)")
-                    if utf8Text.range(of:"successs") != nil{
+                    if utf8Text.range(of:"success") != nil{
                         self.displayAlertMessage(message: "Submitted :)")
                         isResponseSuccess = true
                     } else {
@@ -679,6 +708,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                 }
             })
         }
+    }
         return isResponseSuccess
     }
 
@@ -810,7 +840,8 @@ extension DetailViewController: UICollectionViewDataSource, UICollectionViewDele
         if Manager.userData!["id"] as! String == self.patient?["observer_id"] as? String || self.patient?["observer_id"] as? String == nil {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseCIdentifier, for: indexPath) as! ActionCollectionViewCell
         guard let indexLoc = collectionView.layer.value(forKey: "indexLoc") as? IndexPath else { return }
-        cell.actionView!.backgroundColor = UIColor.purple
+        cell.actionView!.backgroundColor = UIColor.darkGray
+        cell.actionName.textColor = UIColor.white
         self.selectedIndices.remove(IndexPath(row: indexPath.row, section: indexLoc.section))
         self.updateSharedIndicesCount()
         
@@ -863,8 +894,10 @@ extension DetailViewController: UICollectionViewDataSource, UICollectionViewDele
         cell.actionName.numberOfLines = 0
         if (self.selectedIndices.contains(IndexPath(row: indexPath.row, section: sec))) {
             cell.actionView.backgroundColor = UIColor.green
+            cell.actionName.textColor = UIColor.black
         } else {
-            cell.actionView!.backgroundColor = UIColor.purple
+            cell.actionView!.backgroundColor = UIColor.darkGray
+            cell.actionName.textColor = UIColor.white
         }
         return cell
         

@@ -94,12 +94,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let data = userInfo["aps"] as! [String : Any]
         let patient: [String: Any] = data["data"] as! [String : Any]
         if (Manager.triggerNotifications == true) {
-            displayPatient(patient: patient)
+            //displayPatient(patient: patient)
         }
         completionHandler(UIBackgroundFetchResult.newData);
     }
     
-    func displayPatient(patient: [String: Any]) {
+    /*func displayPatient(patient: [String: Any]) {
         Manager.reloadAllCells = false
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let splitViewController =  storyboard.instantiateViewController(withIdentifier: "splitViewController") as! UISplitViewController//self.window!.rootViewController as! UISplitViewController
@@ -111,7 +111,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         //storyboard.instantiateViewController(withIdentifier: "ViewController") as! ViewController//ViewController()
         //vc.reloadIndexPath(patient:patient)
         Manager.reloadAllCells = true
-    }
+    }*/
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

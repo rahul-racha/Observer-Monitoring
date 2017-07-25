@@ -469,13 +469,21 @@
                                             <action selector="clearActions:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hxJ-WY-56y"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NZt-vY-2AU">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NZt-vY-2AU" customClass="UILabelX" customModule="AggressionMonitoring" customModuleProvider="target">
                                         <rect key="frame" x="204" y="97" width="120" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Location" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HiT-no-Dgs" customClass="UITextFieldX" customModule="AggressionMonitoring" customModuleProvider="target">
                                         <rect key="frame" x="584" y="8" width="170" height="30"/>
@@ -550,7 +558,7 @@
                         <outlet property="pickerTextField" destination="HiT-no-Dgs" id="t7y-Td-SDq"/>
                         <outlet property="picture" destination="5cI-J9-4n9" id="n10-5N-eag"/>
                         <outlet property="runningTime" destination="N88-ya-1HW" id="9Cv-zO-SbU"/>
-                        <outlet property="seclectedCount" destination="NZt-vY-2AU" id="Tln-at-wUQ"/>
+                        <outlet property="selectedCount" destination="NZt-vY-2AU" id="MjI-rl-6Kq"/>
                         <outlet property="sendActionButton" destination="7EN-kN-GOo" id="0NJ-5U-jSz"/>
                     </connections>
                 </viewController>
