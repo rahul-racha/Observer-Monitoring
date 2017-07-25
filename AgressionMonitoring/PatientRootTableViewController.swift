@@ -292,7 +292,7 @@ class PatientRootTableViewController: UIViewController, UITableViewDataSource, U
         //tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.blue
         // note that indexPath.section is used rather than indexPath.row
         //print("You tapped cell number \(indexPath.section).")
-        
+        let userid = Int(Manager.userData!["id"] as! String)
         self.selectedPatient = Manager.patientDetails?[indexPath.section]
         //self.delegatePatient?.patientSelected(patientDetails: selectedPatient!)
         //print("at select cell \(selectedPatient)")
@@ -301,8 +301,30 @@ class PatientRootTableViewController: UIViewController, UITableViewDataSource, U
         //}
         
         //performSegue(withIdentifier: "DetailView", sender: self)
-        self.patientDelegate?.patientSelected(patientDetails: self.selectedPatient!, locationList: self.locationList)
-        self.dismiss(animated: true, completion: nil)
+        let parameters: Parameters = ["patient_id": self.selectedPatient!["id"] as Any, "observer_id": userid as Any]
+        Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/getObservationstate.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300).validate(contentType: ["application/json"]).responseJSON { response in
+            
+            if let data = response.data {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! Dictionary<String,Any>
+                    let prevState = json["pastdetails"] as? [Dictionary<String,Any>]
+                    
+                    self.selectedPatient?["action"] = prevState?[0]["ation"] as? String
+                    self.selectedPatient?["comments"] = prevState?[0]["comments"] as? String
+                    //self.patient?["parameters"] = prevState[0]["parameters"] as? [String]
+                    self.selectedPatient?["parameters"] = [5,10,14]
+                    
+                    DispatchQueue.main.async(execute: {
+                        self.patientDelegate?.patientSelected(patientDetails: self.selectedPatient!, locationList: self.locationList)
+                        self.dismiss(animated: true, completion: nil)
+                    })
+                    
+                }
+                catch{
+                    //print("error serializing JSON: \(error)")
+                }
+            }
+        }
     }
 
     

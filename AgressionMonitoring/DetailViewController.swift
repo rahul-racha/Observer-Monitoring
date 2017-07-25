@@ -104,7 +104,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         self.picture.addGestureRecognizer(imageTap)
         
         
-        /*
+        /*Marshall McLuhan’s 106th birthday
         self.splitViewController?.preferredDisplayMode = UISplitViewControllerDisplayMode.allVisible
         splitViewController?.preferredPrimaryColumnWidthFraction = 0.31*/
         //let minimumWidth =  min((splitViewController?.view.bounds)!.width,(splitViewController?.view.bounds)!.height)
@@ -141,7 +141,8 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                                     print(sectionDict[param]["short_name"]!)
                                     self.actionList[section].insert(sectionDict[param]["short_name"]!, at: param)
                                     self.actionParameterList[section].insert(sectionDict[param]["parameter_name"]!, at: param)
-                                    //self.actionParameterIds[section].insert(Int(sectionDict[param]["id"]!), at: param)
+                                    self.actionParameterIds[section].insert(Int(sectionDict[param]["parameter_id"]!), at: param)
+                                    
                                     // #get the id's as well in a separate list
                                     //self.actionParameterList?[section][param] = sectionDict[param]["parameter_name"]!
                                     print("result:\(self.actionList[section][param])")
@@ -221,26 +222,59 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         // Do any additional setup after loading the view, typically from a nib.
         let parameters: Parameters = ["userid": userid as Any, "role": role]
         Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/getPatientDetails.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300).validate(contentType: ["application/json"]).responseJSON { response in
-            
+            DispatchQueue.main.async(execute: {
             if let data = response.data {
                 do {
                     let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! Dictionary<String,Any>
                     Manager.patientDetails = json["patient_details"] as? [Dictionary<String,Any>]
                     self.patient = Manager.patientDetails?[0]
+                    //8888888888888
+                    
+                    let params: Parameters = ["patient_id": self.patient!["id"], "observer_id": userid as Any]
+                    Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/getObservationstate.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300).validate(contentType: ["application/json"]).responseJSON { response in
+                        DispatchQueue.main.async(execute: {
+                        if let data = response.data {
+                            do {
+                                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! Dictionary<String,Any>
+                                let prevState = json["pastdetails"] as? [Dictionary<String,Any>]
+                                
+                                self.patient?["action"] = prevState?[0]["ation"] as? String
+                                self.patient?["comments"] = prevState?[0]["comments"] as? String
+                                //self.patient?["parameters"] = prevState[0]["parameters"] as? [String]
+                                self.patient?["parameters"] = [5,10,14]
+
+                                //DispatchQueue.main.async(execute: {
+                                      self.configurePic()
+                                     /*self.configureView()
+                                     */
+                                    self.configureDetails()
+                                //})
+                                
+                            }
+                            catch{
+                                //print("error serializing JSON: \(error)")
+                            }
+                        }
+                        })
+                    }
+                    
+                    //8888888888888
                     self.pickOption = json["locations"] as! [String]
                     self.pickOption.sort()
                     //let paramIds = Manager.patientDetails?[indexPath.section]["stored_param"] as? [String]
-                    DispatchQueue.main.async(execute: {
+                    //DispatchQueue.main.async(execute: {
                         /*self.configurePic()
                          self.configureView()
-                         */self.configureDetails()
-                    })
+                         */
+                        //self.configureDetails()
+                    //})
                     
                 }
                 catch{
                     //print("error serializing JSON: \(error)")
                 }
             }
+        })
         }
     }
     
@@ -457,7 +491,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             }
         } else if (segue.identifier == "patientSegue") {
             if (self.isStop == true || self.commentTextView.text != self.commentPlaceholder) {
-                //self.sendPatientState()
+                self.sendPatientState()
             }
             if let destinationVC = segue.destination as? PatientRootTableViewController {
                 destinationVC.patientDelegate = self
@@ -495,10 +529,10 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     
     func configurePic() {
         self.picture.image = #imageLiteral(resourceName: "labimg")
-        self.picture.layer.cornerRadius = self.picture.frame.size.width/10
+        /*self.picture.layer.cornerRadius = self.picture.frame.size.width/10
         self.picture.clipsToBounds = true
         self.picture.layer.borderColor = UIColor.gray.cgColor
-        self.picture.layer.borderWidth = 1
+        self.picture.layer.borderWidth = 1*/
     }
     
     func configureView() {
@@ -515,21 +549,29 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     func configureDetails() -> Bool {
         var isReloadCells: Bool = true
         if (patient != nil) {
-          /*  if let cmt = self.patient["comment"] as? String {
+            if let cmt = self.patient?["comment"] as? String {
                 self.commentTextView.text = cmt
             }
-            if ("stop" == self.patient["action"] as? String && self.patient["action"] as? String != nil) {
+            if (self.patient?["action"] as? String != nil && "stop" == self.patient?["action"] as? String) {
             self.sharing = true
-                if (self.patient["observer_id"] as? String != Int(Manager.userData!["id"] as! String)) {
+                if (self.patient?["observer_id"] as? String != Manager.userData!["id"] as? String) {
                     self.enableInterfaceOutlets(flag: false)
                     
                 }
-            if let paramIds = self.patient["stored_param"] as? [String] {
+            let paramIds = self.patient?["parameters"] as? [Int]
+            if (paramIds?.count)! > 0 {
             //if paramIds.count != 0 {
-                for i in 0..<paramIds.count {
-                    for j in 0..<self.actionHeaders?.count {
-                        if let index = self.actionParameterIds[j].indexOf(paramIds[i]) {
-                            self.selectedIndices.insert(IndexPath(row: index, section: j))
+                for i in 0..<(paramIds?.count)! {
+                    for j in 0..<(self.actionHeaders?.count)! {
+                        let id = paramIds?[i]
+//                        if let index = self.actionParameterIds[j].index(where: ()) {
+//                            self.selectedIndices.insert(IndexPath(row: index, section: j))
+//                        }
+                        for k in 0..<(self.actionParameterIds[j].count) {
+                            if id == self.actionParameterIds[j][k] {
+                               self.selectedIndices.insert(IndexPath(row: k, section: j))
+                                break
+                            }
                         }
                     }
                 }
@@ -537,13 +579,14 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             //}
             }
                self.reloadActionCells()
-               self.sendActionButton.title(for: .normal) == "Stop Action"
+               self.updateSharedIndicesCount()
+               self.sendActionButton.setTitle("Stop Action", for: .normal)
                self.sendActionButton.backgroundColor = UIColor.red
                self.eventButton.isEnabled = false
                self.isStop = true
                isReloadCells = false
         }
-        */
+ 
             //self.age.text = patient?["age"] as? String
             //self.gender.text = patient?["gender"] as? String
             self.pickerTextField.text = patient?["location"] as? String
@@ -764,7 +807,7 @@ extension DetailViewController: UICollectionViewDataSource, UICollectionViewDele
     
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        //if (Int(Manager.userData!["id"] as! String) == self.patient["observer_id"] as? String || self.patient["observer_id"] as? String == nil) {
+        if Manager.userData!["id"] as! String == self.patient?["observer_id"] as? String || self.patient?["observer_id"] as? String == nil {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseCIdentifier, for: indexPath) as! ActionCollectionViewCell
         guard let indexLoc = collectionView.layer.value(forKey: "indexLoc") as? IndexPath else { return }
         cell.actionView!.backgroundColor = UIColor.purple
@@ -782,11 +825,11 @@ extension DetailViewController: UICollectionViewDataSource, UICollectionViewDele
                 }
             }
         }
-    //}
+    }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        //if (Int(Manager.userData!["id"] as! String) == self.patient["observer_id"] as? String || self.patient["observer_id"] as? String == nil)) {
+        if Manager.userData!["id"] as? String == self.patient?["observer_id"] as? String || self.patient?["observer_id"] as? String == nil {
         if (self.sharing == false) {
             self.sharing = true
         }
@@ -804,7 +847,7 @@ extension DetailViewController: UICollectionViewDataSource, UICollectionViewDele
         self.selectedIndices.insert(IndexPath(row: indexPath.row, section: indexLoc.section))
         self.updateSharedIndicesCount()
         self.reloadActionCells()
-        //}
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView,
