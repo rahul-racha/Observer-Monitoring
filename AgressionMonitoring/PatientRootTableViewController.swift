@@ -310,6 +310,7 @@ class PatientRootTableViewController: UIViewController, UITableViewDataSource, U
                     let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! Dictionary<String,Any>
                     let prevState = json["pastdetails"] as? [Dictionary<String,Any>]
                     print("prev State: \(prevState)")
+                    if (prevState != nil) {
                     self.selectedPatient?["action"] = prevState?[0]["action"] as? String
                     self.selectedPatient?["comments"] = prevState?[0]["comments"] as? String
                     self.selectedPatient?["observer_id"] = prevState?[0]["observer_id"] as? String
@@ -326,10 +327,16 @@ class PatientRootTableViewController: UIViewController, UITableViewDataSource, U
                         self.patientDelegate?.patientSelected(patientDetails: self.selectedPatient!, locationList: self.locationList)
                         self.dismiss(animated: true, completion: nil)
                     //})
-                    
+                    } else {
+                        self.patientDelegate?.patientSelected(patientDetails: self.selectedPatient!, locationList: self.locationList)
+                        self.dismiss(animated: true, completion: nil)
+                    }
                 }
                 catch{
                     //print("error serializing JSON: \(error)")
+                    self.patientDelegate?.patientSelected(patientDetails: self.selectedPatient!, locationList: self.locationList)
+                    self.dismiss(animated: true, completion: nil)
+                    
                 }
             }
             })
