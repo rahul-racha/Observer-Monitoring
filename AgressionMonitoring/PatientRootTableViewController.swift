@@ -122,6 +122,13 @@ class PatientRootTableViewController: UIViewController, UITableViewDataSource, U
         
     }
     
+    func strToArray(explodeString: String?) -> [String] {
+        if (explodeString != nil) {
+        let temp = explodeString?.trimmingCharacters(in: ["[","]"])
+        return (temp?.components(separatedBy: ","))!
+        }
+        return []
+    }
     
     func reloadIndexPath(patient: [String: Any]) {
         //Add location type too
@@ -314,13 +321,9 @@ class PatientRootTableViewController: UIViewController, UITableViewDataSource, U
                     self.selectedPatient?["action"] = prevState?[0]["action"] as? String
                     self.selectedPatient?["comments"] = prevState?[0]["comments"] as? String
                     self.selectedPatient?["observer_id"] = prevState?[0]["observer_id"] as? String
-                    var temp = prevState?[0]["parameters"] as? String
-                    print("id without manipulation :\(temp)")
-                    //var charRemSet = NSCharacterSet(charactersIn: "[")
-                    temp = temp?.trimmingCharacters(in: ["[","]"])
-                    let strToArray: [String] = (temp?.components(separatedBy: ","))!
-                    self.selectedPatient?["parameters"] = strToArray
-                    print("ID we got back :\(self.selectedPatient?["parameters"])")
+                    self.selectedPatient?["parameters"] = self.strToArray(explodeString: prevState?[0]["parameters"] as? String)
+                    
+                    self.selectedPatient?["parameters"] = self.strToArray(explodeString: prevState?[0]["multi_parameters"] as? String)
                     //self.selectedPatient?["parameters"] = [5,10,14]
                     print("selected patient:\(self.selectedPatient)")
                     //DispatchQueue.main.async(execute: {

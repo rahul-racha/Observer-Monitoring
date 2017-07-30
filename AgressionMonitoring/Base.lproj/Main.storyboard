@@ -301,19 +301,19 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="qlb-f4-88o">
-                                <rect key="frame" x="20" y="210" width="984" height="538"/>
+                                <rect key="frame" x="0.0" y="210" width="1024" height="538"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleAspectFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="actionTableCell" id="inU-7U-O2Q" customClass="ActionTableViewCell" customModule="AggressionMonitoring" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="984" height="44"/>
+                                        <rect key="frame" x="0.0" y="28" width="1024" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="inU-7U-O2Q" id="dVQ-kD-n3Y">
-                                            <rect key="frame" x="0.0" y="0.0" width="984" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="1024" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="xr1-WH-2tk">
-                                                    <rect key="frame" x="0.0" y="0.0" width="984" height="44"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="1004" height="44"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="t6W-vk-y63">
                                                         <size key="itemSize" width="50" height="50"/>
@@ -410,14 +410,14 @@
                                         <rect key="frame" x="8" y="8" width="130" height="55"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <state key="normal" title="Capture Event"/>
+                                        <state key="normal" title="On Multi-select"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                 <real key="value" value="10"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="shareEvent:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aAc-9s-Qn1"/>
+                                            <action selector="onMultiSelect:" destination="BYZ-38-t0r" eventType="touchUpInside" id="76X-xq-Z7N"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7EN-kN-GOo" customClass="UIButtonX" customModule="AggressionMonitoring" customModuleProvider="target">
@@ -431,7 +431,7 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="share:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6I3-3j-V6I"/>
+                                            <action selector="shareMultiAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qKz-aA-eBH"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pbU-pu-RX1" customClass="UIButtonX" customModule="AggressionMonitoring" customModuleProvider="target">
@@ -553,18 +553,18 @@
                         <outlet property="commentButton" destination="pbU-pu-RX1" id="okD-dT-PgR"/>
                         <outlet property="commentTextView" destination="N8W-NS-eJT" id="c0C-Xw-FlV"/>
                         <outlet property="detailsView" destination="Oet-iq-PS8" id="mgq-dn-PEt"/>
-                        <outlet property="eventButton" destination="RjE-rA-oQw" id="Zhh-Kt-DxW"/>
                         <outlet property="hamburger" destination="SY7-gf-peL" id="kS7-9T-7ip"/>
+                        <outlet property="multiSelect" destination="RjE-rA-oQw" id="OIt-iP-lU4"/>
                         <outlet property="pickerTextField" destination="HiT-no-Dgs" id="t7y-Td-SDq"/>
                         <outlet property="picture" destination="5cI-J9-4n9" id="n10-5N-eag"/>
                         <outlet property="runningTime" destination="N88-ya-1HW" id="9Cv-zO-SbU"/>
                         <outlet property="selectedCount" destination="NZt-vY-2AU" id="MjI-rl-6Kq"/>
-                        <outlet property="sendActionButton" destination="7EN-kN-GOo" id="0NJ-5U-jSz"/>
+                        <outlet property="sendActionButton" destination="7EN-kN-GOo" id="emm-yV-Z8U"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-376.171875" y="833.59375"/>
+            <point key="canvasLocation" x="-618" y="820"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="8W9-OK-VxI">
@@ -688,21 +688,16 @@
                             <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rzb-Ok-vCj">
+                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Rzb-Ok-vCj">
                                     <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tBx-Bp-SNi">
-                                            <rect key="frame" x="350" y="213" width="323" height="342"/>
+                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tBx-Bp-SNi">
+                                            <rect key="frame" x="188" y="259" width="649" height="250"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="tpX-yi-4SE">
-                                                    <rect key="frame" x="0.0" y="35" width="323" height="276"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                </textView>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V7h-tD-5rl">
-                                                    <rect key="frame" x="0.0" y="0.0" width="323" height="35"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="649" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="19"/>
@@ -710,34 +705,39 @@
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lzU-O2-Osc">
-                                                    <rect key="frame" x="64" y="312" width="259" height="40"/>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="tpX-yi-4SE">
+                                                    <rect key="frame" x="0.0" y="28" width="649" height="182"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <state key="normal" title="save">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="saveComments:" destination="oIF-tx-wmo" eventType="touchUpInside" id="FpN-Js-LYL"/>
-                                                    </connections>
-                                                </button>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Pe-oK-leD">
-                                                    <rect key="frame" x="0.0" y="312" width="65" height="40"/>
+                                                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IbM-Tg-cE2" customClass="UIButtonX" customModule="AggressionMonitoring" customModuleProvider="target">
+                                                    <rect key="frame" x="0.0" y="211" width="156" height="40"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="0.75146830669999998" colorSpace="calibratedRGB"/>
+                                                    <color key="backgroundColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <state key="normal" title="clear">
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
-                                                        <action selector="clearComments:" destination="oIF-tx-wmo" eventType="touchUpInside" id="Mcn-bO-icN"/>
+                                                        <action selector="clearComments:" destination="oIF-tx-wmo" eventType="touchUpInside" id="XwG-Hi-Szn"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L8P-98-XeG" customClass="UIButtonX" customModule="AggressionMonitoring" customModuleProvider="target">
+                                                    <rect key="frame" x="156" y="211" width="493" height="40"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <state key="normal" title="save">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="saveComments:" destination="oIF-tx-wmo" eventType="touchUpInside" id="OuX-Ic-C5Z"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
                                             <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="323" id="FEb-aB-JaD"/>
-                                                <constraint firstAttribute="height" constant="342" id="z8R-0Q-nPr"/>
-                                            </constraints>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                     <real key="value" value="6"/>
@@ -745,7 +745,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3yo-cC-Vl6" customClass="UIButtonX" customModule="AggressionMonitoring" customModuleProvider="target">
-                                            <rect key="frame" x="636" y="178" width="70" height="70"/>
+                                            <rect key="frame" x="799" y="217" width="70" height="70"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" red="1" green="0.2362056283" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="22"/>
@@ -762,25 +762,12 @@
                                             </connections>
                                         </button>
                                     </subviews>
-                                    <constraints>
-                                        <constraint firstItem="tBx-Bp-SNi" firstAttribute="centerX" secondItem="Rzb-Ok-vCj" secondAttribute="centerX" id="3LH-hb-hig"/>
-                                        <constraint firstAttribute="trailing" secondItem="tBx-Bp-SNi" secondAttribute="trailing" constant="351" id="HlW-RM-AdY"/>
-                                        <constraint firstAttribute="bottom" secondItem="tBx-Bp-SNi" secondAttribute="bottom" constant="213" id="lz7-q1-TJv"/>
-                                        <constraint firstItem="tBx-Bp-SNi" firstAttribute="centerY" secondItem="Rzb-Ok-vCj" secondAttribute="centerY" id="zPY-sc-40d"/>
-                                    </constraints>
                                 </scrollView>
                             </subviews>
-                            <constraints>
-                                <constraint firstItem="Rzb-Ok-vCj" firstAttribute="top" secondItem="vg4-H7-if5" secondAttribute="top" id="AuK-u4-G46"/>
-                                <constraint firstItem="Rzb-Ok-vCj" firstAttribute="leading" secondItem="vg4-H7-if5" secondAttribute="leading" id="KkA-eW-TGa"/>
-                                <constraint firstAttribute="trailing" secondItem="Rzb-Ok-vCj" secondAttribute="trailing" id="h4k-pa-Cef"/>
-                                <constraint firstAttribute="bottom" secondItem="Rzb-Ok-vCj" secondAttribute="bottom" id="u1B-Ba-mAp"/>
-                            </constraints>
                         </view>
                         <blurEffect style="regular"/>
                     </visualEffectView>
                     <connections>
-                        <outlet property="bottomConstraint" destination="lz7-q1-TJv" id="W4d-ne-2Sy"/>
                         <outlet property="commentBox" destination="tpX-yi-4SE" id="JLB-Aj-Ao3"/>
                     </connections>
                 </viewController>

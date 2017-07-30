@@ -17,8 +17,8 @@ class ModelViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var commentBox: UITextView!
     weak var delegate: CommentEntryDelegate?
     var data: String?
-    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
-    var holdConstraint: NSLayoutConstraint!
+    //@IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    //var holdConstraint: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +32,7 @@ class ModelViewController: UIViewController, UITextViewDelegate {
             self.commentBox.textColor = UIColor.lightGray
         }
         
-        self.holdConstraint = self.bottomConstraint
+        //self.holdConstraint = self.bottomConstraint
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -48,7 +48,7 @@ class ModelViewController: UIViewController, UITextViewDelegate {
         let alertMsg = UIAlertController(title:"Alert", message: message,
                                          preferredStyle:UIAlertControllerStyle.alert);
         
-        let confirmAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil );
+        let confirmAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil);
         alertMsg.addAction(confirmAction)
         present(alertMsg, animated:true, completion: nil)
     }
@@ -95,7 +95,7 @@ class ModelViewController: UIViewController, UITextViewDelegate {
     func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y == 0{
-                self.view.frame.origin.y -= (keyboardSize.height/2) - 5
+                self.view.frame.origin.y -= (keyboardSize.height/2) - 40
             }
         }
         /*let info = notification.userInfo!
@@ -110,7 +110,7 @@ class ModelViewController: UIViewController, UITextViewDelegate {
     func keyboardWillHide(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y != 0{
-                self.view.frame.origin.y += (keyboardSize.height/2) - 5
+                self.view.frame.origin.y += (keyboardSize.height/2) - 40
             }
         }
         /*let info = notification.userInfo!
