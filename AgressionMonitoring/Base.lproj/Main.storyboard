@@ -34,14 +34,17 @@
                                             <rect key="frame" x="0.0" y="0.0" width="531" height="50"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U0G-qJ-Nhu" customClass="UIButtonX" customModule="AggressionMonitoring" customModuleProvider="target">
-                                                    <rect key="frame" x="431" y="4" width="100" height="37"/>
+                                                    <rect key="frame" x="423" y="7" width="100" height="37"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <state key="normal" title="Refresh">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     </state>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                                            <real key="value" value="10"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                             <real key="value" value="10"/>
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
@@ -50,15 +53,17 @@
                                                     </connections>
                                                 </button>
                                             </subviews>
-                                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                                         </view>
                                         <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ern-f0-ieO">
                                             <rect key="frame" x="0.0" y="50" width="531" height="441"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="531" id="R8F-F9-N5E"/>
                                                 <constraint firstAttribute="height" constant="441" id="WGL-jX-J7M"/>
                                             </constraints>
+                                            <color key="separatorColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="sectionIndexBackgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             <prototypes>
                                                 <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PatientRootTableViewCell" id="rQs-OM-h8G" customClass="PatientRootTableViewCell" customModule="AggressionMonitoring" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="28" width="531" height="44"/>
@@ -313,7 +318,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="xr1-WH-2tk">
-                                                    <rect key="frame" x="0.0" y="0.0" width="1004" height="44"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="1024" height="44"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="t6W-vk-y63">
                                                         <size key="itemSize" width="50" height="50"/>
@@ -396,7 +401,7 @@
                                 <rect key="frame" x="20" y="72" width="984" height="130"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5cI-J9-4n9" customClass="UIImageViewX" customModule="AggressionMonitoring" customModuleProvider="target">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5cI-J9-4n9" customClass="UIImageViewX" customModule="AggressionMonitoring" customModuleProvider="target">
                                         <rect key="frame" x="432" y="5" width="120" height="120"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1036,9 +1041,14 @@
                                     <segue destination="umo-Dr-jqT" kind="embed" id="C06-1l-Ixc"/>
                                 </connections>
                             </containerView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ooe-uc-B5w">
-                                <rect key="frame" x="49" y="75" width="120" height="120"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="observer_1" translatesAutoresizingMaskIntoConstraints="NO" id="ooe-uc-B5w" customClass="UIImageViewX" customModule="AggressionMonitoring" customModuleProvider="target">
+                                <rect key="frame" x="49" y="75" width="130" height="130"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="65"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.78926701570000002" green="0.78926701570000002" blue="0.78926701570000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -1274,6 +1284,7 @@
         <image name="icons8-Menu Filled-25" width="25" height="25"/>
         <image name="icons8-Menu-30" width="30" height="30"/>
         <image name="icons8-Trash Can-30" width="30" height="30"/>
+        <image name="observer_1" width="424" height="425"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="vH6-ZP-ED2"/>

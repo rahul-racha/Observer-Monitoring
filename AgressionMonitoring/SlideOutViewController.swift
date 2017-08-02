@@ -12,10 +12,12 @@ class SlideOutViewController: UIViewController {
 
     @IBOutlet weak var profilePic: UIImageView!
     @IBOutlet weak var userName: UILabel!
+    var role: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.userName.text = Manager.userData?["name"] as? String
+        self.role = Manager.userData?["role"] as? String
         print("Name: \(Manager.userData)")
         print(Manager.userData?["name"] as? String)
         self.configurePic()
@@ -28,9 +30,18 @@ class SlideOutViewController: UIViewController {
     }
     
     func configurePic() {
-        self.profilePic.image = #imageLiteral(resourceName: "labimg")
-        self.profilePic.layer.cornerRadius = self.profilePic.frame.size.width/2
+        if let roleStr = self.role {
+            if (roleStr == "observer") {
+        self.profilePic.image = #imageLiteral(resourceName: "observer_1")
+            } else if (roleStr == "admin") {
+                self.profilePic.image = #imageLiteral(resourceName: "admin_2")
+            } else if (roleStr == "doctor") {
+                self.profilePic.image = #imageLiteral(resourceName: "doctor_2")
+            }
+            
+        //self.profilePic.layer.cornerRadius = self.profilePic.frame.size.width/2
         self.profilePic.clipsToBounds = true
+        }
         self.profilePic.layer.borderColor = UIColor.gray.cgColor
         self.profilePic.layer.borderWidth = 2
     }

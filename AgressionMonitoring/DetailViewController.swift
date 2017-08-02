@@ -31,7 +31,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     fileprivate let reuseTIdentifier = "actionTableCell"
     fileprivate let reuseCIdentifier = "actionCollectionCell"
     fileprivate let sectionInsets = UIEdgeInsets(top: 2, left: 10, bottom: 2, right: 10)
-    fileprivate var itemsPerRow = 10
+    fileprivate var itemsPerRow = 11
     fileprivate var actionList = [[String?]](repeating: [String?](repeating:nil, count:12), count: 4)
     fileprivate var actionParameterList = [[String?]](repeating: [String?](repeating:nil, count:12), count: 4)
     fileprivate var actionParameterIds = [[String?]](repeating: [String?](repeating:nil, count:12), count: 4)
@@ -96,6 +96,8 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             self.commentTextView.textColor = UIColor.lightGray
         }
         self.title = "Agitation Monitor"
+        self.picture.image = #imageLiteral(resourceName: "labimg")
+        
         self.multiSelect.backgroundColor = UIColor.blue
         self.sendActionButton.backgroundColor = UIColor.blue
         self.commentButton.backgroundColor = UIColor.blue
@@ -642,10 +644,11 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     
     func configurePic() {
         self.picture.image = #imageLiteral(resourceName: "labimg")
-        /*self.picture.layer.cornerRadius = self.picture.frame.size.width/10
+        //self.picture.layer.cornerRadius = self.picture.frame.size.width/10
         self.picture.clipsToBounds = true
-        self.picture.layer.borderColor = UIColor.gray.cgColor
-        self.picture.layer.borderWidth = 1*/
+        self.picture.contentMode = .scaleAspectFill
+        //self.picture.layer.borderColor = UIColor.gray.cgColor
+        //self.picture.layer.borderWidth = 1*/
     }
     
     func configureView() {
@@ -718,6 +721,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                                 }
                                 if id == Int(self.actionParameterIds[j][k]!) {
                                     self.multiSelectedIndices.insert(IndexPath(row: k, section: j))
+                                    self.selectedIndices.insert(IndexPath(row: k, section: j))
                                     break
                                 }
                             }
@@ -746,7 +750,14 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             }
             self.title = patient?["name"] as? String
             //self.age.text = patient?["age"] as? String
-            //self.gender.text = patient?["gender"] as? String
+            //self.gender.text = 
+            if let gender = patient?["gender"] as? String {
+                if (gender == "m") {
+                self.picture.image = #imageLiteral(resourceName: "Male-1400")
+                } else if (gender == "f") {
+                    self.picture.image = #imageLiteral(resourceName: "Female User-1400")
+                }
+            }
             self.pickerTextField.text = patient?["location"] as? String
         }
         return isReloadCells
@@ -859,6 +870,12 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
    
     func sendObservation(selectedParameters: [String], type: String, selectionType: String, cell: ActionCollectionViewCell, indexPath: IndexPath, recordedTime: String) -> Bool? {
         var isResponseSuccess: Bool? = nil
+        var selection: String = ""
+        if (selectionType == "clear") {
+            selection = "deselect"
+        } else {
+            selection = selectionType
+        }
         /*var actionString = "["
         for param in selectedParameters {
             actionString = actionString+param+","
@@ -870,7 +887,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             cmt = self.commentTextView.text!
         }
         if (self.patient != nil && Manager.userData != nil) {
-        let parameters: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "start_time": recordedTime, "comment": (cmt != nil) ? cmt! : cmt, "parameters": selectedParameters, "action": type]
+            let parameters: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "start_time": recordedTime, "comment": (cmt != nil) ? cmt! : cmt, "parameters": selectedParameters, "action": type, "selectionType": selection ,"location" : self.pickerTextField.text == nil ? nil : (self.pickerTextField.text) ]
         print("para:\(parameters)")
         
         
@@ -1045,8 +1062,13 @@ extension DetailViewController: UICollectionViewDataSource, UICollectionViewDele
         
             if (self.multiSelect.title(for: .normal) == self.multiOn) {
             if let parameter = self.actionParameterList[indexLoc.section][indexPath.row] {
+                if (self.multiSelectedIndices.contains(IndexPath(row: indexPath.row, section: indexLoc.section))) {
+                     self.configDeselectedCell(isSuccess: true, cell: cell, indexPath: IndexPath(row: indexPath.row, section: indexLoc.section))
+                }
+                    else {
                 let timeClicked = self.getTimestamp()
                 self.displayConfirmation(message: "Click 'Ok' to send", selectedParameters: [parameter], type: "stop event", selectionType: "deselect", cell: cell, indexPath: IndexPath(row: indexPath.row, section: indexLoc.section), recordedTime: timeClicked)
+                }
             }
             } else {
                 self.configDeselectedCell(isSuccess: true, cell: cell, indexPath: IndexPath(row: indexPath.row, section: indexLoc.section))
@@ -1076,6 +1098,10 @@ extension DetailViewController: UICollectionViewDataSource, UICollectionViewDele
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         if Manager.userData!["id"] as? String == self.patient?["observer_id"] as? String || self.patient?["observer_id"] as? String == nil {
+            if (self.pickerTextField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)! {
+                self.displayAlertMessage(message: "Please choose location first")
+                return
+            }
         if (self.sharing == false) {
             self.sharing = true
         }

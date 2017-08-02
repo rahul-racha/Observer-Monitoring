@@ -71,7 +71,7 @@ class PatientRootTableViewController: UIViewController, UITableViewDataSource, U
 
         }*/
         
-        tableView.backgroundColor = UIColor.gray
+        //tableView.backgroundColor = UIColor.white
         //tableView.rowHeight = UITableViewAutomaticDimension
         //tableView.estimatedRowHeight = 70
         
