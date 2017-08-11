@@ -7,35 +7,70 @@
 //
 
 import UIKit
+import Alamofire
 
-class AddPatientViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
-    var pickGender = ["Male", "Female", "Neutral"]
+class AddPatientViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextViewDelegate {
+    var pickGender = ["Male", "Female", "Prefer not to say"]
     var age: Int?
     var date: Date?
-    @IBOutlet weak var patientName: UITextField!
+    @IBOutlet weak var firstName: UITextField!
+    @IBOutlet weak var lastName: UITextField!
     @IBOutlet weak var gender: UITextField!
     @IBOutlet weak var dob: UITextField!
-    @IBOutlet weak var hamburger: UIBarButtonItem!
+    //@IBOutlet weak var hamburger: UIBarButtonItem!
+    @IBOutlet weak var patientDesc: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
         
         // Do any additional setup after loading the view.
-        if (revealViewController() != nil) {
+        /*if (revealViewController() != nil) {
             hamburger.target = revealViewController()
             hamburger.action = #selector(SWRevealViewController.revealToggle(_:))
             //revealViewController().rearViewRevealWidth = 275
             //revealViewController().rightViewRevealWidth  =
             view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        }
+        }*/
+        self.patientDesc.delegate = self
+        self.patientDesc.text = "write description (optional)"
+        self.patientDesc.textColor = UIColor.lightGray
+        
         self.initPicker()
         self.initDatePicker()
+        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
+        tap.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tap)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    func displayAlertMessage(message: String) {
+        let alertMsg = UIAlertController(title:"Alert", message: message,
+                                         preferredStyle:UIAlertControllerStyle.alert);
+        
+        let confirmAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil );
+        alertMsg.addAction(confirmAction)
+        present(alertMsg, animated:true, completion: nil)
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if self.patientDesc.textColor == UIColor.lightGray {
+            self.patientDesc.text = nil
+            self.patientDesc.textColor = UIColor.black
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if self.patientDesc.text.isEmpty {
+            self.patientDesc.text = "write description (optional)"
+            self.patientDesc.textColor = UIColor.lightGray
+        }
+    }
+
     
     func tappedToolBarBtn(_ sender: UIBarButtonItem) {
         
@@ -126,6 +161,8 @@ class AddPatientViewController: UIViewController, UIPickerViewDelegate, UIPicker
     
     func initDatePicker() {
         let datePickerView = UIDatePicker()
+        datePickerView.minimumDate = Calendar.current.date(byAdding: .year, value: -150, to: Date())
+        datePickerView.maximumDate = Calendar.current.date(byAdding: .year, value: -1, to: Date())
         datePickerView.datePickerMode = UIDatePickerMode.date
         datePickerView.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: UIControlEvents.valueChanged)
         
@@ -166,7 +203,20 @@ class AddPatientViewController: UIViewController, UIPickerViewDelegate, UIPicker
         
         dob.inputAccessoryView = toolBar
     }
-
+    
+    @IBAction func clearAll(_ sender: Any) {
+        self.firstName.text = nil
+        self.lastName.text = nil
+        self.gender.text = nil
+        self.dob.text = nil
+        self.patientDesc.text = nil
+        
+    }
+    
+    
+    @IBAction func dismissAddPatient(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
     
     @IBAction func addPatient(_ sender: Any) {
         //let components = Calendar.current.dateComponents([.year, .month, .day], from: self.date!)
@@ -175,13 +225,64 @@ class AddPatientViewController: UIViewController, UIPickerViewDelegate, UIPicker
             //let fromDOB = Calendar.current.date(from: DateComponents(year: year, month: month, day: day))!
             //self.age = fromDOB.age
         //}
+        
+        if ((self.firstName.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)! || (self.lastName.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)!) {
+            self.displayAlertMessage(message: "first name / last name should not be empty")
+            return
+        } else if ((self.gender.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)!) {
+            self.displayAlertMessage(message: "enter the gender")
+            return
+        } else if ((self.dob.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)!) {
+            self.displayAlertMessage(message: "enter the date of bith of the patient (approximate estimation if not known")
+            return
+        }
+        
+        
         let gregorian = Calendar(identifier: .gregorian)
         let fromDOB = gregorian.dateComponents([.year], from: self.date!, to: Date())
         self.age = fromDOB.year!
-        
+        print("AGE:\(self.age)")
+        var isResponseSuccess: Bool? = nil
         print(self.age!)
+        let name = self.firstName.text!+" "+self.lastName.text!
+        var genderText = ""
+        if (self.gender.text == "Male") {
+            genderText = "m"
+        } else if (self.gender.text == "Female") {
+            genderText = "f"
+        }
         
+        let parameters: Parameters = ["name": name, "age": self.age, "gender": self.gender.text, "description": self.patientDesc.text]
+        Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/addNewUser.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300)/*.validate(contentType: ["application/json"])*/.responseData { response in
+            DispatchQueue.main.async(execute: {
+                if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                    print("Data: \(utf8Text)")
+                    if utf8Text.range(of:"success") != nil{
+                        self.displayAlertMessage(message: "Created :)")
+                        isResponseSuccess = true
+                        self.firstName.text = nil
+                        self.lastName.text = nil
+                        self.gender.text = nil
+                        self.dob.text = nil
+                        self.patientDesc.text = nil
+                    } else {
+                        // Perform ACTION
+                        self.displayAlertMessage(message: "Something went wrong :(")
+                        isResponseSuccess = false
+                    }
+                    
+                } else {
+                    self.displayAlertMessage(message: "Server response is empty")
+                    isResponseSuccess = false
+                }
+                
+            })
+        }
     }
+    
+    /*@IBAction func dismissAddPatient(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }*/
     
 }
 

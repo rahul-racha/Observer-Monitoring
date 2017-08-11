@@ -323,7 +323,7 @@ class PatientRootTableViewController: UIViewController, UITableViewDataSource, U
                     self.selectedPatient?["observer_id"] = prevState?[0]["observer_id"] as? String
                     self.selectedPatient?["parameters"] = self.strToArray(explodeString: prevState?[0]["parameters"] as? String)
                     
-                    self.selectedPatient?["parameters"] = self.strToArray(explodeString: prevState?[0]["multi_parameters"] as? String)
+                    self.selectedPatient?["multi_parameters"] = self.strToArray(explodeString: prevState?[0]["multi_parameters"] as? String)
                     //self.selectedPatient?["parameters"] = [5,10,14]
                     print("selected patient:\(self.selectedPatient)")
                     //DispatchQueue.main.async(execute: {

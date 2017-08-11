@@ -90,13 +90,44 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        //print(userInfo)
+        
+        print(userInfo)
         let data = userInfo["aps"] as! [String : Any]
         let patient: [String: Any] = data["data"] as! [String : Any]
+        print("in app delegateeasdsad")
+        print(patient["location"])
+        print("ptient::::::\(patient)")
+        let isLocation = data["forlocation"] as? String
         if (Manager.triggerNotifications == true) {
             //displayPatient(patient: patient)
+            if (isLocation != nil && isLocation! == "yes") {
+                self.modifyPatientLocation(modifiedPatient: patient)
+            }
         }
         completionHandler(UIBackgroundFetchResult.newData);
+    }
+
+    func modifyPatientLocation(modifiedPatient: [String: Any]) {
+        ///let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        //let dvc/*UIApplication.shared.keyWindow?.rootViewController*/ = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+        //UIApplication.shared.keyWindow?.rootViewController = dvc as DetailViewController
+        //let swRevViewController = storyboard.instantiateViewController(withIdentifier: "SWRevealViewController") as! SWRevealViewController
+        //UIApplication.shared.keyWindow?.rootViewController = swRevViewController
+        //let frontNavController = swRevViewController.frontViewController as! UINavigationController
+        //let dvc = frontNavController.viewControllers[0] as! DetailViewController
+        //let dvc = UIApplication.shared.keyWindow?.rootViewController as! DetailViewController
+        //Manager.reloadAllView = false
+        //dvc.viewDidLoad()
+        //dvc.changePatientDetails(modifiedPatient: modifiedPatient)
+        
+        if let rootViewController = window?.rootViewController as? SWRevealViewController {
+            if let navController = rootViewController.frontViewController as? UINavigationController {
+                if let viewController = navController.viewControllers[0] as? DetailViewController {
+                    viewController.changePatientDetails(modifiedPatient: modifiedPatient)
+                }
+            }
+        }
+        
     }
     
     /*func displayPatient(patient: [String: Any]) {

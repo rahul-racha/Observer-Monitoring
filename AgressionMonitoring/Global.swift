@@ -15,6 +15,7 @@ struct Manager {
     static var patientDetails: [Dictionary<String,Any>]?
     static var reloadAllCells: Bool = true
     //static var addControlHold: Bool = false
+    static var reloadAllView: Bool = true
     static var deviceId: String?
     static var triggerNotifications: Bool = false
 }

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3D0009081F3D183A00669E72 /* DeletePatientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0009071F3D183A00669E72 /* DeletePatientViewController.swift */; };
+		3D0009151F3DFFB100669E72 /* DeletePatientTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0009141F3DFFB100669E72 /* DeletePatientTableViewCell.swift */; };
 		3D0A1EB71EF045ED001F9365 /* SwiftKeychainWrapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0DC6231EF045130011CB7D /* SwiftKeychainWrapper.framework */; };
 		3D0A1EB81EF045ED001F9365 /* SwiftKeychainWrapper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0DC6231EF045130011CB7D /* SwiftKeychainWrapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3D0A1EC31EF045ED001F9365 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0DC60F1EF045000011CB7D /* Alamofire.framework */; };
@@ -188,6 +190,8 @@
 /* Begin PBXFileReference section */
 		2AB310B3DECAF560B2C188C8 /* Pods_AgressionMonitoring.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgressionMonitoring.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3916462B6938D3BCE08B58C9 /* Pods-AgressionMonitoring.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgressionMonitoring.release.xcconfig"; path = "Pods/Target Support Files/Pods-AgressionMonitoring/Pods-AgressionMonitoring.release.xcconfig"; sourceTree = "<group>"; };
+		3D0009071F3D183A00669E72 /* DeletePatientViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeletePatientViewController.swift; sourceTree = "<group>"; };
+		3D0009141F3DFFB100669E72 /* DeletePatientTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeletePatientTableViewCell.swift; sourceTree = "<group>"; };
 		3D0DC6011EF041DC0011CB7D /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		3D0DC6031EF045000011CB7D /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = "../Alamofire-master/Alamofire.xcodeproj"; sourceTree = "<group>"; };
 		3D0DC61C1EF045130011CB7D /* SwiftKeychainWrapper.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftKeychainWrapper.xcodeproj; path = "../SwiftKeychainWrapper-develop/SwiftKeychainWrapper.xcodeproj"; sourceTree = "<group>"; };
@@ -366,6 +370,8 @@
 				41B61AFC1EE71A68008865FF /* PatientRootTableViewCell.swift */,
 				41B61AFE1EE71D69008865FF /* PatientRootUIView.swift */,
 				3D26334C1EF97B5F00BD3750 /* AddPatientViewController.swift */,
+				3D0009071F3D183A00669E72 /* DeletePatientViewController.swift */,
+				3D0009141F3DFFB100669E72 /* DeletePatientTableViewCell.swift */,
 			);
 			name = Patient;
 			sourceTree = "<group>";
@@ -700,6 +706,7 @@
 				41B61AE71EE5A3F9008865FF /* AppDelegate.swift in Sources */,
 				41B61AFD1EE71A68008865FF /* PatientRootTableViewCell.swift in Sources */,
 				3DD8880A1F13CF19005A2438 /* ActionTableViewCell.swift in Sources */,
+				3D0009081F3D183A00669E72 /* DeletePatientViewController.swift in Sources */,
 				3D0DC6021EF041DC0011CB7D /* LoginViewController.swift in Sources */,
 				3DD887931F029304005A2438 /* UISliderX.swift in Sources */,
 				3DD887F81F0FCE68005A2438 /* APLSectionTopToBottomFlowLayout.m in Sources */,
@@ -714,6 +721,7 @@
 				3DD887161F019F05005A2438 /* RegisterViewController.swift in Sources */,
 				41B61AF91EE5B4B4008865FF /* LimbSliderDesign.swift in Sources */,
 				3D5DAEB11EFAF40B00D650EA /* ObservedChartView.swift in Sources */,
+				3D0009151F3DFFB100669E72 /* DeletePatientTableViewCell.swift in Sources */,
 				3D2633471EF441D700BD3750 /* SWRevealViewController.m in Sources */,
 				3DD887941F029304005A2438 /* UITextFieldX.swift in Sources */,
 				3DD887F61F0FCE68005A2438 /* APLExpandableCollectionView.m in Sources */,
