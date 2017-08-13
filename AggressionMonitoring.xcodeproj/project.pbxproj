@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3D0009081F3D183A00669E72 /* DeletePatientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0009071F3D183A00669E72 /* DeletePatientViewController.swift */; };
 		3D0009151F3DFFB100669E72 /* DeletePatientTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0009141F3DFFB100669E72 /* DeletePatientTableViewCell.swift */; };
+		3D0009171F4007DC00669E72 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0009161F4007DB00669E72 /* RegistrationViewController.swift */; };
 		3D0A1EB71EF045ED001F9365 /* SwiftKeychainWrapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0DC6231EF045130011CB7D /* SwiftKeychainWrapper.framework */; };
 		3D0A1EB81EF045ED001F9365 /* SwiftKeychainWrapper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0DC6231EF045130011CB7D /* SwiftKeychainWrapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3D0A1EC31EF045ED001F9365 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0DC60F1EF045000011CB7D /* Alamofire.framework */; };
@@ -192,6 +193,7 @@
 		3916462B6938D3BCE08B58C9 /* Pods-AgressionMonitoring.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgressionMonitoring.release.xcconfig"; path = "Pods/Target Support Files/Pods-AgressionMonitoring/Pods-AgressionMonitoring.release.xcconfig"; sourceTree = "<group>"; };
 		3D0009071F3D183A00669E72 /* DeletePatientViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeletePatientViewController.swift; sourceTree = "<group>"; };
 		3D0009141F3DFFB100669E72 /* DeletePatientTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeletePatientTableViewCell.swift; sourceTree = "<group>"; };
+		3D0009161F4007DB00669E72 /* RegistrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		3D0DC6011EF041DC0011CB7D /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		3D0DC6031EF045000011CB7D /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = "../Alamofire-master/Alamofire.xcodeproj"; sourceTree = "<group>"; };
 		3D0DC61C1EF045130011CB7D /* SwiftKeychainWrapper.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftKeychainWrapper.xcodeproj; path = "../SwiftKeychainWrapper-develop/SwiftKeychainWrapper.xcodeproj"; sourceTree = "<group>"; };
@@ -430,6 +432,7 @@
 				41BBAD531EEB43FE005C9E55 /* NextDetailViewController.swift */,
 				41B61AF81EE5B4B4008865FF /* LimbSliderDesign.swift */,
 				3DD887151F019F05005A2438 /* RegisterViewController.swift */,
+				3D0009161F4007DB00669E72 /* RegistrationViewController.swift */,
 			);
 			path = AgressionMonitoring;
 			sourceTree = "<group>";
@@ -699,6 +702,7 @@
 			files = (
 				3DD887951F029304005A2438 /* UIViewAnchorPoint.swift in Sources */,
 				41B61AE91EE5A3F9008865FF /* DetailViewController.swift in Sources */,
+				3D0009171F4007DC00669E72 /* RegistrationViewController.swift in Sources */,
 				3DD887911F029304005A2438 /* UIImageViewX.swift in Sources */,
 				3D5DAEB71EFB0D1100D650EA /* XAxisFormatter.swift in Sources */,
 				3DD887AB1F0FB399005A2438 /* ActionCollectionViewCell.swift in Sources */,

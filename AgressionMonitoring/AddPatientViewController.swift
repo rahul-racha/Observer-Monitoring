@@ -19,10 +19,12 @@ class AddPatientViewController: UIViewController, UIPickerViewDelegate, UIPicker
     @IBOutlet weak var dob: UITextField!
     //@IBOutlet weak var hamburger: UIBarButtonItem!
     @IBOutlet weak var patientDesc: UITextView!
+    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    var isScroll: Bool?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.isScroll = true
         
         // Do any additional setup after loading the view.
         /*if (revealViewController() != nil) {
@@ -37,7 +39,13 @@ class AddPatientViewController: UIViewController, UIPickerViewDelegate, UIPicker
         self.patientDesc.textColor = UIColor.lightGray
         
         self.initPicker()
-        self.initDatePicker()
+        //self.initDatePicker()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(LoginViewController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(LoginViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        
+
+        
         let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
         tap.cancelsTouchesInView = false
         self.view.addGestureRecognizer(tap)
@@ -71,6 +79,33 @@ class AddPatientViewController: UIViewController, UIPickerViewDelegate, UIPicker
         }
     }
 
+    func keyboardWillShow(notification: NSNotification) {
+        if (self.isScroll == true) {
+        adjustHeight(show: true, notification: notification)
+            self.isScroll = false
+        }
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        if (self.isScroll == false) {
+        adjustHeight(show: false, notification: notification)
+            self.isScroll = true
+        }
+    }
+    
+    func adjustHeight(show:Bool, notification:NSNotification) {
+        var userInfo = notification.userInfo!
+        let keyboardFrame:CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        let animationDurarion = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! TimeInterval
+        let changeInHeight = (keyboardFrame.height) * (show ? 1 : -1)
+        UIView.animate(withDuration: animationDurarion, animations: { () -> Void in
+            self.bottomConstraint.constant += changeInHeight
+            //if self.viewBox.frame.origin.y == 0{
+            //self.viewBox.frame.origin.y += changeInHeight
+            //}
+        })
+    }
+    
     
     func tappedToolBarBtn(_ sender: UIBarButtonItem) {
         
@@ -82,7 +117,7 @@ class AddPatientViewController: UIViewController, UIPickerViewDelegate, UIPicker
     func donePressed(_ sender: UIBarButtonItem) {
         
         gender.resignFirstResponder()
-        dob.resignFirstResponder()
+        //dob.resignFirstResponder()
         
     }
 
@@ -204,6 +239,15 @@ class AddPatientViewController: UIViewController, UIPickerViewDelegate, UIPicker
         dob.inputAccessoryView = toolBar
     }
     
+    func isValidAge(testStr: String) -> Bool {
+        let ageRegEx = "^(?=.*[1-9])[0-9]{1,2}"//"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
+        
+        var ageTest = NSPredicate(format:"SELF MATCHES %@", ageRegEx)
+        let result = ageTest.evaluate(with: testStr)
+        
+        return result
+    }
+    
     @IBAction func clearAll(_ sender: Any) {
         self.firstName.text = nil
         self.lastName.text = nil
@@ -233,26 +277,31 @@ class AddPatientViewController: UIViewController, UIPickerViewDelegate, UIPicker
             self.displayAlertMessage(message: "enter the gender")
             return
         } else if ((self.dob.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)!) {
-            self.displayAlertMessage(message: "enter the date of bith of the patient (approximate estimation if not known")
+            self.displayAlertMessage(message: "enter the patient's age (approximate estimation if not known")
+            return
+        } else if (!self.isValidAge(testStr: self.dob.text!)) {
+            self.displayAlertMessage(message: "Please enter a number not greater than 99.")
             return
         }
         
+        self.firstName.text = self.firstName.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        self.lastName.text = self.lastName.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         
-        let gregorian = Calendar(identifier: .gregorian)
+        /*let gregorian = Calendar(identifier: .gregorian)
         let fromDOB = gregorian.dateComponents([.year], from: self.date!, to: Date())
-        self.age = fromDOB.year!
-        print("AGE:\(self.age)")
+        self.age = fromDOB.year!*/
         var isResponseSuccess: Bool? = nil
         print(self.age!)
         let name = self.firstName.text!+" "+self.lastName.text!
         var genderText = ""
-        if (self.gender.text == "Male") {
+        if (self.gender.text! == "Male") {
             genderText = "m"
-        } else if (self.gender.text == "Female") {
+        } else if (self.gender.text! == "Female") {
             genderText = "f"
         }
         
-        let parameters: Parameters = ["name": name, "age": self.age, "gender": self.gender.text, "description": self.patientDesc.text]
+        let parameters: Parameters = ["name": name, "age": self.age!, "gender": genderText, "userdescription": self.patientDesc.text, "role": "patient"]
+        print(parameters)
         Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/addNewUser.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300)/*.validate(contentType: ["application/json"])*/.responseData { response in
             DispatchQueue.main.async(execute: {
                 if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {

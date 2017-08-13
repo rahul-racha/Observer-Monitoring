@@ -12,12 +12,15 @@ class SlideOutViewController: UIViewController {
 
     @IBOutlet weak var profilePic: UIImageView!
     @IBOutlet weak var userName: UILabel!
+    @IBOutlet weak var roleLabel: UILabel!
+    
     var role: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.userName.text = Manager.userData?["name"] as? String
         self.role = Manager.userData?["role"] as? String
+        self.roleLabel.text = Manager.userData?["role"] as? String
         print("Name: \(Manager.userData)")
         print(Manager.userData?["name"] as? String)
         self.configurePic()

@@ -17,6 +17,9 @@ class LoginViewController: UIViewController, NSURLConnectionDelegate {
     @IBOutlet weak var _username: UITextField!
     @IBOutlet weak var _password: UITextField?
     @IBOutlet weak var rememberCredentials: UISwitch!
+    @IBOutlet weak var viewBox: UIViewX!
+    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    var isScroll: Bool?
     
     //@IBOutlet weak var headerTopConstraint: NSLayoutConstraint!
     
@@ -40,36 +43,35 @@ class LoginViewController: UIViewController, NSURLConnectionDelegate {
 
     
     func keyboardWillShow(notification: NSNotification) {
-        /* if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-         if self.view.frame.origin.y == 0{
-         self.view.frame.origin.y -= keyboardSize.height
-         }
-         }*/
-        //let info = notification.userInfo!
-        //let keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        
-        UIView.animate(withDuration: 0.1, animations: { () -> Void in
-        //    self.bottomConstraint.constant = keyboardFrame.size.height + 20
-        })
+        if (self.isScroll == true) {
+       adjustHeight(show: true, notification: notification)
+            self.isScroll = false
+        }
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        /*
-         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-         if self.view.frame.origin.y != 0{
-         self.view.frame.origin.y += keyboardSize.height
-         }
-         }*/
-        
+        if (self.isScroll == false) {
+        adjustHeight(show: false, notification: notification)
+            self.isScroll = true
+        }
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self);
+    func adjustHeight(show:Bool, notification:NSNotification) {
+        var userInfo = notification.userInfo!
+        let keyboardFrame:CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        let animationDurarion = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! TimeInterval
+        let changeInHeight = (keyboardFrame.height) * (show ? 1 : -1)
+        UIView.animate(withDuration: animationDurarion, animations: { () -> Void in
+            self.bottomConstraint.constant += changeInHeight
+            //if self.viewBox.frame.origin.y == 0{
+                //self.viewBox.frame.origin.y += changeInHeight
+            //}
+        })
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.isScroll = true
         Manager.triggerNotifications = false
         keyChainUser = KeychainWrapper.standard.string(forKey: "username")
         if(keyChainUser != nil) {
@@ -87,8 +89,8 @@ class LoginViewController: UIViewController, NSURLConnectionDelegate {
         //        password = UserDefaults.standard.string(forKey: "keepPassword")!
         // Do any additional setup after loading the view, typically from a nib.
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(LoginViewController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(LoginViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
         tap.cancelsTouchesInView = false

@@ -207,84 +207,45 @@ class PatientRootTableViewController: UIViewController, UITableViewDataSource, U
             cell.patientName.text = Manager.patientDetails?[indexPath.section]["name"] as? String
             print(cell.patientName.text)
             cell.location.text = Manager.patientDetails?[indexPath.section]["location"] as? String
-            let limb_status = Manager.patientDetails?[indexPath.section]["limb_status"] as? String
+            
+            /*let limb_status = Manager.patientDetails?[indexPath.section]["limb_status"] as? String
             let voice_status = Manager.patientDetails?[indexPath.section]["voice_status"] as? String
-            //let view = UIView(frame: cell.bounds)
-            // Set background color that you want
-            //view.backgroundColor = UIColor(colorLiteralRed: 0, green: 0.8, blue: 0, alpha: 1.00)
-            //cell.selectedBackgroundView = view
-            //self.collectionView.reloadItems(at: [indexPath])
-            //cell.causeTime.isHidden = false
+            
             if(limb_status == "stable" && voice_status == "stable") {
-                //cell.status.text = "stable"
-                //cell.causeTime.isHidden = true
-                //cell.status.text = "stable"
+                
                 cell.patientStatus(status: PatientRootTableViewCell.Status.stable)
                 Manager.patientDetails?[indexPath.section]["status_color"] = UIColor.green
             } else if (limb_status == "agitated" && voice_status == "agitated") {
-                //cell.status.text = "aggressive"
-                //let name = Manager.patientDetails?[indexPath.row]["status_timestamp"] as? String
-                //let endIndex = name?.index((name?.endIndex)!, offsetBy: -4)
-                //let truncated = name?.substring(to: endIndex!)
-                //cell.causeTime.text = truncated
-                //cell.status.text = "hands & voice"
+               
                 cell.patientStatus(status: PatientRootTableViewCell.Status.aggressive)
                 Manager.patientDetails?[indexPath.section]["status_color"] = UIColor.red
             } else if (limb_status == "agitated" || voice_status == "agitated") {
                 //cell.status.text = "slightly aggressive"
                 if limb_status == "agitated" {
-                    /*let name = Manager.patientDetails?[indexPath.row]["status_timestamp"] as? String
-                    let endIndex = name?.index((name?.endIndex)!, offsetBy: -4)
-                    let truncated = name?.substring(to: endIndex!)
-                    cell.causeTime.text = truncated*/
-                    //cell.status.text = "hands"
                     
                 } else if voice_status == "agitated" {
-                    //cell.status.text = "voice"
-                    /*let name = Manager.patientDetails?[indexPath.row]["voicestatus_timestamp"] as? String
-                    let endIndex = name?.index((name?.endIndex)!, offsetBy: -9)
-                    let truncated = name?.substring(to: endIndex!)
-                    cell.causeTime.text = truncated*/
-                    
+
                 }
                 cell.patientStatus(status:  PatientRootTableViewCell.Status.partiallyaggressive)
                 Manager.patientDetails?[indexPath.section]["status_color"] = UIColor.yellow
             } else {
-                //cell.status.text = "unknown"
                 cell.patientStatus(status:  PatientRootTableViewCell.Status.unknown)
                 Manager.patientDetails?[indexPath.section]["status_color"] = UIColor.gray
-            }
+            }*/
             
             if (indexPath.section == 0) {
                 self.selectedPatient = Manager.patientDetails?[0]
                 //performSegue(withIdentifier: "DetailView", sender: self)
-            } else if (indexPath.section == Manager.patientDetails!.count - 1) {
+            } /*else if (indexPath.section == Manager.patientDetails!.count - 1) {
                 //performSegue(withIdentifier: "DetailView", sender: self)
-            }
-            
-            
-            //cell.age.text = self.patientDetails?[indexPath.row]["age"] as? String
-            // cell.gender.text = self.patientDetails?[indexPath.row]["gender"] as? String
-            // cell.wid.text = self.patientDetails?[indexPath.row]["watch_name"] as? String
-            //cell.wname.text = self.patientDetails?[indexPath.row]["device_name"] as? String
-            //cell.location.text = self.patientDetails?[indexPath.row]["location"] as? String
-            //cell.layoutMargins = UIEdgeInsets(top: 0, left: 15, bottom: 20, right: 8)
+            }*/
+
             cell.layer.cornerRadius = 5.0
             cell.layer.borderWidth = 3.0
             cell.layer.borderColor = UIColor.black.cgColor
-            //cell.backgroundColor = UIColor.gray
+            cell.view.backgroundColor = UIColor.white
             cell.clipsToBounds = true
-            
-            /*cell.contentView.backgroundColor = UIColor.clear
-            let whiteRoundedView : UIView = UIView(frame: CGRect(0, 10, self.view.frame.size.width, 70))
-            whiteRoundedView.layer.backgroundColor = CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(), components: [1.0, 1.0, 1.0, 1.0])
-            whiteRoundedView.layer.masksToBounds = false
-            whiteRoundedView.layer.cornerRadius = 3.0
-            whiteRoundedView.layer.shadowOffset = CGRect(origin: -1, size: 1)
-            whiteRoundedView.layer.shadowOpacity = 0.5
-            cell.contentView.addSubview(whiteRoundedView)
-            cell.contentView.sendSubview(toBack: whiteRoundedView)
-             */
+
         }
         
         return cell
@@ -319,7 +280,8 @@ class PatientRootTableViewController: UIViewController, UITableViewDataSource, U
                     print("prev State: \(prevState)")
                     if (prevState != nil) {
                     self.selectedPatient?["action"] = prevState?[0]["action"] as? String
-                    self.selectedPatient?["comments"] = prevState?[0]["comments"] as? String
+                    self.selectedPatient?["comment"] = prevState?[0]["comments"] as? String
+                        print(self.selectedPatient?["comment"])
                     self.selectedPatient?["observer_id"] = prevState?[0]["observer_id"] as? String
                     self.selectedPatient?["parameters"] = self.strToArray(explodeString: prevState?[0]["parameters"] as? String)
                     

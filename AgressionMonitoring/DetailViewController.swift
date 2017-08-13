@@ -48,7 +48,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     //var locationSet: Set<String> = [] //["Room 1", "Room 2", "Room 3", "Room 4", "Room 5"]
     var pickOption = [String]()
     var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
-    var cellHeightBooster: CGFloat = 1.3
+    var cellHeightBooster: CGFloat = 1.7
     var cellWidthBooster: CGFloat = 1
     let commentPlaceholder: String = "write your observations"
     var isStop: Bool = false
@@ -338,8 +338,8 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                                 let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! Dictionary<String,Any>
                                 let prevState = json["pastdetails"] as? [Dictionary<String,Any>]
                                 if (prevState != nil) {
-                                self.patient?["action"] = prevState?[0]["ation"] as? String
-                                self.patient?["comments"] = prevState?[0]["comments"] as? String
+                                self.patient?["action"] = prevState?[0]["action"] as? String
+                                self.patient?["comment"] = prevState?[0]["comments"] as? String
                                 self.patient?["observer_id"] = prevState?[0]["observer_id"] as? String
                                 let strToArray: [String] = self.strToArray(explodeString: prevState?[0]["parameters"] as? String)
                                 self.patient?["parameters"] = strToArray
@@ -464,7 +464,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                                 return
                             }
                             
-                            if (self.multiSelect.title(for: .normal) == self.multiOn) {
+                            //if (self.multiSelect.title(for: .normal) == self.multiOn) {
                                 if let parameter = self.actionParameterList[indexLoc.section][indexPath.row] {
                                     let timeClicked: String = self.getTimestamp()
                                     /*if (self.multiSelect.title(for: .normal) == self.multiOff) {
@@ -472,7 +472,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                                      } else {
                                      timeClicked = self.getTimestamp()
                                      }*/
-                                    self.displayConfirmation(message: "Click 'Ok' to send", selectedParameters: [parameter], type: "start event", selectionType: "select", cell: cell, indexPath: IndexPath(row: indexPath.row, section: indexLoc.section), recordedTime: timeClicked)
+                                    self.displayConfirmation(message: "Click 'Ok' to capture continuous action", selectedParameters: [parameter], type: "start event", selectionType: "select", cell: cell, indexPath: IndexPath(row: indexPath.row, section: indexLoc.section), recordedTime: timeClicked)
                                     
                                 }
                                 
@@ -485,9 +485,9 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                                  cell.actionView!.backgroundColor = UIColor.green
                                  self.reloadActionCells()
                                  }*/
-                            } else {
+                            /*} else {
                                 self.configSelectedCell(isSuccess: true, cell: cell, indexPath: IndexPath(row: indexPath.row, section: indexLoc.section))
-                            }
+                            }*/
                         } else {
                             self.displayAlertMessage(message: "you cannot modify other observer's record. Allow \(self.patient?["observer_id"] as? String) to submit the action(s)")
                         }
@@ -570,26 +570,26 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         }
     }
     
-    func prepareToSendData(actionType: String) -> Bool?{
+    /*func prepareToSendData(actionType: String) -> Bool?{
         var selectedParameters = [String]()
         //if let selList = self.selectedIndices? {
-        for idx in self.multiSelectedIndices {
+       //# for idx in self.multiSelectedIndices {
             //print("action dict:\(self.actionDictionary)")
             //let key = (idx.section*10)+(idx.row)
             //if let _ = self.actionDictionary?.index(forKey: key) {
             //    selectedParameters.append((self.actionDictionary?[key])!)
             //}
-            selectedParameters.append((self.actionParameterList[idx.section][idx.row])!)
-        }
+         //#   selectedParameters.append((self.actionParameterList[idx.section][idx.row])!)
+        //#}
         //}
         let tCell = self.actionTableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? ActionTableViewCell
         let cell = tCell?.actionCollectionView.dequeueReusableCell(withReuseIdentifier: self.reuseCIdentifier, for: IndexPath(row: 0, section: 0)) as! ActionCollectionViewCell
         return self.sendObservation(selectedParameters: selectedParameters, type: actionType, selectionType: "multi", cell: cell, indexPath: IndexPath(row: 0, section: 0), recordedTime: self.actionTimeStamp == nil ? self.getTimestamp() : self.actionTimeStamp!)
-    }
+    }*/
     
     
     
-    func processActions(isSendAction: Bool, response: Bool?) {
+   /* func processActions(isSendAction: Bool, response: Bool?) {
         var resp: Bool? = response
         if (self.sendActionButton.title(for: .normal) == "Start Action") {
             if (isSendAction == true) {
@@ -634,10 +634,10 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                 }
             
         }
-    }
+    }*/
     
     @IBAction func onMultiSelect(_ sender: Any) {
-        for index in self.multiSelectedIndices {
+       /* for index in self.multiSelectedIndices {
             if (self.selectedIndices.contains(index)) {
                 self.selectedIndices.remove(index)
             }
@@ -652,18 +652,18 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         } else {
             self.multiSelect.setTitle(self.multiOn, for: .normal)
             self.multiSelect.backgroundColor = UIColor.blue
-        }
+        }*/
     }
     
     @IBAction func shareMultiAction(_ sender: Any) {
-        guard !self.multiSelectedIndices.isEmpty else {
+       /* guard !self.multiSelectedIndices.isEmpty else {
             self.displayAlertMessage(message: "No actions selected")
             //self.sharing = !self.sharing
             return
         }
         
         //guard sharing else { return }
-        self.processActions(isSendAction: true, response: nil)
+        self.processActions(isSendAction: true, response: nil)*/
     }
     /*
     func processEvent(isSendEvent: Bool, response: Bool?) {
@@ -693,7 +693,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     @IBAction func clearActions(_ sender: Any) {
         var selectedParameters = [String]()
         var allSelIndices = self.selectedIndices
-        if (self.sendActionButton.title(for: .normal) == "Stop Action") {
+       /* if (self.sendActionButton.title(for: .normal) == "Stop Action") {
             if (!self.multiSelectedIndices.isEmpty) {
                 for idx in self.multiSelectedIndices {
                     selectedParameters.append((self.actionParameterList[idx.section][idx.row])!)
@@ -706,7 +706,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             self.sendActionButton.setTitle("Start Action", for: .normal)
             self.sendActionButton.backgroundColor = UIColor.blue
             //self.multiSelect.isEnabled = true
-        }
+        }*/
         
         if (!allSelIndices.isEmpty) {
         for idx in allSelIndices {
@@ -717,7 +717,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             self.sendObservation(selectedParameters: selectedParameters, type: "stop event", selectionType: "clear", cell: cell, indexPath: IndexPath(row: 0, section: 0), recordedTime: self.getTimestamp())
         } else {
         
-        self.multiSelectedIndices.removeAll(keepingCapacity: false)
+        //self.multiSelectedIndices.removeAll(keepingCapacity: false)
         self.sharing = false
         self.reloadActionCells()
         }
@@ -726,7 +726,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     func clearActions(isSuccess: Bool?) {
         
         if (isSuccess != nil && isSuccess == true) {
-        self.multiSelectedIndices.removeAll(keepingCapacity: false)
+        //self.multiSelectedIndices.removeAll(keepingCapacity: false)
         self.sharing = false
         self.reloadActionCells()
         } else {
@@ -739,20 +739,22 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     func sendPatientState() {
         var isResponseSuccess: Bool? = nil
         var cmt: String? = nil
-        if (self.commentTextView.text != self.commentPlaceholder) {
+        if (self.commentTextView != nil && self.commentTextView.text != self.commentPlaceholder) {
             cmt = self.commentTextView.text!
+        } else {
+            cmt = ""
         }
         
         var selectedIds = [Int]()
         var multiSelectedIds = [Int]()
         var selIndices = self.selectedIndices
         
-        for idx in self.multiSelectedIndices {
+       /* for idx in self.multiSelectedIndices {
             multiSelectedIds.append(Int(self.actionParameterIds[idx.section][idx.row]!)!)
             if (selIndices.contains(idx)) {
                 selIndices.remove(idx)
             }
-        }
+        }*/
         
         
         for idx in selIndices {
@@ -768,18 +770,21 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             DispatchQueue.main.async(execute: {
                 if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
                     print("Data: \(utf8Text)")
-                    if utf8Text.range(of:"successs") != nil {
+                    if utf8Text.range(of:"success") != nil {
                         //self.displayAlertMessage(message: "Submitted :)")
+                        print("Success")
                         isResponseSuccess = true
                     } else {
                         // Perform ACTION
                         //self.displayAlertMessage(message: "Something went wrong :(")
                         isResponseSuccess = false
+                        print("no success")
                     }
                     
                 } else {
                     //self.displayAlertMessage(message: "Server response is empty")
                     isResponseSuccess = false
+                    print("no success")
                 }
 
             })
@@ -797,7 +802,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                 }
             }
         } else if (segue.identifier == "patientSegue") {
-            if (self.isStop == true || self.commentTextView.text != self.commentPlaceholder || self.selectedIndices.count > 0) {
+            if (/*self.isStop == true || */self.commentTextView.text != self.commentPlaceholder || self.selectedIndices.count > 0) {
                 self.sendPatientState()
             }
             if let destinationVC = segue.destination as? PatientRootTableViewController {
@@ -842,6 +847,8 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                 self.picture.image = #imageLiteral(resourceName: "Male-1400")
             } else if (gender == "f") {
                 self.picture.image = #imageLiteral(resourceName: "Female User-1400")
+            } else {
+                self.picture.image = #imageLiteral(resourceName: "labimg")
             }
         }
         //self.picture.layer.cornerRadius = self.picture.frame.size.width/10
@@ -865,12 +872,16 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     func configureDetails() -> Bool {
         var isReloadCells: Bool = true
         if (patient != nil) {
-            if let cmt = self.patient?["comment"] as? String {
-                self.commentTextView.text = cmt
+            //if let cmt = self.patient?["comment"] as? String {
+            if (self.patient?["comment"] != nil && self.patient?["comment"] as! String != "nil" && self.patient?["comment"] as! String != self.commentPlaceholder) {
+                self.commentTextView.text = self.patient?["comment"] as! String
+            } else {
+                    self.commentTextView.text = self.commentPlaceholder
+                    self.commentTextView.textColor = UIColor.lightGray
             }
             //if (self.patient?["action"] as? String != nil && "stop" == self.patient?["action"] as? String) {
             //if ((((self.patient?["parameters"] as? [String])?.count)! > 0) || (((self.patient?["multi_parameters"] as? [String])?.count)! > 0)) {
-            if (self.patient?["parameters"] as? [String] != nil || self.patient?["multi_parameters"] as? [String] != nil) {
+            if (self.patient?["parameters"] as? [String] != nil /*|| self.patient?["multi_parameters"] as? [String] != nil*/) {
             self.sharing = true
             self.multiSelectedIndices.removeAll(keepingCapacity: false)
                 print("observer in selected patient:\(self.patient?["observer_id"] as? String), \(Manager.userData!["id"] as? String)")
@@ -910,7 +921,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                 
                 
                 
-                if let multiParamIds = self.patient?["multi_parameters"] as? [String] {
+               /* if let multiParamIds = self.patient?["multi_parameters"] as? [String] {
                 if (multiParamIds.count > 0) {
                     for i in 0..<multiParamIds.count {
                         for j in 0..<(self.actionHeaders?.count)! {
@@ -932,20 +943,20 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                     self.sendActionButton.backgroundColor = UIColor.orange
                     self.multiSelect.isEnabled = false
                 }
-                }
+                }*/
                 
                self.reloadActionCells()
                self.updateSharedIndicesCount()
                
-               self.isStop = true
+               //self.isStop = true
                isReloadCells = false
             } else {
-                self.sendActionButton.setTitle("Start Action", for: .normal)
-                self.sendActionButton.backgroundColor = UIColor.blue
+                //self.sendActionButton.setTitle("Start Action", for: .normal)
+                //self.sendActionButton.backgroundColor = UIColor.blue
                 //self.sendActionButton.isEnabled = true
                 //self.multiSelect.isEnabled = true
                 //self.eventButton.isEnabled = true
-                self.isStop = false
+                //self.isStop = false
                 isReloadCells = true
  
             }
@@ -1079,8 +1090,10 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         actionString = actionString+"]"*/
         
         var cmt: String? = nil
-        if (self.commentTextView.text != self.commentPlaceholder) {
+        if (self.commentTextView != nil && self.commentTextView.text != self.commentPlaceholder) {
             cmt = self.commentTextView.text!
+        } else {
+            cmt = ""
         }
         
         var loc: String = ""
@@ -1123,9 +1136,9 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                     self.configSelectedCell(isSuccess: isResponseSuccess!, cell: cell, indexPath: indexPath)
                 } else if (selectionType == "deselect") {
                     self.configDeselectedCell(isSuccess:isResponseSuccess!, cell: cell, indexPath: indexPath)
-                } else if (selectionType == "multi") {
+                } /*else if (selectionType == "multi") {
                     self.processActions(isSendAction: false, response: isResponseSuccess)
-                } else if (selectionType == "clear") {
+                }*/ else if (selectionType == "clear") {
                     self.clearActions(isSuccess: isResponseSuccess)
                 } else if (selectionType == "single") {
                     //to do
@@ -1268,7 +1281,7 @@ extension DetailViewController: UICollectionViewDataSource, UICollectionViewDele
             if (indexLoc.section == 2 && (indexPath.row == 0 || indexPath.row == 4)) {
                 return
             }
-            if (self.multiSelect.title(for: .normal) == self.multiOn) {
+           // if (self.multiSelect.title(for: .normal) == self.multiOn) {
             if let parameter = self.actionParameterList[indexLoc.section][indexPath.row] {
                 let timeClicked = self.getTimestamp()
                 //if (self.multiSelectedIndices.contains(IndexPath(row: indexPath.row, section: indexLoc.section))) {
@@ -1277,12 +1290,12 @@ extension DetailViewController: UICollectionViewDataSource, UICollectionViewDele
                 //}
                 //    else {
                 
-                self.displayConfirmation(message: "Click 'Ok' to send", selectedParameters: [parameter], type: "stop event", selectionType: "deselect", cell: cell, indexPath: IndexPath(row: indexPath.row, section: indexLoc.section), recordedTime: timeClicked)
+                self.displayConfirmation(message: "Click 'Ok' to stop action", selectedParameters: [parameter], type: "stop event", selectionType: "deselect", cell: cell, indexPath: IndexPath(row: indexPath.row, section: indexLoc.section), recordedTime: timeClicked)
                 //}
             }
-            } else {
+            /*} else {
                 self.configDeselectedCell(isSuccess: true, cell: cell, indexPath: IndexPath(row: indexPath.row, section: indexLoc.section))
-            }
+            }*/
             
 //            if (isSuccess != nil && isSuccess == true) {
 //        cell.actionView!.backgroundColor = UIColor.darkGray
@@ -1330,7 +1343,7 @@ extension DetailViewController: UICollectionViewDataSource, UICollectionViewDele
             return
         }
 
-            if (self.multiSelect.title(for: .normal) == self.multiOn) {
+            //if (self.multiSelect.title(for: .normal) == self.multiOn) {
         if let parameter = self.actionParameterList[indexLoc.section][indexPath.row] {
             let timeClicked: String = self.getTimestamp()
             /*if (self.multiSelect.title(for: .normal) == self.multiOff) {
@@ -1338,7 +1351,7 @@ extension DetailViewController: UICollectionViewDataSource, UICollectionViewDele
             } else {
                 timeClicked = self.getTimestamp()
             }*/
-        self.displayConfirmation(message: "Click 'Ok' to send", selectedParameters: [parameter], type: "start event", selectionType: "single", cell: cell, indexPath: IndexPath(row: indexPath.row, section: indexLoc.section), recordedTime: timeClicked)
+        self.displayConfirmation(message: "Click 'Ok' to capture event", selectedParameters: [parameter], type: "start event", selectionType: "single", cell: cell, indexPath: IndexPath(row: indexPath.row, section: indexLoc.section), recordedTime: timeClicked)
         
         }
                 
@@ -1351,9 +1364,9 @@ extension DetailViewController: UICollectionViewDataSource, UICollectionViewDele
         cell.actionView!.backgroundColor = UIColor.green
         self.reloadActionCells()
             }*/
-            } else {
+           /* } else {
                 self.configSelectedCell(isSuccess: true, cell: cell, indexPath: IndexPath(row: indexPath.row, section: indexLoc.section))
-            }
+            }*/
         } else {
             self.displayAlertMessage(message: "you cannot modify other observer's record. Allow \(self.patient?["observer_id"] as? String) to submit the action(s)")
         }
@@ -1376,10 +1389,10 @@ extension DetailViewController: UICollectionViewDataSource, UICollectionViewDele
             cell.actionView!.backgroundColor = UIColor.lightGray
             cell.actionName.textColor = UIColor.black
         } else {
-        if (self.multiSelectedIndices.contains(IndexPath(row: indexPath.row, section: sec))) {
+        /*if (self.multiSelectedIndices.contains(IndexPath(row: indexPath.row, section: sec))) {
             cell.actionView.backgroundColor = UIColor.orange
             cell.actionName.textColor = UIColor.black
-        } else if (self.selectedIndices.contains(IndexPath(row: indexPath.row, section: sec))) {
+        } else */if (self.selectedIndices.contains(IndexPath(row: indexPath.row, section: sec))) {
             cell.actionView.backgroundColor = UIColor.green
             cell.actionName.textColor = UIColor.black
         } else {

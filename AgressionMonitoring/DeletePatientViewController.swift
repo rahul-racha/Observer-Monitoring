@@ -37,6 +37,9 @@ class DeletePatientViewController: UIViewController, UITableViewDataSource, UITa
                         //self.locationList = json["locations"] as! [String]
                         DispatchQueue.main.async(execute: {
                             self.tableView.reloadData()
+                            if (Manager.userData!["role"] as! String != "admin") {
+                                self.displayAlertMessage(message: "Contact admin")
+                            }
                         })
                         
                     }
@@ -53,6 +56,20 @@ class DeletePatientViewController: UIViewController, UITableViewDataSource, UITa
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    func displayAlert(message: String) {
+        
+        let confirmationAlert = UIAlertController(title: "Permission denied", message: message, preferredStyle: UIAlertControllerStyle.alert)
+        
+        confirmationAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
+            self.dismiss(animated: true, completion: nil)
+        }))
+        
+        
+        present(confirmationAlert, animated: true, completion: nil)
+        
+    }
+    
     
     func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
@@ -143,7 +160,7 @@ class DeletePatientViewController: UIViewController, UITableViewDataSource, UITa
         print("para:\(parameters)")
         
         
-        Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/xyz.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300)/*.validate(contentType: ["application/json"])*/.responseData { response in
+        Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/deletePatients.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300)/*.validate(contentType: ["application/json"])*/.responseData { response in
             DispatchQueue.main.async(execute: {
                 if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
                     print("Data: \(utf8Text)")
