@@ -96,16 +96,17 @@ class PatientRootTableViewController: UIViewController, UITableViewDataSource, U
     
     @IBAction func refresh(_ sender: Any) {
         //viewDidLoad()
-        let userid = Int(Manager.userData!["id"] as! String)
+        let userid = Manager.userData!["id"] as! String
         let role = Manager.userData!["role"] as! String
         if (Manager.reloadAllCells == true) {
             // Do any additional setup after loading the view, typically from a nib.
-            let parameters: Parameters = ["userid": userid as Any, "role": role]
+            let parameters: Parameters = ["user_id": userid, "role": role]
             Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/getPatientDetails.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300).validate(contentType: ["application/json"]).responseJSON { response in
                 
                 if let data = response.data {
                     do {
                         let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! Dictionary<String,Any>
+                        print(json["patient_details"])
                         Manager.patientDetails = json["patient_details"] as? [Dictionary<String,Any>]
                         self.locationList = json["locations"] as! [String]
                         DispatchQueue.main.async(execute: {

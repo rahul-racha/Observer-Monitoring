@@ -24,6 +24,10 @@ class SlideOutViewController: UIViewController {
         print("Name: \(Manager.userData)")
         print(Manager.userData?["name"] as? String)
         self.configurePic()
+        
+        let imageTap = UITapGestureRecognizer(target: self, action: #selector(SlideOutViewController.imageTapped(_:)))
+        imageTap.numberOfTapsRequired = 1
+        self.profilePic.addGestureRecognizer(imageTap)
         // Do any additional setup after loading the view.
     }
 
@@ -49,6 +53,14 @@ class SlideOutViewController: UIViewController {
         self.profilePic.layer.borderWidth = 2
     }
 
+    func imageTapped(_ gestureRecognizer: UIGestureRecognizer) {
+        /*print("IMAGE TAPPED")
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let actVC = storyboard.instantiateViewController(withIdentifier: "AccountSettingsViewController") as! AccountSettingsViewController
+        self.modalPresentationStyle = .overCurrentContext
+        self.present(actVC, animated: true, completion: nil)*/
+    }
+    
     
     @IBAction func logout(_ sender: Any) {
         Manager.triggerNotifications = false

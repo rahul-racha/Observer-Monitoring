@@ -195,7 +195,7 @@ class RegistrationViewController: UIViewController, UIPickerViewDelegate, UIPick
             alert.show()
             
         }else if !isValidEmail(testStr: self.txtEmailID.text!){
-            var alert : UIAlertView = UIAlertView(title: "Oops!", message: "Username length should be atleast 5. Include only small case alphabets.",
+            var alert : UIAlertView = UIAlertView(title: "Oops!", message: "Username length should be atleast 5. Include only small case alphabets. Avoid spaces.",
                                                   delegate: nil, cancelButtonTitle: "OK")
             alert.show()
             
@@ -231,9 +231,9 @@ class RegistrationViewController: UIViewController, UIPickerViewDelegate, UIPick
                 genderText = "f"
             }
             
-            let parameters: Parameters = ["name": self.txtEmailID.text!, "full_name": fullName, "gender": genderText, "age": self.age.text!, "password": self.txtPassword.text!, "role": "observer"]
+            let parameters: Parameters = ["username": self.txtEmailID.text!, "full_name": fullName, "gender": genderText, "age": self.age.text!, "password": self.txtPassword.text!, "role": "observer"]
             print(parameters)
-            Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/addNewUser1.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300)/*.validate(contentType: ["application/json"])*/.responseData { response in
+            Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/registerNewUser.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300)/*.validate(contentType: ["application/json"])*/.responseData { response in
                 DispatchQueue.main.async(execute: {
                     if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
                         print("Data: \(utf8Text)")

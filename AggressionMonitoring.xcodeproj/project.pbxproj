@@ -10,6 +10,7 @@
 		3D0009081F3D183A00669E72 /* DeletePatientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0009071F3D183A00669E72 /* DeletePatientViewController.swift */; };
 		3D0009151F3DFFB100669E72 /* DeletePatientTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0009141F3DFFB100669E72 /* DeletePatientTableViewCell.swift */; };
 		3D0009171F4007DC00669E72 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0009161F4007DB00669E72 /* RegistrationViewController.swift */; };
+		3D0009191F40CFAA00669E72 /* AccountSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0009181F40CFA900669E72 /* AccountSettingsViewController.swift */; };
 		3D0A1EB71EF045ED001F9365 /* SwiftKeychainWrapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0DC6231EF045130011CB7D /* SwiftKeychainWrapper.framework */; };
 		3D0A1EB81EF045ED001F9365 /* SwiftKeychainWrapper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0DC6231EF045130011CB7D /* SwiftKeychainWrapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3D0A1EC31EF045ED001F9365 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0DC60F1EF045000011CB7D /* Alamofire.framework */; };
@@ -48,13 +49,11 @@
 		41B61AEC1EE5A3F9008865FF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41B61AEA1EE5A3F9008865FF /* Main.storyboard */; };
 		41B61AEE1EE5A3F9008865FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41B61AED1EE5A3F9008865FF /* Assets.xcassets */; };
 		41B61AF11EE5A3FA008865FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41B61AEF1EE5A3FA008865FF /* LaunchScreen.storyboard */; };
-		41B61AF91EE5B4B4008865FF /* LimbSliderDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B61AF81EE5B4B4008865FF /* LimbSliderDesign.swift */; };
 		41B61AFB1EE71764008865FF /* PatientRootTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B61AFA1EE71764008865FF /* PatientRootTableViewController.swift */; };
 		41B61AFD1EE71A68008865FF /* PatientRootTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B61AFC1EE71A68008865FF /* PatientRootTableViewCell.swift */; };
 		41B61AFF1EE71D69008865FF /* PatientRootUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B61AFE1EE71D69008865FF /* PatientRootUIView.swift */; };
 		41B61B011EE7212F008865FF /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B61B001EE7212F008865FF /* Global.swift */; };
 		41BBAD461EEB37E9005C9E55 /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BBAD451EEB37E9005C9E55 /* PageViewController.swift */; };
-		41BBAD541EEB43FE005C9E55 /* NextDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BBAD531EEB43FE005C9E55 /* NextDetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -194,6 +193,7 @@
 		3D0009071F3D183A00669E72 /* DeletePatientViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeletePatientViewController.swift; sourceTree = "<group>"; };
 		3D0009141F3DFFB100669E72 /* DeletePatientTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeletePatientTableViewCell.swift; sourceTree = "<group>"; };
 		3D0009161F4007DB00669E72 /* RegistrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
+		3D0009181F40CFA900669E72 /* AccountSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountSettingsViewController.swift; sourceTree = "<group>"; };
 		3D0DC6011EF041DC0011CB7D /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		3D0DC6031EF045000011CB7D /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = "../Alamofire-master/Alamofire.xcodeproj"; sourceTree = "<group>"; };
 		3D0DC61C1EF045130011CB7D /* SwiftKeychainWrapper.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftKeychainWrapper.xcodeproj; path = "../SwiftKeychainWrapper-develop/SwiftKeychainWrapper.xcodeproj"; sourceTree = "<group>"; };
@@ -236,13 +236,11 @@
 		41B61AED1EE5A3F9008865FF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		41B61AF01EE5A3FA008865FF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		41B61AF21EE5A3FA008865FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		41B61AF81EE5B4B4008865FF /* LimbSliderDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimbSliderDesign.swift; sourceTree = "<group>"; };
 		41B61AFA1EE71764008865FF /* PatientRootTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PatientRootTableViewController.swift; sourceTree = "<group>"; };
 		41B61AFC1EE71A68008865FF /* PatientRootTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PatientRootTableViewCell.swift; sourceTree = "<group>"; };
 		41B61AFE1EE71D69008865FF /* PatientRootUIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PatientRootUIView.swift; sourceTree = "<group>"; };
 		41B61B001EE7212F008865FF /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		41BBAD451EEB37E9005C9E55 /* PageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
-		41BBAD531EEB43FE005C9E55 /* NextDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NextDetailViewController.swift; sourceTree = "<group>"; };
 		41E83B961EE751D7008EB517 /* AgressionMonitoring.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AgressionMonitoring.entitlements; sourceTree = "<group>"; };
 		C055C0EA9DE8CB3BD839CC01 /* Pods-AgressionMonitoring.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgressionMonitoring.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AgressionMonitoring/Pods-AgressionMonitoring.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -305,6 +303,7 @@
 			isa = PBXGroup;
 			children = (
 				3D2633501EF991E200BD3750 /* SlideOutViewController.swift */,
+				3D0009181F40CFA900669E72 /* AccountSettingsViewController.swift */,
 			);
 			name = "Slide Out Menu";
 			sourceTree = "<group>";
@@ -418,6 +417,7 @@
 				41E83B961EE751D7008EB517 /* AgressionMonitoring.entitlements */,
 				41B61AE61EE5A3F9008865FF /* AppDelegate.swift */,
 				3D0DC6011EF041DC0011CB7D /* LoginViewController.swift */,
+				3D0009161F4007DB00669E72 /* RegistrationViewController.swift */,
 				41B61AEA1EE5A3F9008865FF /* Main.storyboard */,
 				41B61AED1EE5A3F9008865FF /* Assets.xcassets */,
 				41B61AEF1EE5A3FA008865FF /* LaunchScreen.storyboard */,
@@ -429,10 +429,7 @@
 				41972B651EE867B90072D6F1 /* Patient */,
 				41972B641EE860D50072D6F1 /* Model */,
 				41BBAD451EEB37E9005C9E55 /* PageViewController.swift */,
-				41BBAD531EEB43FE005C9E55 /* NextDetailViewController.swift */,
-				41B61AF81EE5B4B4008865FF /* LimbSliderDesign.swift */,
 				3DD887151F019F05005A2438 /* RegisterViewController.swift */,
-				3D0009161F4007DB00669E72 /* RegistrationViewController.swift */,
 			);
 			path = AgressionMonitoring;
 			sourceTree = "<group>";
@@ -723,14 +720,13 @@
 				41BBAD461EEB37E9005C9E55 /* PageViewController.swift in Sources */,
 				3DA2A2591F158A4900E7B78D /* ModelViewController.swift in Sources */,
 				3DD887161F019F05005A2438 /* RegisterViewController.swift in Sources */,
-				41B61AF91EE5B4B4008865FF /* LimbSliderDesign.swift in Sources */,
 				3D5DAEB11EFAF40B00D650EA /* ObservedChartView.swift in Sources */,
 				3D0009151F3DFFB100669E72 /* DeletePatientTableViewCell.swift in Sources */,
+				3D0009191F40CFAA00669E72 /* AccountSettingsViewController.swift in Sources */,
 				3D2633471EF441D700BD3750 /* SWRevealViewController.m in Sources */,
 				3DD887941F029304005A2438 /* UITextFieldX.swift in Sources */,
 				3DD887F61F0FCE68005A2438 /* APLExpandableCollectionView.m in Sources */,
 				3D2633511EF991E200BD3750 /* SlideOutViewController.swift in Sources */,
-				41BBAD541EEB43FE005C9E55 /* NextDetailViewController.swift in Sources */,
 				3DD887991F029304005A2438 /* UIVisualEffectViewX.swift in Sources */,
 				3D5DAEAF1EFAF3FC00D650EA /* SensorChartView.swift in Sources */,
 				3DD887971F029304005A2438 /* UIViewX.swift in Sources */,
@@ -891,6 +887,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "AgressionMonitoring/AggressionMonitoring-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};
@@ -910,6 +907,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "AgressionMonitoring/AggressionMonitoring-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
 		};

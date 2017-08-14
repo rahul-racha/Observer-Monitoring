@@ -1,14 +1,14 @@
 //
-//  NextDetailViewController.swift
-//  AgressionMonitoring
+//  AccountSettingsViewController.swift
+//  AggressionMonitoring
 //
-//  Created by rahul rachamalla on 6/9/17.
+//  Created by admin on 8/13/17.
 //  Copyright © 2017 handson. All rights reserved.
 //
 
 import UIKit
 
-class NextDetailViewController: UIViewController {
+class AccountSettingsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,9 +21,6 @@ class NextDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func dismissCntrl(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
-    }
 
     /*
     // MARK: - Navigation

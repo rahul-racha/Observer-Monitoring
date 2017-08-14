@@ -125,8 +125,8 @@ class LoginViewController: UIViewController, NSURLConnectionDelegate {
     
     
     @IBAction func login(_ sender: UIButton) {
-        let username = _username?.text
-        let password = _password?.text
+        var username = _username?.text
+        var password = _password?.text
         var user: String?
         
         if (username?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)! || (password?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)! {
@@ -138,6 +138,9 @@ class LoginViewController: UIViewController, NSURLConnectionDelegate {
             return
         }
         
+        username = username?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        password = password?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+
         
         let parameters: Parameters = ["user_name":username! , "password": password!, "device_id": Manager.deviceId == nil ? "abc" : Manager.deviceId!, "device_type": "apple"]
         Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/login.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300).validate(contentType: ["application/json"])

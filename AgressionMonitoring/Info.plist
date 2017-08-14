@@ -37,17 +37,8 @@
 			</dict>
 		</dict>
 	</dict>
-    <key>NSBluetoothPeripheralUsageDescription</key>
-    <string>Need bluetooth status to aid the users presence </string>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>beacons need to detect the user device</string>    
-	<key>NSCameraUsageDescription</key>
-	<string>Aggression Monitoring would like to use your camera</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Aggression Monitoring would like access to your photo library</string>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>bluetooth-central</string>
 		<string>fetch</string>
 		<string>remote-notification</string>
 	</array>
@@ -70,8 +61,6 @@
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>

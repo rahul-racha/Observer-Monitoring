@@ -20,6 +20,9 @@ class DeletePatientViewController: UIViewController, UITableViewDataSource, UITa
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        /*if (Manager.userData!["role"] as! String != "admin") {
+            self.displayAlertMessage(message: "Contact admin")
+        }*/
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
@@ -38,7 +41,7 @@ class DeletePatientViewController: UIViewController, UITableViewDataSource, UITa
                         DispatchQueue.main.async(execute: {
                             self.tableView.reloadData()
                             if (Manager.userData!["role"] as! String != "admin") {
-                                self.displayAlertMessage(message: "Contact admin")
+                                self.displayAlert(message: "Contact admin", title: "Permission denied")
                             }
                         })
                         
@@ -57,9 +60,9 @@ class DeletePatientViewController: UIViewController, UITableViewDataSource, UITa
         // Dispose of any resources that can be recreated.
     }
     
-    func displayAlert(message: String) {
+    func displayAlert(message: String, title: String) {
         
-        let confirmationAlert = UIAlertController(title: "Permission denied", message: message, preferredStyle: UIAlertControllerStyle.alert)
+        let confirmationAlert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         
         confirmationAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
             self.dismiss(animated: true, completion: nil)

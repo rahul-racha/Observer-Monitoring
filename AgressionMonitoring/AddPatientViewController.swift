@@ -291,7 +291,7 @@ class AddPatientViewController: UIViewController, UIPickerViewDelegate, UIPicker
         let fromDOB = gregorian.dateComponents([.year], from: self.date!, to: Date())
         self.age = fromDOB.year!*/
         var isResponseSuccess: Bool? = nil
-        print(self.age!)
+        //print(self.age!)
         let name = self.firstName.text!+" "+self.lastName.text!
         var genderText = ""
         if (self.gender.text! == "Male") {
@@ -300,13 +300,17 @@ class AddPatientViewController: UIViewController, UIPickerViewDelegate, UIPicker
             genderText = "f"
         }
         
-        let parameters: Parameters = ["name": name, "age": self.age!, "gender": genderText, "userdescription": self.patientDesc.text, "role": "patient"]
+        let parameters: Parameters = ["name": name, "age": self.dob.text!, "gender": genderText, "userdescription": self.patientDesc.text, "role": "patient"]
         print(parameters)
         Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/addNewUser.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300)/*.validate(contentType: ["application/json"])*/.responseData { response in
             DispatchQueue.main.async(execute: {
                 if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
                     print("Data: \(utf8Text)")
-                    if utf8Text.range(of:"success") != nil{
+                    
+                    if (utf8Text.range(of:"patient name exists") != nil) {
+                        self.displayAlertMessage(message: "Another patient exists with the same name. Add a number to the patient's name. Eg: John Broderick 2")
+                        isResponseSuccess = false
+                    }else if utf8Text.range(of:"success") != nil{
                         self.displayAlertMessage(message: "Created :)")
                         isResponseSuccess = true
                         self.firstName.text = nil

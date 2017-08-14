@@ -266,7 +266,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             hamburger.action = #selector(SWRevealViewController.revealToggle(_:))
             //revealViewController().rearViewRevealWidth = 275
             //revealViewController().rightViewRevealWidth  =
-            //view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+            view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
         
         //self.stackHeader.backgroundColor = UIColor.
@@ -316,10 +316,11 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     }
     
     func getAllPatients() {
-        let userid = Int(Manager.userData!["id"] as! String)
+        let userid = Manager.userData!["id"] as! String
         let role = Manager.userData!["role"] as! String
         // Do any additional setup after loading the view, typically from a nib.
-        let parameters: Parameters = ["userid": userid as Any, "role": role]
+        let parameters: Parameters = ["user_id": userid, "role": role]
+        print(parameters)
         Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/getPatientDetails.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300).validate(contentType: ["application/json"]).responseJSON { response in
             DispatchQueue.main.async(execute: {
             if let data = response.data {
