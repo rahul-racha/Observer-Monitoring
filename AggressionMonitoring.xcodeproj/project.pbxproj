@@ -27,7 +27,6 @@
 		3D5DAEB71EFB0D1100D650EA /* XAxisFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5DAEB61EFB0D1100D650EA /* XAxisFormatter.swift */; };
 		3D5DAEB91EFC95F300D650EA /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D5DAEB81EFC95F300D650EA /* UserNotifications.framework */; };
 		3DA2A2591F158A4900E7B78D /* ModelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA2A2581F158A4900E7B78D /* ModelViewController.swift */; };
-		3DD887161F019F05005A2438 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD887151F019F05005A2438 /* RegisterViewController.swift */; };
 		3DD887901F029304005A2438 /* UIButtonX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD887851F029304005A2438 /* UIButtonX.swift */; };
 		3DD887911F029304005A2438 /* UIImageViewX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD887861F029304005A2438 /* UIImageViewX.swift */; };
 		3DD887921F029304005A2438 /* UILabelX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD887871F029304005A2438 /* UILabelX.swift */; };
@@ -53,7 +52,6 @@
 		41B61AFD1EE71A68008865FF /* PatientRootTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B61AFC1EE71A68008865FF /* PatientRootTableViewCell.swift */; };
 		41B61AFF1EE71D69008865FF /* PatientRootUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B61AFE1EE71D69008865FF /* PatientRootUIView.swift */; };
 		41B61B011EE7212F008865FF /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B61B001EE7212F008865FF /* Global.swift */; };
-		41BBAD461EEB37E9005C9E55 /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BBAD451EEB37E9005C9E55 /* PageViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -209,7 +207,6 @@
 		3D5DAEB61EFB0D1100D650EA /* XAxisFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XAxisFormatter.swift; sourceTree = "<group>"; };
 		3D5DAEB81EFC95F300D650EA /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		3DA2A2581F158A4900E7B78D /* ModelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelViewController.swift; sourceTree = "<group>"; };
-		3DD887151F019F05005A2438 /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		3DD887851F029304005A2438 /* UIButtonX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButtonX.swift; sourceTree = "<group>"; };
 		3DD887861F029304005A2438 /* UIImageViewX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageViewX.swift; sourceTree = "<group>"; };
 		3DD887871F029304005A2438 /* UILabelX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UILabelX.swift; sourceTree = "<group>"; };
@@ -240,7 +237,6 @@
 		41B61AFC1EE71A68008865FF /* PatientRootTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PatientRootTableViewCell.swift; sourceTree = "<group>"; };
 		41B61AFE1EE71D69008865FF /* PatientRootUIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PatientRootUIView.swift; sourceTree = "<group>"; };
 		41B61B001EE7212F008865FF /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
-		41BBAD451EEB37E9005C9E55 /* PageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
 		41E83B961EE751D7008EB517 /* AgressionMonitoring.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AgressionMonitoring.entitlements; sourceTree = "<group>"; };
 		C055C0EA9DE8CB3BD839CC01 /* Pods-AgressionMonitoring.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgressionMonitoring.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AgressionMonitoring/Pods-AgressionMonitoring.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -428,8 +424,6 @@
 				41972B671EE868130072D6F1 /* Detail */,
 				41972B651EE867B90072D6F1 /* Patient */,
 				41972B641EE860D50072D6F1 /* Model */,
-				41BBAD451EEB37E9005C9E55 /* PageViewController.swift */,
-				3DD887151F019F05005A2438 /* RegisterViewController.swift */,
 			);
 			path = AgressionMonitoring;
 			sourceTree = "<group>";
@@ -717,9 +711,7 @@
 				3DD887F71F0FCE68005A2438 /* APLExpandableSectionFlowLayout.m in Sources */,
 				3D26334D1EF97B5F00BD3750 /* AddPatientViewController.swift in Sources */,
 				3DD887901F029304005A2438 /* UIButtonX.swift in Sources */,
-				41BBAD461EEB37E9005C9E55 /* PageViewController.swift in Sources */,
 				3DA2A2591F158A4900E7B78D /* ModelViewController.swift in Sources */,
-				3DD887161F019F05005A2438 /* RegisterViewController.swift in Sources */,
 				3D5DAEB11EFAF40B00D650EA /* ObservedChartView.swift in Sources */,
 				3D0009151F3DFFB100669E72 /* DeletePatientTableViewCell.swift in Sources */,
 				3D0009191F40CFAA00669E72 /* AccountSettingsViewController.swift in Sources */,

@@ -12,10 +12,8 @@ import SwiftKeychainWrapper
 
 class LoginViewController: UIViewController, NSURLConnectionDelegate {
 
-    
-    //@IBOutlet weak var _username: UIView!
     @IBOutlet weak var _username: UITextField!
-    @IBOutlet weak var _password: UITextField?
+    @IBOutlet weak var _password: UITextField!
     @IBOutlet weak var rememberCredentials: UISwitch!
     @IBOutlet weak var viewBox: UIViewX!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!

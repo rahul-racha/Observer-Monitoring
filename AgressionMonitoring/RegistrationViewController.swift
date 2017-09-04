@@ -16,6 +16,8 @@ class RegistrationViewController: UIViewController, UIPickerViewDelegate, UIPick
     @IBOutlet weak var txtEmailID: UITextField!
     @IBOutlet weak var txtPassword: UITextField!
     @IBOutlet weak var txtConfirmPassword: UITextField!
+    @IBOutlet weak var keyField: UITextField!
+    
     
     @IBOutlet weak var age: UITextField!
     @IBOutlet weak var gender: UITextField!
@@ -166,36 +168,36 @@ class RegistrationViewController: UIViewController, UIPickerViewDelegate, UIPick
     @IBAction func btnRegistration(sender: AnyObject)
     {
         //if(countElements(txtFName.text) == 0){
-        if(self.txtFName.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)! {
+        if (self.txtFName.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)! {
             var alert : UIAlertView = UIAlertView(title: "Oops!", message: "Please enter your first name.",
                                                   delegate: nil, cancelButtonTitle: "OK")
             alert.show()
             
-        }else if (self.txtLName.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)! {//(countElements(txtLName.text) == 0){
+        } else if (self.txtLName.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)! {//(countElements(txtLName.text) == 0){
             var alert : UIAlertView = UIAlertView(title: "Oops!", message: "Please enter your last name.",
                                                   delegate: nil, cancelButtonTitle: "OK")
             alert.show()
             
-        } else if ((self.age.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)!) {
+        } /*else if ((self.age.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)!) {
             var alert : UIAlertView = UIAlertView(title: "Oops!", message: "Age should not be empty.",
                                                   delegate: nil, cancelButtonTitle: "OK")
             alert.show()
             
-        } else if (!self.isValidAge(testStr: self.age.text!)) {
+        } */else if (!(self.age.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)! && !self.isValidAge(testStr: self.age.text!)) {
             var alert : UIAlertView = UIAlertView(title: "Oops!", message: "Value should be a number and cannot be more than 99.",
                                                   delegate: nil, cancelButtonTitle: "OK")
             alert.show()
-        } else if (self.gender.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)! {
+        }/* else if (self.gender.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)! {
             var alert : UIAlertView = UIAlertView(title: "Oops!", message: "gender cannot be empty.",
                                                   delegate: nil, cancelButtonTitle: "OK")
             alert.show()
-        }else if (self.txtEmailID.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)! { //(countElements(txtEmailID.text) == 0){
+        }*/else if (self.txtEmailID.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)! { //(countElements(txtEmailID.text) == 0){
             var alert : UIAlertView = UIAlertView(title: "Oops!", message: "Please enter your email id.",
                                                   delegate: nil, cancelButtonTitle: "OK")
             alert.show()
             
         }else if !isValidEmail(testStr: self.txtEmailID.text!){
-            var alert : UIAlertView = UIAlertView(title: "Oops!", message: "Username length should be atleast 5. Include only small case alphabets. Avoid spaces.",
+            var alert : UIAlertView = UIAlertView(title: "Oops!", message: "Username length should be atleast 5. Include only small case alphabets. Avoid spaces (especially at end).",
                                                   delegate: nil, cancelButtonTitle: "OK")
             alert.show()
             
@@ -213,7 +215,16 @@ class RegistrationViewController: UIViewController, UIPickerViewDelegate, UIPick
                                                   delegate: nil, cancelButtonTitle: "OK")
             alert.show()
             
-        }else{
+        } else if (self.keyField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)! { //(countElements(txtPassword.text) == 0){
+            var alert : UIAlertView = UIAlertView(title: "Oops!", message: "Please enter the key.",
+                                                  delegate: nil, cancelButtonTitle: "OK")
+            alert.show()
+            
+        } else if !(self.isPasswordValid(password: (self.keyField?.text)!)) {
+            var alert : UIAlertView = UIAlertView(title: "Oops!", message: "key length should be atleast 8. Include One Alphabet, One digit and One Special Character.",
+                                                  delegate: nil, cancelButtonTitle: "OK")
+            alert.show()
+        } else{
             /*var alert : UIAlertView = UIAlertView(title: "User Registration!", message: "Your Registration is successfully.",
                                                   delegate: nil, cancelButtonTitle: "OK")
             alert.show()*/
@@ -231,7 +242,12 @@ class RegistrationViewController: UIViewController, UIPickerViewDelegate, UIPick
                 genderText = "f"
             }
             
-            let parameters: Parameters = ["username": self.txtEmailID.text!, "full_name": fullName, "gender": genderText, "age": self.age.text!, "password": self.txtPassword.text!, "role": "observer"]
+            var ageText = ""
+            if (self.age.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) != nil) {
+                ageText = self.age.text!
+            }
+            
+            let parameters: Parameters = ["username": self.txtEmailID.text!, "full_name": fullName, "gender": genderText, "age": ageText, "password": self.txtPassword.text!, "role": "observer", "keyField": self.keyField.text!]
             print(parameters)
             Alamofire.request("http://qav2.cs.odu.edu/Dev_AggressionDetection/registerNewUser.php",method: .post,parameters: parameters, encoding: URLEncoding.default).validate(statusCode: 200..<300)/*.validate(contentType: ["application/json"])*/.responseData { response in
                 DispatchQueue.main.async(execute: {
@@ -239,6 +255,9 @@ class RegistrationViewController: UIViewController, UIPickerViewDelegate, UIPick
                         print("Data: \(utf8Text)")
                         if (utf8Text.range(of:"username exists") != nil) {
                             self.displayAlertMessage(message: "username exists. Try a different one")
+                            isResponseSuccess = false
+                        } else if (utf8Text.range(of:"invalid key") != nil) {
+                            self.displayAlertMessage(message: "entered invalid key")
                             isResponseSuccess = false
                         } else if (utf8Text.range(of:"success") != nil) {
                             self.displayConfirmation(message: "You are registered :)")
@@ -312,7 +331,7 @@ class RegistrationViewController: UIViewController, UIPickerViewDelegate, UIPick
     }
     
     func isPasswordValid(password : String) -> Bool{
-        let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[a-z])(?=.*[0-9])(?=.*[$@$#!%*?&])[A-Za-z0-9\\d$@$#!%*?&]{8,}")
+        let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[$@$#!%*?&])[A-Za-z0-9\\d$@$#!%*?&]{8,}")
         return passwordTest.evaluate(with: password)
     }
 
