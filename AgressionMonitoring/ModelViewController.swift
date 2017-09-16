@@ -24,7 +24,7 @@ class ModelViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         self.commentBox.delegate = self
         print("in model:\(self.data)")
-        if (!(self.data?.isEmpty)! && self.data != "write your observations")  {
+        if (/*!(self.data?.isEmpty)!*/self.data != nil && self.data != "write your observations")  {
             self.commentBox.text = data
             self.commentBox.textColor = UIColor.black
         } else {
@@ -70,12 +70,12 @@ class ModelViewController: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func saveComments(_ sender: Any) {
-        if (self.commentBox?.text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)! {
+        /*if (self.commentBox?.text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty)! {
             displayAlertMessage(message: "comments not entered!")
-        } else {
+        } else {*/
             self.delegate?.commentTextEntered(comment: self.commentBox.text)
             self.dismiss(animated: true, completion: nil)
-        }
+        //}
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {

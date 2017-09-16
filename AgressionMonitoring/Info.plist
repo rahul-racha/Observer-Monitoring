@@ -37,6 +37,8 @@
 			</dict>
 		</dict>
 	</dict>
+    <key>aps-environment</key>
+    <string>production</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

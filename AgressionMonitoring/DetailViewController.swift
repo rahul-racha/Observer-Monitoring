@@ -41,10 +41,17 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     fileprivate var actionHeaders: [String]?
     fileprivate var selectedIndices = Set<IndexPath>()
     fileprivate var multiSelectedIndices = Set<IndexPath>()
+    fileprivate var fSelectedParameters = [String]()
+    fileprivate var fType: String?
+    fileprivate var fSelectionType: String?
+    fileprivate var fRecordedTime: String?
+    fileprivate var fCell: ActionCollectionViewCell?
+    fileprivate var fIndexPath: IndexPath?
     
     var actionTimeStamp: String?
     var observerParameters: Dictionary<String,Any>?
     var patient: [String:Any]?
+    var commentTextVar: String?
     //var locationSet: Set<String> = [] //["Room 1", "Room 2", "Room 3", "Room 4", "Room 5"]
     var pickOption = [String]()
     var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
@@ -93,6 +100,8 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         //if (self.reloadView == true) {
         self.updateTime()
         Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true)
+        //let mvc = ModelViewController()
+        //mvc.delegate = self
         self.commentTextView.delegate = self
         if !(self.commentTextView?.text.isEmpty)!  {
             self.commentTextView.textColor = UIColor.black
@@ -473,7 +482,8 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                                      } else {
                                      timeClicked = self.getTimestamp()
                                      }*/
-                                    self.displayConfirmation(message: "Click 'Ok' to capture continuous action", selectedParameters: [parameter], type: "start event", selectionType: "select", cell: cell, indexPath: IndexPath(row: indexPath.row, section: indexLoc.section), recordedTime: timeClicked)
+                                    //self.displayConfirmation(message: "Click 'Ok' to capture continuous action", selectedParameters: [parameter], type: "start event", selectionType: "select", cell: cell, indexPath: IndexPath(row: indexPath.row, section: indexLoc.section), recordedTime: timeClicked)
+                                    self.displayActions(selectedParameters: [parameter], type: "start event", selectionType: "select", cell: cell, indexPath: IndexPath(row: indexPath.row, section: indexLoc.section), recordedTime: timeClicked)
                                     
                                 }
                                 
@@ -793,7 +803,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "modelSegue" {
+        /*if segue.identifier == "modelSegue" {
             if let destinationController = segue.destination as? ModelViewController {
                 destinationController.delegate = self
                 if let data = self.commentTextView?.text {
@@ -802,7 +812,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
                     destinationController.data = nil
                 }
             }
-        } else if (segue.identifier == "patientSegue") {
+        } else*/ if (segue.identifier == "patientSegue") {
             if (/*self.isStop == true || */self.commentTextView.text != self.commentPlaceholder || self.selectedIndices.count > 0) {
                 self.sendPatientState()
             }
@@ -837,7 +847,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         //self.sendActionButton.isEnabled = flag
         //self.eventButton.isEnabled = flag
         self.clearActionsButton.isEnabled = flag
-        self.commentButton.isEnabled = flag
+        //self.commentButton.isEnabled = flag
         self.pickerTextField.isEnabled = flag
     }
     
@@ -1073,7 +1083,47 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             }
         }
     }
+    
+    func addComment() {
+        var mVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ModelViewController") as! ModelViewController
+        var modalStyle: UIModalTransitionStyle = UIModalTransitionStyle.coverVertical
+        mVC.modalTransitionStyle = modalStyle
+        mVC.delegate = self
+        mVC.data = self.commentTextVar
+        self.present(mVC, animated: true, completion: nil)
+    }
    
+    func displayActions(selectedParameters: [String], type: String, selectionType: String, cell: ActionCollectionViewCell, indexPath: IndexPath, recordedTime: String) {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let commentAction = UIAlertAction(title: "Add comment", style: .default) { (action) in
+            self.fSelectedParameters = selectedParameters
+            self.fType = type
+            self.fSelectionType = selectionType
+            self.fRecordedTime = recordedTime
+            self.fCell = cell
+            self.fIndexPath = indexPath
+            self.addComment()
+        }
+        
+        let continueAction = UIAlertAction(title: "Continue", style: .default) { (action) in
+            self.commentTextVar = nil
+            self.sendObservation(selectedParameters: selectedParameters, type: type, selectionType: selectionType, cell: cell, indexPath: indexPath, recordedTime: recordedTime)
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        
+        alertController.addAction(commentAction)
+        alertController.addAction(continueAction)
+        alertController.addAction(cancelAction)
+        
+        alertController.popoverPresentationController?.sourceView = self.view
+        alertController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        alertController.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+        present(alertController, animated: true, completion: nil)
+        
+    }
+    
     func sendObservation(selectedParameters: [String], type: String, selectionType: String, cell: ActionCollectionViewCell, indexPath: IndexPath, recordedTime: String) -> Bool? {
         var isResponseSuccess: Bool? = nil
         
@@ -1090,12 +1140,12 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         }
         actionString = actionString+"]"*/
         
-        var cmt: String? = nil
+        /*var cmt: String? = nil
         if (self.commentTextView != nil && self.commentTextView.text != self.commentPlaceholder) {
             cmt = self.commentTextView.text!
         } else {
             cmt = ""
-        }
+        }*/
         
         var loc: String = ""
         if (self.pickerTextField.text != nil) {
@@ -1105,7 +1155,7 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         }
         
         if (self.patient != nil && Manager.userData != nil) {
-            let parameters: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "start_time": recordedTime, "comment": (cmt != nil) ? cmt! : cmt, "parameters": selectedParameters, "action": type, "selectionType": selectionType ,"location" : loc ]
+            let parameters: Parameters = ["patient_id": patient!["id"] as! String, "observer_id": Manager.userData!["id"] as! String, "start_time": recordedTime, "comment": (self.commentTextVar != nil) ? self.commentTextVar! : self.commentTextVar, "parameters": selectedParameters, "action": type, "selectionType": selectionType ,"location" : loc ]
         print("para:\(parameters)")
         
         
@@ -1197,11 +1247,20 @@ class DetailViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
 
 extension DetailViewController: CommentEntryDelegate {
     func commentTextEntered(comment: String) {
-        self.commentTextView.text = comment
+        /*self.commentTextView.text = comment
         if (comment == self.commentPlaceholder) {
             self.commentTextView.textColor = UIColor.lightGray
         } else {
             self.commentTextView.textColor = UIColor.black
+        }*/
+        if (comment == self.commentPlaceholder) {
+            self.commentTextVar = nil
+        } else {
+            self.commentTextVar = comment
+        }
+        if (self.fSelectedParameters != nil && self.fSelectionType != nil && self.fRecordedTime != nil &&
+            self.fType != nil && self.fCell != nil && self.fIndexPath != nil) {
+            self.sendObservation(selectedParameters: self.fSelectedParameters, type: self.fType!, selectionType: self.fSelectionType!, cell: self.fCell!, indexPath: self.fIndexPath!, recordedTime: self.fRecordedTime!)
         }
     }
 }
@@ -1352,7 +1411,8 @@ extension DetailViewController: UICollectionViewDataSource, UICollectionViewDele
             } else {
                 timeClicked = self.getTimestamp()
             }*/
-        self.displayConfirmation(message: "Click 'Ok' to capture event", selectedParameters: [parameter], type: "start event", selectionType: "single", cell: cell, indexPath: IndexPath(row: indexPath.row, section: indexLoc.section), recordedTime: timeClicked)
+        //self.displayConfirmation(message: "Click 'Ok' to capture event", selectedParameters: [parameter], type: "start event", selectionType: "single", cell: cell, indexPath: IndexPath(row: indexPath.row, section: indexLoc.section), recordedTime: timeClicked)
+            self.displayActions(selectedParameters: [parameter], type: "start event", selectionType: "single", cell: cell, indexPath: IndexPath(row: indexPath.row, section: indexLoc.section), recordedTime: timeClicked)
         
         }
                 

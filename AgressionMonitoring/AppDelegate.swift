@@ -93,6 +93,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         print(userInfo)
         let data = userInfo["aps"] as! [String : Any]
+        if (data["data"] != nil) {
         let patient: [String: Any] = data["data"] as! [String : Any]
         print("in app delegateeasdsad")
         print(patient["location"])
@@ -105,6 +106,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             }
         }
         completionHandler(UIBackgroundFetchResult.newData);
+        } else {
+            completionHandler(UIBackgroundFetchResult.noData)
+        }
     }
 
     func modifyPatientLocation(modifiedPatient: [String: Any]) {
