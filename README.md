@@ -27,7 +27,7 @@ All the behaviors can be recorded as two types:
 * [Record single events by a single tap on any of the cells representing the behavior.](#record-behaviors)
 * [Record continuous events by a double tap on any of the cells representing the behavior.](#record-behaviors)
 * [Multiple behaviors can be recorded for continuous events.](#record-behaviors)
-* [Either stop the continuous event for one behavior or stop for multiple behaviors.](#end-events)
+* [Either end the continuous event for one behavior or stop for multiple behaviors.](#end-events)
 * Patient's location is updatated automatically based on the beacons assigned to different rooms in the house. You can also manually enter the location from the picker.
 
 ## Screenshots
@@ -53,8 +53,8 @@ All the behaviors can be recorded as two types:
 
 ## Requirements
 * Swift 3
-* Compatible with iPads only.
 * iOS 9
+* Compatible with iPads only.
 
 The app is available in the App Store. 
 Clink on the [itunes link](https://itunes.apple.com/us/app/observer-monitoring/id1271245223?mt=8)
