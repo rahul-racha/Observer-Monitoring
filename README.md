@@ -23,9 +23,21 @@ All the behaviors can be recorded as two types:
 - Continuous events: Occurs for a period of time.
 
 ## Features
-* Add new patients as well as switch between multiple patients to record their behaviors.
-* Record single events by a single tap on any of the cells representing the behavior.
+* [Add new patients as well as switch between multiple patients to record their behaviors.](#add-or-select-patient)
+* [Record single events by a single tap on any of the cells representing the behavior.](#record-behaviors)
 * Record continuous events by a double tap on any of the cells representing the behavior.
 * Multiple behaviors can be recorded for continuous events.
 * Either stop the continuous event for one behavior or stop for multiple behaviors.
 * Patient's location is updatated automatically based on the beacons assigned to different rooms in the house.
+
+## Screenshots
+### Add or select patient
+|  Add                                                       |                     Select                                 |
+|------------------------------------------------------------|------------------------------------------------------------|
+| <img src="./resources/add-patient.PNG" width="300"/>       | <img src="./resources/switch-patients.PNG" width="300"/>   |
+
+### Record Behaviors
+
+| After Cell Selection                               |  Single Continuous                                       | Multiple Continous                                              |
+|----------------------------------------------------|----------------------------------------------------------|--------------------------------------------------------------------|
+|<img src="./resources/after-click.PNG" width="300"/>|<img src="./resources/continuous-single.PNG" width="300"/>|<img src="./resources/continuous-multiple.PNG" width="300"/>| 
