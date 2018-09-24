@@ -25,10 +25,10 @@ All the behaviors can be recorded as two types:
 ## Features
 * [Add new patients as well as switch between multiple patients to record their behaviors.](#add-or-select-patient)
 * [Record single events by a single tap on any of the cells representing the behavior.](#record-behaviors)
-* Record continuous events by a double tap on any of the cells representing the behavior.
-* Multiple behaviors can be recorded for continuous events.
-* Either stop the continuous event for one behavior or stop for multiple behaviors.
-* Patient's location is updatated automatically based on the beacons assigned to different rooms in the house.
+* [Record continuous events by a double tap on any of the cells representing the behavior.](#record-behaviors)
+* [Multiple behaviors can be recorded for continuous events.](#record-behaviors)
+* [Either stop the continuous event for one behavior or stop for multiple behaviors.](#end-events)
+* Patient's location is updatated automatically based on the beacons assigned to different rooms in the house. You can also manually enter the location from the picker.
 
 ## Screenshots
 ### Add or select patient
@@ -40,4 +40,21 @@ All the behaviors can be recorded as two types:
 
 | After Cell Selection                               |  Single Continuous                                       | Multiple Continous                                              |
 |----------------------------------------------------|----------------------------------------------------------|--------------------------------------------------------------------|
-|<img src="./resources/after-click.PNG" width="300"/>|<img src="./resources/continuous-single.PNG" width="300"/>|<img src="./resources/continuous-multiple.PNG" width="300"/>| 
+|<img src="./resources/after-click.PNG" width="300"/>|<img src="./resources/continous-single.PNG" width="300"/>|<img src="./resources/continuous-multiple.PNG" width="300"/>| 
+
+### End Events
+- One selected continous behavior can be ended by tapping on the cell. 
+- All the continous behaviors can be ended by clicking on the red colored close button below the timestamp.
+
+|  End One Behavior                                      |                     End All Behaviors                      |
+|-----------------------------------------------------------|------------------------------------------------------------|
+| <img src="./resources/end-single.PNG" width="300"/>       | <img src="./resources/ended-result.PNG" width="300"/>        |
+
+
+## Requirements
+* Swift 3
+* Compatible with iPads only.
+* iOS 9
+
+The app is available in the App Store. 
+Clink on the [itunes link](https://itunes.apple.com/us/app/observer-monitoring/id1271245223?mt=8)
